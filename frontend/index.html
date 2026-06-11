@@ -1100,11 +1100,6 @@
         </article>
       </div>
 
-      <article class="panel">
-        <h2>Access Message</h2>
-        <p class="subtitle">Your purchase status and download access appear here only for your order. Admin order data and Google Sheet data are never shown on this public page.</p>
-        <p class="subtitle" id="customerAccessState">No submitted order yet.</p>
-      </article>
     </section>
   </main>
 
@@ -1469,7 +1464,6 @@
       const order = { name, email, whatsapp, utrId, screenshot, product: selectedPdf.product, amount: selectedPdf.price, date: today, status: "Pending", paid: false, pdfSent: false };
       localStorage.setItem("latestPdfOrder", JSON.stringify(order));
       $("downloadState").textContent = `Lead saved for ${name}. Pay ₹${selectedPdf.price} with PhonePe QR to unlock download.`;
-      $("customerAccessState").textContent = `${order.product} is pending payment verification.`;
       renderCommerce(order);
     });
 
@@ -1483,15 +1477,14 @@
       order.status = "Pending";
       localStorage.setItem("latestPdfOrder", JSON.stringify(order));
       $("downloadState").textContent = "Payment details submitted. Admin will verify UTR/screenshot before download access is unlocked.";
-      $("customerAccessState").textContent = `${order.product} is pending admin verification.`;
       renderCommerce(order);
     });
 
     function renderCommerce(order = JSON.parse(localStorage.getItem("latestPdfOrder") || "null")) {
       if (!order) return;
-      $("customerAccessState").textContent = order.paid
+      $("downloadState").textContent = order.paid
         ? `${order.product} download is unlocked.`
-        : `${order.product} is pending payment verification.`;
+        : `${order.product} is pending admin verification.`;
     }
 
     fields.forEach(id => $(id).addEventListener("input", update));
