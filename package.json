@@ -1,0 +1,19 @@
+{
+  "name": "physique-meter",
+  "version": "1.0.0",
+  "private": true,
+  "description": "A physique baseline onboarding, scorecard, and metrics calculator app.",
+  "main": "backend/server.js",
+  "scripts": {
+    "start": "node backend/server.js",
+    "serve": "node backend/server.js",
+    "check": "node -e \"const { calculatePhysique } = require('./shared/physique'); const result = calculatePhysique({ sex: 'male', heightCm: 178, weightKg: 82, goalBodyFat: 14 }); if (!Number.isFinite(result.bodyFat)) process.exit(1); console.log('check ok');\""
+  },
+  "keywords": [
+    "fitness",
+    "physique",
+    "body-composition",
+    "github-pages"
+  ],
+  "license": "MIT"
+}

@@ -1,0 +1,1211 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Physique Metrics</title>
+  <style>
+    :root {
+      color-scheme: dark;
+      --black: #070707;
+      --black-soft: #0d0d0d;
+      --white: #f7f7f5;
+      --text: #d7dce7;
+      --muted: #8d95a3;
+      --line-dark: #252525;
+      --blue: #1184ff;
+      --blue-dark: #0a67d2;
+      --ink: #17201c;
+      --line: #dce4df;
+      --panel: #ffffff;
+      --wash: #f4f7f2;
+      --mint: #2f8f6c;
+      --mint-dark: #17644c;
+      --lime: #d7f36b;
+      --shadow: 0 18px 50px rgba(25, 42, 35, .11);
+    }
+
+    * { box-sizing: border-box; }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      margin: 0;
+      min-height: 100vh;
+      font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      color: var(--text);
+      background: var(--black);
+    }
+
+    button, input, select {
+      font: inherit;
+    }
+
+    button { cursor: pointer; }
+
+    .screen { min-height: 100vh; }
+
+    .baseline-screen {
+      display: grid;
+      align-items: start;
+      background: var(--black);
+      padding: 22px 0 30px;
+    }
+
+    .baseline-wrap {
+      width: min(100% - 112px, 680px);
+      margin-left: 56px;
+      padding-bottom: 24px;
+    }
+
+    .step-label {
+      margin: 0 0 14px;
+      color: var(--blue);
+      font-size: 11px;
+      font-weight: 850;
+      letter-spacing: 7px;
+      text-transform: uppercase;
+    }
+
+    .baseline-title {
+      margin: 0 0 8px;
+      color: var(--white);
+      font-family: Impact, Haettenschweiler, "Arial Narrow Bold", "Roboto Condensed", Arial, sans-serif;
+      font-size: clamp(3rem, 7vw, 4.95rem);
+      line-height: .86;
+      letter-spacing: 0;
+      text-transform: uppercase;
+      max-width: 760px;
+    }
+
+    .baseline-copy {
+      margin: 0 0 48px;
+      color: #c9d4ec;
+      font-size: 16px;
+      line-height: 1.55;
+    }
+
+    .baseline-form {
+      display: grid;
+      gap: 34px;
+    }
+
+    .baseline-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 17px 16px;
+    }
+
+    .baseline-field,
+    .dashboard-label {
+      display: grid;
+      gap: 9px;
+      color: var(--muted);
+      font-size: 10px;
+      font-weight: 850;
+      letter-spacing: 4px;
+      text-transform: uppercase;
+    }
+
+    .baseline-field input,
+    .baseline-field select {
+      width: 100%;
+      height: 54px;
+      border: 1px solid var(--line-dark);
+      border-radius: 0;
+      padding: 0 16px;
+      background: #090909;
+      color: var(--white);
+      outline: none;
+      font-size: 16px;
+      letter-spacing: 0;
+      text-transform: none;
+    }
+
+    .baseline-field select {
+      appearance: auto;
+    }
+
+    .baseline-field input:focus,
+    .baseline-field select:focus {
+      border-color: var(--blue);
+      box-shadow: 0 0 0 2px rgba(17, 132, 255, .14);
+    }
+
+    .baseline-field.invalid input,
+    .baseline-field.invalid select {
+      border-color: #ff4f4f;
+    }
+
+    .field-error {
+      display: none;
+      color: #ff6b6b;
+      font-size: 11px;
+      letter-spacing: 0;
+      text-transform: none;
+    }
+
+    .baseline-field.invalid .field-error {
+      display: block;
+    }
+
+    .goal-label {
+      margin: 4px 0 -12px;
+      color: var(--muted);
+      font-size: 10px;
+      font-weight: 850;
+      letter-spacing: 5px;
+      text-transform: uppercase;
+    }
+
+    .goal-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 12px;
+    }
+
+    .goal-card {
+      min-height: 96px;
+      padding: 26px 20px 18px;
+      border: 1px solid var(--line-dark);
+      background: #090909;
+      color: var(--white);
+      text-align: left;
+      transition: border-color .16s ease, background .16s ease, transform .16s ease;
+    }
+
+    .goal-card:hover,
+    .goal-card.selected {
+      border-color: var(--blue);
+      background: #0b1119;
+    }
+
+    .goal-card.selected {
+      box-shadow: inset 4px 0 0 var(--blue);
+    }
+
+    .goal-card:active {
+      transform: translateY(1px);
+    }
+
+    .goal-card strong {
+      display: block;
+      margin-bottom: 7px;
+      font-family: Impact, Haettenschweiler, "Arial Narrow Bold", "Roboto Condensed", Arial, sans-serif;
+      font-size: 20px;
+      font-weight: 900;
+      line-height: 1;
+      letter-spacing: 0;
+      text-transform: uppercase;
+    }
+
+    .goal-card span {
+      color: #c7d0e0;
+      font-size: 14px;
+      line-height: 1.3;
+    }
+
+    .baseline-actions {
+      display: grid;
+      gap: 12px;
+      align-items: start;
+      justify-items: start;
+      margin-top: 14px;
+    }
+
+    .scan-button {
+      width: 246px;
+      height: 56px;
+      border: 0;
+      border-radius: 0;
+      background: var(--blue);
+      color: white;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 16px;
+      font-size: 13px;
+      font-weight: 900;
+      letter-spacing: 1.8px;
+      text-transform: uppercase;
+    }
+
+    .scan-button:hover { background: var(--blue-dark); }
+
+    .baseline-note {
+      min-height: 20px;
+      color: #ff6b6b;
+      font-size: 13px;
+    }
+
+    .app {
+      width: min(1180px, calc(100% - 32px));
+      margin: 0 auto;
+      padding: 26px 0 42px;
+      color: var(--ink);
+    }
+
+    body.dashboard-active {
+      color-scheme: light;
+      background:
+        linear-gradient(135deg, rgba(215, 243, 107, .16), transparent 32%),
+        linear-gradient(220deg, rgba(57, 113, 216, .12), transparent 34%),
+        var(--wash);
+    }
+
+    body.dashboard-active .baseline-screen { display: none; }
+    body:not(.dashboard-active) .app { display: none; }
+
+    header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 18px;
+      margin-bottom: 22px;
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      min-width: 0;
+    }
+
+    .mark {
+      width: 44px;
+      height: 44px;
+      border-radius: 8px;
+      display: grid;
+      place-items: center;
+      background: var(--ink);
+      color: var(--lime);
+      box-shadow: var(--shadow);
+      flex: 0 0 auto;
+    }
+
+    .mark svg { width: 24px; height: 24px; }
+
+    h1 {
+      margin: 0;
+      font-size: clamp(1.35rem, 2vw, 2.15rem);
+      letter-spacing: 0;
+      line-height: 1.05;
+    }
+
+    .subtitle {
+      margin: 4px 0 0;
+      color: #65726c;
+      font-size: .95rem;
+    }
+
+    .tabs {
+      display: inline-grid;
+      grid-template-columns: repeat(4, minmax(74px, 1fr));
+      gap: 4px;
+      padding: 4px;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: rgba(255,255,255,.72);
+    }
+
+    .tab {
+      border: 0;
+      border-radius: 6px;
+      padding: 10px 12px;
+      color: #65726c;
+      background: transparent;
+      cursor: pointer;
+      white-space: nowrap;
+    }
+
+    .tab.active {
+      background: var(--ink);
+      color: white;
+    }
+
+    .layout {
+      display: grid;
+      grid-template-columns: minmax(300px, 390px) 1fr;
+      gap: 18px;
+      align-items: start;
+    }
+
+    .panel, .metric, .history-item {
+      background: rgba(255,255,255,.9);
+      border: 1px solid rgba(220, 228, 223, .9);
+      box-shadow: var(--shadow);
+      border-radius: 8px;
+    }
+
+    .panel { padding: 18px; }
+
+    .panel h2 {
+      margin: 0 0 14px;
+      font-size: 1.05rem;
+    }
+
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 12px;
+    }
+
+    .dashboard-label {
+      color: #65726c;
+      letter-spacing: 0;
+      font-size: .82rem;
+      text-transform: none;
+      gap: 6px;
+    }
+
+    .dashboard-label input,
+    .dashboard-label select {
+      width: 100%;
+      min-height: 44px;
+      border: 1px solid var(--line);
+      border-radius: 7px;
+      padding: 10px 11px;
+      color: var(--ink);
+      background: white;
+      outline: none;
+    }
+
+    .dashboard-label input:focus,
+    .dashboard-label select:focus {
+      border-color: var(--mint);
+      box-shadow: 0 0 0 3px rgba(47, 143, 108, .14);
+    }
+
+    .unit-row {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 8px;
+      margin-bottom: 14px;
+    }
+
+    .seg {
+      border: 1px solid var(--line);
+      border-radius: 7px;
+      min-height: 42px;
+      background: white;
+      color: #65726c;
+      cursor: pointer;
+      font-weight: 800;
+    }
+
+    .seg.active {
+      background: var(--mint);
+      color: white;
+      border-color: var(--mint);
+    }
+
+    .actions {
+      display: flex;
+      gap: 10px;
+      margin-top: 15px;
+    }
+
+    .primary, .ghost {
+      min-height: 44px;
+      border-radius: 7px;
+      border: 1px solid transparent;
+      padding: 0 14px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      cursor: pointer;
+      font-weight: 850;
+      flex: 1;
+    }
+
+    .primary {
+      background: var(--ink);
+      color: white;
+    }
+
+    .ghost {
+      background: white;
+      border-color: var(--line);
+      color: var(--ink);
+      flex: 0 0 48px;
+      padding: 0;
+    }
+
+    .hero {
+      min-height: 260px;
+      display: grid;
+      grid-template-columns: 1.1fr .9fr;
+      gap: 18px;
+      margin-bottom: 18px;
+    }
+
+    .score {
+      position: relative;
+      overflow: hidden;
+      padding: 22px;
+      background: var(--ink);
+      color: white;
+      border-radius: 8px;
+      min-height: 260px;
+      box-shadow: var(--shadow);
+    }
+
+    .score::after {
+      content: "";
+      position: absolute;
+      right: -70px;
+      bottom: -70px;
+      width: 210px;
+      height: 210px;
+      border-radius: 50%;
+      border: 34px solid rgba(215, 243, 107, .45);
+    }
+
+    .score .kicker {
+      color: rgba(255,255,255,.67);
+      font-weight: 800;
+      font-size: .78rem;
+      text-transform: uppercase;
+    }
+
+    .body-fat {
+      margin: 22px 0 4px;
+      font-size: clamp(3.7rem, 9vw, 6.2rem);
+      line-height: .9;
+      font-weight: 950;
+      letter-spacing: 0;
+    }
+
+    .score p {
+      margin: 0;
+      max-width: 440px;
+      color: rgba(255,255,255,.72);
+      line-height: 1.55;
+    }
+
+    .figure {
+      min-height: 260px;
+      padding: 22px;
+      display: grid;
+      place-items: center;
+      background: linear-gradient(180deg, #ffffff, #eef5ec);
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      box-shadow: var(--shadow);
+    }
+
+    .body-visual {
+      width: min(190px, 70%);
+      aspect-ratio: 1 / 1.62;
+      display: grid;
+      place-items: center;
+    }
+
+    .body-visual svg {
+      width: 100%;
+      height: 100%;
+      filter: drop-shadow(0 16px 22px rgba(23,32,28,.14));
+    }
+
+    .metrics {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: 12px;
+      margin-bottom: 18px;
+    }
+
+    .metric {
+      padding: 15px;
+      min-height: 112px;
+      display: grid;
+      align-content: space-between;
+    }
+
+    .metric span {
+      color: #65726c;
+      font-size: .76rem;
+      font-weight: 850;
+      text-transform: uppercase;
+    }
+
+    .metric strong {
+      font-size: clamp(1.25rem, 2.3vw, 2rem);
+      line-height: 1;
+    }
+
+    .bar {
+      height: 8px;
+      overflow: hidden;
+      border-radius: 999px;
+      background: #edf1ee;
+    }
+
+    .bar i {
+      display: block;
+      height: 100%;
+      width: var(--value, 50%);
+      border-radius: inherit;
+      background: var(--mint);
+    }
+
+    .details {
+      display: grid;
+      grid-template-columns: 1.08fr .92fr;
+      gap: 18px;
+    }
+
+    .chart {
+      height: 230px;
+      display: grid;
+      grid-template-columns: repeat(7, 1fr);
+      align-items: end;
+      gap: 10px;
+      padding-top: 12px;
+    }
+
+    .col {
+      display: grid;
+      gap: 8px;
+      justify-items: center;
+      color: #65726c;
+      font-size: .76rem;
+      font-weight: 750;
+    }
+
+    .col i {
+      width: 100%;
+      min-height: 18px;
+      height: var(--h);
+      border-radius: 6px 6px 2px 2px;
+      background: linear-gradient(180deg, var(--lime), var(--mint));
+    }
+
+    .history {
+      display: grid;
+      gap: 10px;
+      max-height: 276px;
+      overflow: auto;
+      padding-right: 2px;
+    }
+
+    .history-item {
+      display: flex;
+      justify-content: space-between;
+      gap: 10px;
+      align-items: center;
+      padding: 12px;
+      box-shadow: none;
+    }
+
+    .history-item b { font-size: .95rem; }
+    .history-item small { color: #65726c; display: block; margin-top: 2px; }
+    .pill { color: var(--mint-dark); font-weight: 950; }
+
+    .hidden { display: none; }
+
+    @media (max-width: 920px) {
+      .baseline-wrap {
+        width: min(100% - 44px, 720px);
+        margin: 0 auto;
+      }
+
+      header, .layout, .hero, .details {
+        grid-template-columns: 1fr;
+      }
+
+      header { align-items: stretch; }
+      .tabs { width: 100%; }
+      .metrics { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+    }
+
+    @media (max-width: 640px) {
+      .baseline-screen { padding-top: 26px; }
+      .baseline-wrap { width: min(100% - 26px, 680px); }
+      .step-label { letter-spacing: 4px; }
+      .baseline-title { font-size: clamp(3rem, 14vw, 4rem); }
+      .baseline-copy { max-width: 345px; margin-bottom: 34px; }
+      .baseline-grid, .goal-grid { grid-template-columns: 1fr; }
+      .scan-button { width: 100%; }
+    }
+
+    @media (max-width: 560px) {
+      .app { width: min(100% - 22px, 1180px); padding-top: 16px; }
+      .panel { padding: 14px; }
+      .grid { grid-template-columns: 1fr; }
+      .metrics { grid-template-columns: 1fr; }
+      .score { min-height: 230px; }
+      .figure { min-height: 210px; }
+      .body-fat { font-size: 4.2rem; }
+      .tabs { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+  <section class="screen baseline-screen" id="baselineScreen">
+    <div class="baseline-wrap">
+      <p class="step-label">// Step 01 - Athlete Profile</p>
+      <h1 class="baseline-title">Set Your Baseline</h1>
+      <p class="baseline-copy">We use this to personalize your scorecard, coach report, and goal predictions.</p>
+
+      <form class="baseline-form" id="baselineForm" novalidate>
+        <div class="baseline-grid">
+          <label class="baseline-field" data-field="baselineName">Name
+            <input id="baselineName" type="text" value="Umang Awasthi" autocomplete="name" />
+            <span class="field-error"></span>
+          </label>
+          <label class="baseline-field" data-field="baselineAge">Age
+            <input id="baselineAge" type="number" min="14" max="90" inputmode="numeric" />
+            <span class="field-error"></span>
+          </label>
+          <label class="baseline-field" data-field="baselineGender">Gender
+            <select id="baselineGender">
+              <option value="male">Male</option>
+              <option value="female">Female</option>
+            </select>
+            <span class="field-error"></span>
+          </label>
+          <label class="baseline-field" data-field="baselineHeight">Height (cm)
+            <input id="baselineHeight" type="number" min="90" max="230" inputmode="decimal" />
+            <span class="field-error"></span>
+          </label>
+          <label class="baseline-field" data-field="baselineWeight">Current Weight (kg)
+            <input id="baselineWeight" type="number" min="30" max="260" inputmode="decimal" />
+            <span class="field-error"></span>
+          </label>
+          <label class="baseline-field" data-field="baselineTarget">Target Weight (kg) - Optional
+            <input id="baselineTarget" type="number" min="30" max="260" inputmode="decimal" />
+            <span class="field-error"></span>
+          </label>
+        </div>
+
+        <p class="goal-label">Fitness Goal</p>
+        <div class="goal-grid" id="goalCards" aria-label="Fitness goal">
+          <button class="goal-card selected" type="button" data-goal="fat-loss" data-body-fat="14">
+            <strong>Fat Loss</strong>
+            <span>Drop body fat while preserving muscle.</span>
+          </button>
+          <button class="goal-card" type="button" data-goal="muscle-gain" data-body-fat="16">
+            <strong>Muscle Gain</strong>
+            <span>Add lean mass progressively.</span>
+          </button>
+          <button class="goal-card" type="button" data-goal="recomposition" data-body-fat="15">
+            <strong>Recomposition</strong>
+            <span>Lose fat and build muscle together.</span>
+          </button>
+          <button class="goal-card" type="button" data-goal="general-fitness" data-body-fat="18">
+            <strong>General Fitness</strong>
+            <span>Stay healthy and balanced.</span>
+          </button>
+        </div>
+
+        <div class="baseline-actions">
+          <button class="scan-button" type="submit">
+            Continue to Scan
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <path d="M5 12h14" />
+              <path d="m13 5 7 7-7 7" />
+            </svg>
+          </button>
+          <div class="baseline-note" id="baselineNote" role="status"></div>
+        </div>
+      </form>
+    </div>
+  </section>
+
+  <main class="app" id="metricsApp">
+    <header>
+      <div class="brand">
+        <div class="mark" aria-hidden="true">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M6 20V10" />
+            <path d="M18 20V10" />
+            <path d="M4 10h16" />
+            <path d="M8 6h8" />
+            <path d="M10 3h4" />
+          </svg>
+        </div>
+        <div>
+          <h1>Physique Metrics</h1>
+          <p class="subtitle" id="athleteSubtitle">Track body composition, shape changes, and training progress.</p>
+        </div>
+      </div>
+      <nav class="tabs" aria-label="Views">
+        <button class="tab" data-view="baseline">Baseline</button>
+        <button class="tab active" data-view="dashboard">Scorecard</button>
+        <button class="tab" data-view="measure">Adjust</button>
+        <button class="tab" data-view="history">History</button>
+      </nav>
+    </header>
+
+    <section class="layout">
+      <aside class="panel" id="measure">
+        <h2>Measurement Adjustments</h2>
+        <div class="unit-row" aria-label="Unit system">
+          <button class="seg active" data-unit="metric">Metric</button>
+          <button class="seg" data-unit="imperial">Imperial</button>
+        </div>
+        <div class="grid">
+          <label class="dashboard-label">Sex
+            <select id="sex">
+              <option value="male">Male</option>
+              <option value="female">Female</option>
+            </select>
+          </label>
+          <label class="dashboard-label">Age
+            <input id="age" type="number" min="14" max="90" value="29" />
+          </label>
+          <label class="dashboard-label">Height <span class="unitLabel">(cm)</span>
+            <input id="height" type="number" min="90" max="230" value="178" />
+          </label>
+          <label class="dashboard-label">Weight <span class="weightLabel">(kg)</span>
+            <input id="weight" type="number" min="30" max="260" value="82" />
+          </label>
+          <label class="dashboard-label">Neck <span class="unitLabel">(cm)</span>
+            <input id="neck" type="number" min="20" max="80" value="39" />
+          </label>
+          <label class="dashboard-label">Waist <span class="unitLabel">(cm)</span>
+            <input id="waist" type="number" min="40" max="180" value="88" />
+          </label>
+          <label class="dashboard-label hipWrap hidden">Hips <span class="unitLabel">(cm)</span>
+            <input id="hips" type="number" min="50" max="190" value="96" />
+          </label>
+          <label class="dashboard-label">Goal Body Fat %
+            <input id="goal" type="number" min="3" max="45" value="14" />
+          </label>
+        </div>
+        <div class="actions">
+          <button class="primary" id="saveBtn">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2Z" />
+              <path d="M17 21v-8H7v8" />
+              <path d="M7 3v5h8" />
+            </svg>
+            Save check-in
+          </button>
+          <button class="ghost" id="resetBtn" title="Reset sample data" aria-label="Reset sample data">
+            <svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.35" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <path d="M3 12a9 9 0 1 0 3-6.7" />
+              <path d="M3 3v6h6" />
+            </svg>
+          </button>
+        </div>
+      </aside>
+
+      <section id="dashboard">
+        <div class="hero">
+          <article class="score">
+            <div class="kicker">Estimated body fat</div>
+            <div class="body-fat"><span id="bf">17.6</span>%</div>
+            <p id="summary">Lean, athletic range. Keep measurements consistent and compare trend lines rather than single days.</p>
+          </article>
+          <article class="figure" aria-label="Physique visualization">
+            <div class="body-visual">
+              <svg viewBox="0 0 160 260" role="img" aria-label="Human body shape">
+                <defs>
+                  <linearGradient id="skin" x1="0" x2="1" y1="0" y2="1">
+                    <stop stop-color="#d7f36b" />
+                    <stop offset="1" stop-color="#2f8f6c" />
+                  </linearGradient>
+                </defs>
+                <circle cx="80" cy="27" r="23" fill="#17201c" />
+                <path id="torso" d="M52 61 C64 51 96 51 108 61 L125 132 C129 150 115 170 101 160 L96 240 C95 251 65 251 64 240 L59 160 C45 170 31 150 35 132 Z" fill="url(#skin)" />
+                <path d="M50 73 C30 86 22 110 18 142" stroke="#17201c" stroke-width="16" stroke-linecap="round" fill="none" />
+                <path d="M110 73 C130 86 138 110 142 142" stroke="#17201c" stroke-width="16" stroke-linecap="round" fill="none" />
+                <path d="M66 245 L61 258" stroke="#17201c" stroke-width="17" stroke-linecap="round" />
+                <path d="M94 245 L99 258" stroke="#17201c" stroke-width="17" stroke-linecap="round" />
+              </svg>
+            </div>
+          </article>
+        </div>
+
+        <div class="metrics">
+          <article class="metric">
+            <span>BMI</span>
+            <strong id="bmi">25.9</strong>
+            <div class="bar"><i id="bmiBar"></i></div>
+          </article>
+          <article class="metric">
+            <span>Lean Mass</span>
+            <strong id="lean">67.6 kg</strong>
+            <div class="bar"><i id="leanBar"></i></div>
+          </article>
+          <article class="metric">
+            <span>Fat Mass</span>
+            <strong id="fat">14.4 kg</strong>
+            <div class="bar"><i id="fatBar"></i></div>
+          </article>
+          <article class="metric">
+            <span>To Goal</span>
+            <strong id="goalOut">-4.2 kg</strong>
+            <div class="bar"><i id="goalBar"></i></div>
+          </article>
+        </div>
+
+        <div class="details">
+          <article class="panel">
+            <h2>Progress Trend</h2>
+            <div class="chart" id="chart" aria-label="Recent body fat trend"></div>
+          </article>
+          <article class="panel">
+            <h2>Recent Check-Ins</h2>
+            <div class="history" id="history"></div>
+          </article>
+        </div>
+      </section>
+    </section>
+  </main>
+
+  <script>
+    const $ = (id) => document.getElementById(id);
+    const fields = ["sex", "age", "height", "weight", "neck", "waist", "hips", "goal"];
+    const baselineFields = ["baselineName", "baselineAge", "baselineGender", "baselineHeight", "baselineWeight", "baselineTarget"];
+    let unit = "metric";
+    let selectedGoal = "fat-loss";
+    const sample = [
+      { date: "May 02", bf: 20.1, weight: 84.4 },
+      { date: "May 09", bf: 19.4, weight: 83.7 },
+      { date: "May 16", bf: 18.9, weight: 83.1 },
+      { date: "May 23", bf: 18.1, weight: 82.5 },
+      { date: "May 30", bf: 17.9, weight: 82.2 },
+      { date: "Jun 06", bf: 17.7, weight: 82.0 }
+    ];
+    let entries = JSON.parse(localStorage.getItem("physiqueEntries") || "null") || sample;
+
+    function toMetric(value, kind) {
+      if (unit === "metric") return value;
+      return kind === "weight" ? value * 0.45359237 : value * 2.54;
+    }
+
+    function fromMetric(value, kind) {
+      if (unit === "metric") return value;
+      return kind === "weight" ? value / 0.45359237 : value / 2.54;
+    }
+
+    function round(value, places = 1) {
+      return Number.isFinite(value) ? value.toFixed(places) : "0.0";
+    }
+
+    function getGoalCard() {
+      return document.querySelector(".goal-card.selected");
+    }
+
+    function estimateMeasurements(sex, height, weight) {
+      const bmi = weight / Math.pow(height / 100, 2);
+      const neck = sex === "male" ? height * .22 : height * .19;
+      const waist = sex === "male"
+        ? height * (.43 + Math.max(0, bmi - 22) * .008)
+        : height * (.39 + Math.max(0, bmi - 21) * .008);
+      const hips = sex === "female" ? height * (.55 + Math.max(0, bmi - 21) * .006) : height * .52;
+      return {
+        neck: Math.round(neck),
+        waist: Math.round(waist),
+        hips: Math.round(hips)
+      };
+    }
+
+    function clearBaselineErrors() {
+      document.querySelectorAll(".baseline-field").forEach(field => {
+        field.classList.remove("invalid");
+        field.querySelector(".field-error").textContent = "";
+      });
+      $("baselineNote").textContent = "";
+    }
+
+    function setFieldError(id, message) {
+      const field = document.querySelector(`[data-field="${id}"]`);
+      field.classList.add("invalid");
+      field.querySelector(".field-error").textContent = message;
+    }
+
+    function validateBaseline() {
+      clearBaselineErrors();
+      const required = [
+        ["baselineName", "Enter your name."],
+        ["baselineAge", "Enter your age."],
+        ["baselineGender", "Choose a gender."],
+        ["baselineHeight", "Enter height."],
+        ["baselineWeight", "Enter weight."]
+      ];
+      let valid = true;
+
+      required.forEach(([id, message]) => {
+        if (!$(id).value.trim()) {
+          setFieldError(id, message);
+          valid = false;
+        }
+      });
+
+      const age = parseFloat($("baselineAge").value);
+      const height = parseFloat($("baselineHeight").value);
+      const weight = parseFloat($("baselineWeight").value);
+      const target = parseFloat($("baselineTarget").value);
+
+      if ($("baselineAge").value && (age < 14 || age > 90)) {
+        setFieldError("baselineAge", "Use 14-90.");
+        valid = false;
+      }
+      if ($("baselineHeight").value && (height < 90 || height > 230)) {
+        setFieldError("baselineHeight", "Use 90-230 cm.");
+        valid = false;
+      }
+      if ($("baselineWeight").value && (weight < 30 || weight > 260)) {
+        setFieldError("baselineWeight", "Use 30-260 kg.");
+        valid = false;
+      }
+      if ($("baselineTarget").value && (target < 30 || target > 260)) {
+        setFieldError("baselineTarget", "Use 30-260 kg.");
+        valid = false;
+      }
+      if (!getGoalCard()) {
+        $("baselineNote").textContent = "Choose a fitness goal.";
+        valid = false;
+      }
+
+      if (!valid && !$("baselineNote").textContent) {
+        $("baselineNote").textContent = "Complete the highlighted fields to continue.";
+      }
+      return valid;
+    }
+
+    function baselineDataFromForm(completed = false) {
+      const goalCard = getGoalCard();
+      return {
+        name: $("baselineName").value.trim(),
+        age: $("baselineAge").value.trim(),
+        gender: $("baselineGender").value,
+        height: $("baselineHeight").value.trim(),
+        weight: $("baselineWeight").value.trim(),
+        target: $("baselineTarget").value.trim(),
+        fitnessGoal: goalCard?.dataset.goal || "fat-loss",
+        goalBodyFat: goalCard?.dataset.bodyFat || "14",
+        completed
+      };
+    }
+
+    function saveBaseline(completed = false) {
+      const data = baselineDataFromForm(completed);
+      localStorage.setItem("physiqueBaseline", JSON.stringify(data));
+      return data;
+    }
+
+    function populateBaseline(data) {
+      if (!data) return;
+      $("baselineName").value = data.name || "Umang Awasthi";
+      $("baselineAge").value = data.age || "";
+      $("baselineGender").value = data.gender || "male";
+      $("baselineHeight").value = data.height || "";
+      $("baselineWeight").value = data.weight || "";
+      $("baselineTarget").value = data.target || "";
+      selectedGoal = data.fitnessGoal || "fat-loss";
+      document.querySelectorAll(".goal-card").forEach(card => {
+        card.classList.toggle("selected", card.dataset.goal === selectedGoal);
+      });
+    }
+
+    function applyBaselineToDashboard(data) {
+      const height = parseFloat(data.height);
+      const weight = parseFloat(data.weight);
+      const sex = data.gender || "male";
+      const estimates = estimateMeasurements(sex, height, weight);
+      unit = "metric";
+      $("sex").value = sex;
+      $("age").value = data.age || 29;
+      $("height").value = round(height);
+      $("weight").value = round(weight);
+      $("neck").value = estimates.neck;
+      $("waist").value = estimates.waist;
+      $("hips").value = estimates.hips;
+      $("goal").value = data.goalBodyFat || 14;
+      document.querySelector(".hipWrap").classList.toggle("hidden", sex !== "female");
+      document.querySelectorAll(".seg").forEach(btn => btn.classList.toggle("active", btn.dataset.unit === unit));
+      document.querySelectorAll(".unitLabel").forEach(label => label.textContent = "(cm)");
+      document.querySelector(".weightLabel").textContent = "(kg)";
+      $("athleteSubtitle").textContent = data.name
+        ? `${data.name} - ${labelForGoal(data.fitnessGoal)} scorecard`
+        : "Track body composition, shape changes, and training progress.";
+      update();
+    }
+
+    function labelForGoal(goal) {
+      const labels = {
+        "fat-loss": "Fat Loss",
+        "muscle-gain": "Muscle Gain",
+        "recomposition": "Recomposition",
+        "general-fitness": "General Fitness"
+      };
+      return labels[goal] || "Athlete";
+    }
+
+    function showDashboard() {
+      document.body.classList.add("dashboard-active");
+      window.scrollTo({ top: 0, behavior: "smooth" });
+    }
+
+    function showBaseline() {
+      document.body.classList.remove("dashboard-active");
+      window.scrollTo({ top: 0, behavior: "smooth" });
+    }
+
+    function calculate() {
+      const sex = $("sex").value;
+      const height = toMetric(parseFloat($("height").value), "length");
+      const weight = toMetric(parseFloat($("weight").value), "weight");
+      const neck = toMetric(parseFloat($("neck").value), "length");
+      const waist = toMetric(parseFloat($("waist").value), "length");
+      const hips = toMetric(parseFloat($("hips").value), "length");
+      const goal = parseFloat($("goal").value);
+      let bf;
+
+      if (sex === "male") {
+        bf = 495 / (1.0324 - 0.19077 * Math.log10(waist - neck) + 0.15456 * Math.log10(height)) - 450;
+      } else {
+        bf = 495 / (1.29579 - 0.35004 * Math.log10(waist + hips - neck) + 0.22100 * Math.log10(height)) - 450;
+      }
+
+      bf = Math.min(60, Math.max(3, bf));
+      const bmi = weight / Math.pow(height / 100, 2);
+      const fatMass = weight * bf / 100;
+      const leanMass = weight - fatMass;
+      const targetWeight = leanMass / (1 - goal / 100);
+      const toGoal = targetWeight - weight;
+      return { bf, bmi, fatMass, leanMass, weight, toGoal, goal };
+    }
+
+    function update() {
+      const result = calculate();
+      const weightUnit = unit === "metric" ? "kg" : "lb";
+      $("bf").textContent = round(result.bf);
+      $("bmi").textContent = round(result.bmi);
+      $("lean").textContent = `${round(fromMetric(result.leanMass, "weight"))} ${weightUnit}`;
+      $("fat").textContent = `${round(fromMetric(result.fatMass, "weight"))} ${weightUnit}`;
+      $("goalOut").textContent = `${result.toGoal > 0 ? "+" : ""}${round(fromMetric(result.toGoal, "weight"))} ${weightUnit}`;
+      $("summary").textContent = summaryFor(result.bf, result.goal);
+      $("bmiBar").style.setProperty("--value", `${Math.min(100, result.bmi * 2.7)}%`);
+      $("leanBar").style.setProperty("--value", `${Math.min(100, 100 - result.bf)}%`);
+      $("fatBar").style.setProperty("--value", `${Math.min(100, result.bf * 2.2)}%`);
+      $("goalBar").style.setProperty("--value", `${Math.min(100, 100 - Math.abs(result.toGoal) * 9)}%`);
+      renderChart(result.bf);
+      renderHistory();
+      updateFigure(result.bf);
+    }
+
+    function summaryFor(bf, goal) {
+      const baseline = JSON.parse(localStorage.getItem("physiqueBaseline") || "null");
+      const targetNote = baseline?.target ? ` Target weight: ${baseline.target} kg.` : "";
+      if (bf <= goal + 1) return `You are right around your goal. Maintenance habits and repeatable check-ins matter most now.${targetNote}`;
+      if (bf < 15) return `Very lean range. Small changes will show quickly, so watch recovery and training performance.${targetNote}`;
+      if (bf < 22) return `Athletic range. Keep measurements consistent and compare trend lines rather than single days.${targetNote}`;
+      return `Good baseline captured. A steady trend over the next few check-ins will make the next move obvious.${targetNote}`;
+    }
+
+    function renderChart(current) {
+      const values = [...entries.slice(-6).map(e => e.bf), current];
+      const max = Math.max(...values, 30);
+      const min = Math.min(...values, 6);
+      $("chart").innerHTML = values.map((value, index) => {
+        const pct = 22 + ((value - min) / Math.max(1, max - min)) * 76;
+        const label = index === values.length - 1 ? "Now" : entries.slice(-6)[index]?.date.split(" ")[0] || "";
+        return `<div class="col"><i style="--h:${pct}%"></i><span>${label}</span></div>`;
+      }).join("");
+    }
+
+    function renderHistory() {
+      $("history").innerHTML = entries.slice(-6).reverse().map(entry => `
+        <div class="history-item">
+          <div><b>${entry.date}</b><small>${round(entry.weight)} ${unit === "metric" ? "kg" : "lb"}</small></div>
+          <div class="pill">${round(entry.bf)}%</div>
+        </div>
+      `).join("");
+    }
+
+    function updateFigure(bf) {
+      const torso = document.getElementById("torso");
+      const width = Math.min(16, Math.max(-7, (bf - 16) * .9));
+      torso.setAttribute("d", `M${52 - width} 61 C64 51 96 51 ${108 + width} 61 L${125 + width} 132 C${129 + width} 150 ${115 + width * .4} 170 101 160 L96 240 C95 251 65 251 64 240 L59 160 C45 170 ${31 - width * .4} 150 ${35 - width} 132 Z`);
+    }
+
+    function save() {
+      const result = calculate();
+      const today = new Date().toLocaleDateString("en-US", { month: "short", day: "2-digit" });
+      entries.push({ date: today, bf: result.bf, weight: fromMetric(result.weight, "weight") });
+      entries = entries.slice(-18);
+      localStorage.setItem("physiqueEntries", JSON.stringify(entries));
+      update();
+    }
+
+    function setUnit(nextUnit) {
+      if (unit === nextUnit) return;
+      const oldUnit = unit;
+      unit = nextUnit;
+      ["height", "neck", "waist", "hips"].forEach(id => {
+        const metric = oldUnit === "metric" ? parseFloat($(id).value) : parseFloat($(id).value) * 2.54;
+        $(id).value = round(fromMetric(metric, "length"));
+      });
+      const metricWeight = oldUnit === "metric" ? parseFloat($("weight").value) : parseFloat($("weight").value) * 0.45359237;
+      $("weight").value = round(fromMetric(metricWeight, "weight"));
+      document.querySelectorAll(".seg").forEach(btn => btn.classList.toggle("active", btn.dataset.unit === unit));
+      document.querySelectorAll(".unitLabel").forEach(label => label.textContent = unit === "metric" ? "(cm)" : "(in)");
+      document.querySelector(".weightLabel").textContent = unit === "metric" ? "(kg)" : "(lb)";
+      update();
+    }
+
+    document.querySelectorAll(".goal-card").forEach(card => {
+      card.addEventListener("click", () => {
+        selectedGoal = card.dataset.goal;
+        document.querySelectorAll(".goal-card").forEach(item => item.classList.remove("selected"));
+        card.classList.add("selected");
+        clearBaselineErrors();
+      });
+    });
+
+    baselineFields.forEach(id => {
+      $(id).addEventListener("input", () => {
+        saveBaseline(false);
+        clearBaselineErrors();
+      });
+      $(id).addEventListener("change", () => saveBaseline(false));
+    });
+
+    $("baselineForm").addEventListener("submit", (event) => {
+      event.preventDefault();
+      if (!validateBaseline()) return;
+      const baseline = saveBaseline(true);
+      applyBaselineToDashboard(baseline);
+      showDashboard();
+    });
+
+    fields.forEach(id => $(id).addEventListener("input", update));
+    $("sex").addEventListener("change", () => {
+      document.querySelector(".hipWrap").classList.toggle("hidden", $("sex").value !== "female");
+      update();
+    });
+    $("saveBtn").addEventListener("click", save);
+    $("resetBtn").addEventListener("click", () => {
+      entries = sample;
+      localStorage.removeItem("physiqueEntries");
+      update();
+    });
+    document.querySelectorAll(".seg").forEach(btn => btn.addEventListener("click", () => setUnit(btn.dataset.unit)));
+    document.querySelectorAll(".tab").forEach(btn => {
+      btn.addEventListener("click", () => {
+        document.querySelectorAll(".tab").forEach(tab => tab.classList.remove("active"));
+        if (btn.dataset.view !== "baseline") btn.classList.add("active");
+        if (btn.dataset.view === "baseline") showBaseline();
+        if (btn.dataset.view === "measure") $("measure").scrollIntoView({ behavior: "smooth", block: "start" });
+        if (btn.dataset.view === "history") $("history").scrollIntoView({ behavior: "smooth", block: "center" });
+        if (btn.dataset.view === "dashboard") $("dashboard").scrollIntoView({ behavior: "smooth", block: "start" });
+      });
+    });
+
+    const storedBaseline = JSON.parse(localStorage.getItem("physiqueBaseline") || "null");
+    populateBaseline(storedBaseline);
+    if (storedBaseline?.completed) {
+      applyBaselineToDashboard(storedBaseline);
+      showDashboard();
+    } else {
+      update();
+    }
+  </script>
+</body>
+</html>
