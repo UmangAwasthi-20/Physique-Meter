@@ -2,7 +2,7 @@ from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
 from .config import settings
-from .routers import analysis, auth, progress, reports
+from .routers import analysis, auth, commerce, progress, reports
 
 app = FastAPI(
     title="Physique Meter AI API",
@@ -20,6 +20,7 @@ app.add_middleware(
 
 app.include_router(auth.router)
 app.include_router(analysis.router)
+app.include_router(commerce.router)
 app.include_router(progress.router)
 app.include_router(reports.router)
 

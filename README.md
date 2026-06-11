@@ -22,6 +22,12 @@ Repository: https://github.com/UmangAwasthi-20/Physique-Meter
 - PDF report export
 - Transformation comparison view
 - Goal tracker
+- PDF product storefront
+- PhonePe QR checkout flow
+- PostgreSQL order and lead storage
+- Google Sheets lead sync
+- Admin panel for PDF uploads, prices, orders, and customer exports
+- Customer dashboard for purchased PDFs and order history
 
 Example AI report:
 
@@ -35,6 +41,9 @@ Example AI report:
 - Computer vision: OpenCV, MediaPipe
 - AI: Gemini API
 - Export: ReportLab PDF
+- Payments: PhonePe QR / UPI scanner flow
+- Lead collection: Google Sheets API
+- PDF storage: Google Drive, Cloudinary, or AWS S3
 - Current live static demo: GitHub Pages
 
 ## Screenshots
@@ -53,11 +62,15 @@ flowchart LR
   A --> V["OpenCV + MediaPipe"]
   A --> G["Gemini API"]
   A --> R["PDF Export"]
+  A --> S["Google Sheets"]
+  A --> D["PDF Storage"]
 ```
 
 More detail: [docs/architecture.md](docs/architecture.md)
 
 Demo video script: [docs/demo-video-script.md](docs/demo-video-script.md)
+
+PDF commerce flow: [docs/commerce-flow.md](docs/commerce-flow.md)
 
 ## Project Structure
 
@@ -65,6 +78,10 @@ Demo video script: [docs/demo-video-script.md](docs/demo-video-script.md)
 - `frontend/index.html` - exported static frontend copy
 - `apps/web` - portfolio Next.js frontend
 - `apps/api` - FastAPI backend with AI, CV, progress, auth, and PDF routes
+- `apps/web/app/products` - PDF product storefront
+- `apps/web/app/checkout/[slug]` - PhonePe QR checkout flow
+- `apps/web/app/admin` - admin panel UI
+- `apps/web/app/customer` - customer dashboard UI
 - `database/schema.sql` - PostgreSQL schema
 - `shared/physique.js` - shared physique metrics calculator
 - `docs` - architecture and demo materials
@@ -124,6 +141,29 @@ Copy `.env.example` to `.env` and add your real `GEMINI_API_KEY`.
 - `POST /analysis/report`
 - `GET /progress/history`
 - `GET /reports/latest.pdf`
+- `GET /commerce/products`
+- `POST /commerce/orders`
+- `POST /commerce/orders/confirm-payment`
+- `POST /commerce/admin/products`
+- `GET /commerce/admin/orders`
+
+## PDF Products
+
+| Product | Price |
+| --- | ---: |
+| Weight Gain Shake PDF | ₹49 |
+| Vegetarian Muscle Gain Guide | ₹99 |
+
+Checkout flow:
+
+1. Customer opens product page.
+2. Customer clicks Buy Now.
+3. Customer enters name, email, and optional phone.
+4. Backend stores pending order and lead.
+5. Customer scans PhonePe admin QR.
+6. Admin confirms payment.
+7. Download access unlocks.
+8. Lead is synced to Google Sheets.
 
 ## Deployment Notes
 

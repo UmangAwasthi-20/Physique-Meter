@@ -37,3 +37,24 @@ class ReportRequest(BaseModel):
     shoulder_waist_ratio: float | None = None
     previous_shoulder_waist_ratio: float | None = None
     notes: str | None = None
+
+
+class ProductPayload(BaseModel):
+    slug: str
+    name: str
+    description: str | None = None
+    price_inr: int
+    pdf_url: str | None = None
+    active: bool = True
+
+
+class OrderCreateRequest(BaseModel):
+    product_slug: str
+    name: str
+    email: EmailStr
+    phone: str | None = None
+
+
+class PaymentConfirmRequest(BaseModel):
+    order_id: str
+    admin_note: str | None = None

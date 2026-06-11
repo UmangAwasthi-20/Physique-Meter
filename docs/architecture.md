@@ -8,6 +8,8 @@ flowchart LR
   A --> V["OpenCV + MediaPipe"]
   A --> G["Gemini API"]
   A --> R["PDF Export Service"]
+  A --> S["Google Sheets Leads"]
+  A --> D["PDF Storage: Drive / Cloudinary / S3"]
   V --> A
   G --> A
   R --> W

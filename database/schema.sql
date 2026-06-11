@@ -42,3 +42,46 @@ CREATE TABLE IF NOT EXISTS ai_reports (
   weekly_summary TEXT,
   created_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
 );
+
+CREATE TABLE IF NOT EXISTS products (
+  id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+  slug TEXT UNIQUE NOT NULL,
+  name TEXT NOT NULL,
+  description TEXT,
+  price_inr INTEGER NOT NULL,
+  pdf_url TEXT,
+  active BOOLEAN NOT NULL DEFAULT TRUE,
+  created_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
+);
+
+CREATE TABLE IF NOT EXISTS orders (
+  id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+  product_id UUID NOT NULL REFERENCES products(id) ON DELETE RESTRICT,
+  user_id UUID REFERENCES users(id) ON DELETE SET NULL,
+  customer_name TEXT NOT NULL,
+  customer_email TEXT NOT NULL,
+  customer_phone TEXT,
+  amount_inr INTEGER NOT NULL,
+  payment_method TEXT NOT NULL DEFAULT 'phonepe_qr',
+  payment_status TEXT NOT NULL DEFAULT 'pending',
+  download_unlocked BOOLEAN NOT NULL DEFAULT FALSE,
+  created_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
+  paid_at TIMESTAMPTZ
+);
+
+CREATE TABLE IF NOT EXISTS leads (
+  id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+  order_id UUID REFERENCES orders(id) ON DELETE SET NULL,
+  name TEXT NOT NULL,
+  email TEXT NOT NULL,
+  phone TEXT,
+  purchase TEXT NOT NULL,
+  purchased_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
+  google_sheet_synced BOOLEAN NOT NULL DEFAULT FALSE
+);
+
+INSERT INTO products (slug, name, description, price_inr, pdf_url)
+VALUES
+  ('weight-gain-shake-pdf', 'Weight Gain Shake PDF', 'High-calorie shake recipes for clean weight gain.', 49, 'https://drive.google.com/example-weight-gain-shake.pdf'),
+  ('vegetarian-muscle-gain-guide', 'Vegetarian Muscle Gain Guide', 'Indian vegetarian muscle-gain nutrition guide.', 99, 'https://drive.google.com/example-vegetarian-guide.pdf')
+ON CONFLICT (slug) DO NOTHING;

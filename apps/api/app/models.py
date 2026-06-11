@@ -1,5 +1,5 @@
 import uuid
-from sqlalchemy import Column, DateTime, ForeignKey, Integer, Numeric, String, Text, func
+from sqlalchemy import Boolean, Column, DateTime, ForeignKey, Integer, Numeric, String, Text, func
 from sqlalchemy.dialects.postgresql import JSONB, UUID
 from sqlalchemy.orm import relationship
 
@@ -59,3 +59,46 @@ class AIReport(Base):
     focus_areas = Column(JSONB, nullable=False, default=list)
     weekly_summary = Column(Text)
     created_at = Column(DateTime(timezone=True), server_default=func.now(), nullable=False)
+
+
+class Product(Base):
+    __tablename__ = "products"
+
+    id = Column(UUID(as_uuid=True), primary_key=True, default=uuid.uuid4)
+    slug = Column(String, unique=True, nullable=False, index=True)
+    name = Column(String, nullable=False)
+    description = Column(Text)
+    price_inr = Column(Integer, nullable=False)
+    pdf_url = Column(Text)
+    active = Column(Boolean, nullable=False, default=True)
+    created_at = Column(DateTime(timezone=True), server_default=func.now(), nullable=False)
+
+
+class Order(Base):
+    __tablename__ = "orders"
+
+    id = Column(UUID(as_uuid=True), primary_key=True, default=uuid.uuid4)
+    product_id = Column(UUID(as_uuid=True), ForeignKey("products.id", ondelete="RESTRICT"), nullable=False)
+    user_id = Column(UUID(as_uuid=True), ForeignKey("users.id", ondelete="SET NULL"))
+    customer_name = Column(String, nullable=False)
+    customer_email = Column(String, nullable=False)
+    customer_phone = Column(String)
+    amount_inr = Column(Integer, nullable=False)
+    payment_method = Column(String, nullable=False, default="phonepe_qr")
+    payment_status = Column(String, nullable=False, default="pending")
+    download_unlocked = Column(Boolean, nullable=False, default=False)
+    created_at = Column(DateTime(timezone=True), server_default=func.now(), nullable=False)
+    paid_at = Column(DateTime(timezone=True))
+
+
+class Lead(Base):
+    __tablename__ = "leads"
+
+    id = Column(UUID(as_uuid=True), primary_key=True, default=uuid.uuid4)
+    order_id = Column(UUID(as_uuid=True), ForeignKey("orders.id", ondelete="SET NULL"))
+    name = Column(String, nullable=False)
+    email = Column(String, nullable=False)
+    phone = Column(String)
+    purchase = Column(String, nullable=False)
+    purchased_at = Column(DateTime(timezone=True), server_default=func.now(), nullable=False)
+    google_sheet_synced = Column(Boolean, nullable=False, default=False)

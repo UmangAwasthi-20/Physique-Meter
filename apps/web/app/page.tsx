@@ -13,6 +13,7 @@ export default function HomePage() {
       <div style={{ display: "flex", gap: 12, flexWrap: "wrap", marginTop: 26 }}>
         <Link className="button" href="/signup">Create account <ArrowRight size={18} /></Link>
         <Link className="button secondary" href="/login">Login</Link>
+        <Link className="button secondary" href="/products">View PDF Products</Link>
       </div>
 
       <section className="grid" style={{ marginTop: 34 }}>
