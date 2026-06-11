@@ -3,26 +3,25 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Physique Metrics</title>
+  <title>Physique Meter AI</title>
   <style>
     :root {
       color-scheme: dark;
-      --black: #070707;
-      --black-soft: #0d0d0d;
-      --white: #f7f7f5;
-      --text: #d7dce7;
-      --muted: #8d95a3;
-      --line-dark: #252525;
-      --blue: #1184ff;
-      --blue-dark: #0a67d2;
-      --ink: #17201c;
-      --line: #dce4df;
-      --panel: #ffffff;
-      --wash: #f4f7f2;
-      --mint: #2f8f6c;
-      --mint-dark: #17644c;
-      --lime: #d7f36b;
-      --shadow: 0 18px 50px rgba(25, 42, 35, .11);
+      --bg: #050608;
+      --panel: rgba(18, 22, 30, .72);
+      --panel-strong: rgba(20, 26, 36, .9);
+      --line: rgba(255,255,255,.1);
+      --line-strong: rgba(255,255,255,.18);
+      --text: #f7f8fb;
+      --muted: #9aa6b8;
+      --soft: #d7deea;
+      --blue: #35a7ff;
+      --violet: #8e7cff;
+      --green: #61e49d;
+      --amber: #ffca5c;
+      --red: #ff6b7a;
+      --shadow: 0 24px 80px rgba(0,0,0,.42);
+      --radius: 8px;
     }
 
     * { box-sizing: border-box; }
@@ -32,236 +31,50 @@
     body {
       margin: 0;
       min-height: 100vh;
+      overflow-x: hidden;
       font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
       color: var(--text);
-      background: var(--black);
+      background:
+        radial-gradient(circle at 18% 12%, rgba(53,167,255,.24), transparent 28%),
+        radial-gradient(circle at 82% 8%, rgba(142,124,255,.24), transparent 24%),
+        linear-gradient(180deg, #07090d 0%, #050608 46%, #080a0e 100%);
+    }
+
+    body::before {
+      content: "";
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      background-image:
+        linear-gradient(rgba(255,255,255,.035) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(255,255,255,.035) 1px, transparent 1px);
+      background-size: 64px 64px;
+      mask-image: linear-gradient(to bottom, rgba(0,0,0,.7), transparent 78%);
     }
 
     button, input, select {
       font: inherit;
     }
 
-    button { cursor: pointer; }
-
-    .screen { min-height: 100vh; }
-
-    .baseline-screen {
-      display: grid;
-      align-items: start;
-      background: var(--black);
-      padding: 22px 0 30px;
-    }
-
-    .baseline-wrap {
-      width: min(100% - 112px, 680px);
-      margin-left: 56px;
-      padding-bottom: 24px;
-    }
-
-    .step-label {
-      margin: 0 0 14px;
-      color: var(--blue);
-      font-size: 11px;
-      font-weight: 850;
-      letter-spacing: 7px;
-      text-transform: uppercase;
-    }
-
-    .baseline-title {
-      margin: 0 0 8px;
-      color: var(--white);
-      font-family: Impact, Haettenschweiler, "Arial Narrow Bold", "Roboto Condensed", Arial, sans-serif;
-      font-size: clamp(3rem, 7vw, 4.95rem);
-      line-height: .86;
-      letter-spacing: 0;
-      text-transform: uppercase;
-      max-width: 760px;
-    }
-
-    .baseline-copy {
-      margin: 0 0 48px;
-      color: #c9d4ec;
-      font-size: 16px;
-      line-height: 1.55;
-    }
-
-    .baseline-form {
-      display: grid;
-      gap: 34px;
-    }
-
-    .baseline-grid {
-      display: grid;
-      grid-template-columns: repeat(2, minmax(0, 1fr));
-      gap: 17px 16px;
-    }
-
-    .baseline-field,
-    .dashboard-label {
-      display: grid;
-      gap: 9px;
-      color: var(--muted);
-      font-size: 10px;
-      font-weight: 850;
-      letter-spacing: 4px;
-      text-transform: uppercase;
-    }
-
-    .baseline-field input,
-    .baseline-field select {
-      width: 100%;
-      height: 54px;
-      border: 1px solid var(--line-dark);
-      border-radius: 0;
-      padding: 0 16px;
-      background: #090909;
-      color: var(--white);
-      outline: none;
-      font-size: 16px;
-      letter-spacing: 0;
-      text-transform: none;
-    }
-
-    .baseline-field select {
-      appearance: auto;
-    }
-
-    .baseline-field input:focus,
-    .baseline-field select:focus {
-      border-color: var(--blue);
-      box-shadow: 0 0 0 2px rgba(17, 132, 255, .14);
-    }
-
-    .baseline-field.invalid input,
-    .baseline-field.invalid select {
-      border-color: #ff4f4f;
-    }
-
-    .field-error {
-      display: none;
-      color: #ff6b6b;
-      font-size: 11px;
-      letter-spacing: 0;
-      text-transform: none;
-    }
-
-    .baseline-field.invalid .field-error {
-      display: block;
-    }
-
-    .goal-label {
-      margin: 4px 0 -12px;
-      color: var(--muted);
-      font-size: 10px;
-      font-weight: 850;
-      letter-spacing: 5px;
-      text-transform: uppercase;
-    }
-
-    .goal-grid {
-      display: grid;
-      grid-template-columns: repeat(2, minmax(0, 1fr));
-      gap: 12px;
-    }
-
-    .goal-card {
-      min-height: 96px;
-      padding: 26px 20px 18px;
-      border: 1px solid var(--line-dark);
-      background: #090909;
-      color: var(--white);
-      text-align: left;
-      transition: border-color .16s ease, background .16s ease, transform .16s ease;
-    }
-
-    .goal-card:hover,
-    .goal-card.selected {
-      border-color: var(--blue);
-      background: #0b1119;
-    }
-
-    .goal-card.selected {
-      box-shadow: inset 4px 0 0 var(--blue);
-    }
-
-    .goal-card:active {
-      transform: translateY(1px);
-    }
-
-    .goal-card strong {
-      display: block;
-      margin-bottom: 7px;
-      font-family: Impact, Haettenschweiler, "Arial Narrow Bold", "Roboto Condensed", Arial, sans-serif;
-      font-size: 20px;
-      font-weight: 900;
-      line-height: 1;
-      letter-spacing: 0;
-      text-transform: uppercase;
-    }
-
-    .goal-card span {
-      color: #c7d0e0;
-      font-size: 14px;
-      line-height: 1.3;
-    }
-
-    .baseline-actions {
-      display: grid;
-      gap: 12px;
-      align-items: start;
-      justify-items: start;
-      margin-top: 14px;
-    }
-
-    .scan-button {
-      width: 246px;
-      height: 56px;
-      border: 0;
-      border-radius: 0;
-      background: var(--blue);
-      color: white;
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      gap: 16px;
-      font-size: 13px;
-      font-weight: 900;
-      letter-spacing: 1.8px;
-      text-transform: uppercase;
-    }
-
-    .scan-button:hover { background: var(--blue-dark); }
-
-    .baseline-note {
-      min-height: 20px;
-      color: #ff6b6b;
-      font-size: 13px;
+    button, a {
+      -webkit-tap-highlight-color: transparent;
     }
 
     .app {
-      width: min(1180px, calc(100% - 32px));
+      width: min(1440px, calc(100% - 28px));
       margin: 0 auto;
-      padding: 26px 0 42px;
-      color: var(--ink);
+      padding: 18px 0 48px;
+      position: relative;
+      z-index: 1;
     }
 
-    body.dashboard-active {
-      color-scheme: light;
-      background:
-        linear-gradient(135deg, rgba(215, 243, 107, .16), transparent 32%),
-        linear-gradient(220deg, rgba(57, 113, 216, .12), transparent 34%),
-        var(--wash);
-    }
-
-    body.dashboard-active .baseline-screen { display: none; }
-    body:not(.dashboard-active) .app { display: none; }
-
-    header {
+    .topbar {
+      min-height: 68px;
       display: flex;
       align-items: center;
       justify-content: space-between;
-      gap: 18px;
-      margin-bottom: 22px;
+      gap: 16px;
+      padding: 10px 0 18px;
     }
 
     .brand {
@@ -271,1343 +84,809 @@
       min-width: 0;
     }
 
-    .mark {
-      width: 44px;
-      height: 44px;
-      border-radius: 8px;
+    .logo {
+      width: 46px;
+      height: 46px;
+      border-radius: var(--radius);
       display: grid;
       place-items: center;
-      background: var(--ink);
-      color: var(--lime);
-      box-shadow: var(--shadow);
-      flex: 0 0 auto;
+      background: linear-gradient(145deg, rgba(53,167,255,.95), rgba(97,228,157,.9));
+      box-shadow: 0 18px 44px rgba(53,167,255,.28);
+      color: #031016;
+      font-weight: 950;
     }
 
-    .mark svg { width: 24px; height: 24px; }
-
-    h1 {
+    .brand h1 {
       margin: 0;
-      font-size: clamp(1.35rem, 2vw, 2.15rem);
+      font-size: clamp(1.15rem, 2vw, 1.7rem);
       letter-spacing: 0;
-      line-height: 1.05;
     }
 
-    .subtitle {
-      margin: 4px 0 0;
-      color: #65726c;
-      font-size: .95rem;
+    .brand p {
+      margin: 2px 0 0;
+      color: var(--muted);
+      font-size: .9rem;
     }
 
-    .tabs {
-      display: inline-grid;
-      grid-template-columns: repeat(5, minmax(74px, 1fr));
-      gap: 4px;
-      padding: 4px;
+    .nav {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      padding: 5px;
       border: 1px solid var(--line);
-      border-radius: 8px;
-      background: rgba(255,255,255,.72);
+      border-radius: var(--radius);
+      background: rgba(255,255,255,.045);
+      backdrop-filter: blur(18px);
     }
 
-    .tab {
-      border: 0;
-      border-radius: 6px;
-      padding: 10px 12px;
-      color: #65726c;
+    .nav button,
+    .ghost {
+      min-height: 40px;
+      border: 1px solid transparent;
+      border-radius: 7px;
+      padding: 0 13px;
       background: transparent;
+      color: var(--muted);
       cursor: pointer;
-      white-space: nowrap;
+      font-weight: 750;
     }
 
-    .tab.active {
-      background: var(--ink);
-      color: white;
+    .nav button.active {
+      color: var(--text);
+      background: rgba(255,255,255,.11);
+      border-color: var(--line);
     }
 
-    .layout {
+    .hero {
       display: grid;
-      grid-template-columns: minmax(300px, 390px) 1fr;
-      gap: 18px;
-      align-items: start;
+      grid-template-columns: minmax(0, 1.1fr) minmax(360px, .9fr);
+      gap: 16px;
+      align-items: stretch;
     }
 
-    .panel, .metric, .history-item {
-      background: rgba(255,255,255,.9);
-      border: 1px solid rgba(220, 228, 223, .9);
+    .glass {
+      position: relative;
+      overflow: hidden;
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      background: linear-gradient(145deg, rgba(255,255,255,.105), rgba(255,255,255,.045));
       box-shadow: var(--shadow);
-      border-radius: 8px;
+      backdrop-filter: blur(24px);
     }
 
-    .panel { padding: 18px; }
+    .glass::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      pointer-events: none;
+      background: linear-gradient(125deg, rgba(255,255,255,.2), transparent 22%, transparent 78%, rgba(255,255,255,.08));
+      opacity: .45;
+    }
 
-    .panel h2 {
-      margin: 0 0 14px;
-      font-size: 1.05rem;
+    .score-card {
+      min-height: 520px;
+      padding: clamp(22px, 4vw, 42px);
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) 320px;
+      gap: 24px;
+      align-items: center;
+    }
+
+    .eyebrow {
+      color: var(--blue);
+      font-size: .78rem;
+      font-weight: 900;
+      letter-spacing: 3px;
+      text-transform: uppercase;
+    }
+
+    .headline {
+      margin: 14px 0 12px;
+      max-width: 720px;
+      font-size: clamp(3rem, 5.8vw, 6.4rem);
+      line-height: .82;
+      letter-spacing: 0;
+      font-family: Impact, Haettenschweiler, "Arial Narrow Bold", "Roboto Condensed", Arial, sans-serif;
+      text-transform: uppercase;
+    }
+
+    .lead {
+      max-width: 620px;
+      color: var(--soft);
+      font-size: clamp(1rem, 1.6vw, 1.18rem);
+      line-height: 1.7;
+    }
+
+    .score-row {
+      display: flex;
+      gap: 12px;
+      flex-wrap: wrap;
+      margin-top: 24px;
+    }
+
+    .score-pill {
+      min-width: 132px;
+      padding: 12px 14px;
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      background: rgba(255,255,255,.06);
+    }
+
+    .score-pill span {
+      display: block;
+      color: var(--muted);
+      font-size: .76rem;
+      font-weight: 850;
+      text-transform: uppercase;
+    }
+
+    .score-pill strong {
+      display: block;
+      margin-top: 6px;
+      font-size: 1.35rem;
+    }
+
+    .ring-stack {
+      display: grid;
+      gap: 16px;
+      justify-items: center;
+      align-content: center;
+    }
+
+    .ring {
+      width: min(290px, 100%);
+      aspect-ratio: 1;
+      border-radius: 50%;
+      display: grid;
+      place-items: center;
+      background:
+        radial-gradient(circle, rgba(8,10,14,1) 0 54%, transparent 55%),
+        conic-gradient(from -90deg, var(--green) 0 84%, rgba(255,255,255,.08) 84% 100%);
+      animation: ringPulse 3.8s ease-in-out infinite;
+      box-shadow: 0 0 80px rgba(97,228,157,.18);
+    }
+
+    @keyframes ringPulse {
+      0%, 100% { transform: scale(1); filter: saturate(1); }
+      50% { transform: scale(1.025); filter: saturate(1.2); }
+    }
+
+    .ring-inner {
+      width: 68%;
+      aspect-ratio: 1;
+      border-radius: 50%;
+      display: grid;
+      place-items: center;
+      text-align: center;
+      background: linear-gradient(145deg, rgba(255,255,255,.11), rgba(255,255,255,.035));
+      border: 1px solid var(--line);
+    }
+
+    .ring-inner strong {
+      display: block;
+      font-size: clamp(3rem, 6vw, 5rem);
+      line-height: .9;
+    }
+
+    .ring-inner span {
+      color: var(--muted);
+      font-weight: 850;
+      font-size: .78rem;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+    }
+
+    .silhouette-card {
+      min-height: 520px;
+      padding: 22px;
+      display: grid;
+      place-items: center;
+      perspective: 900px;
+    }
+
+    .silhouette-stage {
+      width: min(310px, 72vw);
+      height: 430px;
+      position: relative;
+      transform-style: preserve-3d;
+      animation: floatBody 5.8s ease-in-out infinite;
+    }
+
+    @keyframes floatBody {
+      0%, 100% { transform: rotateY(-10deg) translateY(0); }
+      50% { transform: rotateY(10deg) translateY(-10px); }
+    }
+
+    .human {
+      position: absolute;
+      inset: 0;
+      filter: drop-shadow(0 36px 60px rgba(53,167,255,.2));
+    }
+
+    .human::before {
+      content: "";
+      position: absolute;
+      left: 50%;
+      top: 8px;
+      width: 70px;
+      height: 70px;
+      border-radius: 50%;
+      transform: translateX(-50%);
+      background: linear-gradient(145deg, #e8f4ff, #78c4ff 42%, #1d3751);
+      box-shadow: inset -18px -16px 32px rgba(0,0,0,.28);
+    }
+
+    .torso {
+      position: absolute;
+      left: 50%;
+      top: 92px;
+      width: 168px;
+      height: 230px;
+      transform: translateX(-50%);
+      border-radius: 46% 46% 38% 38% / 20% 20% 44% 44%;
+      background: linear-gradient(145deg, #c4f7ff 0%, #61e49d 46%, #2177ff 100%);
+      box-shadow: inset -28px -20px 50px rgba(0,0,0,.28), inset 18px 0 34px rgba(255,255,255,.18);
+      clip-path: polygon(20% 0, 80% 0, 96% 52%, 68% 100%, 32% 100%, 4% 52%);
+    }
+
+    .arm, .leg {
+      position: absolute;
+      border-radius: 999px;
+      background: linear-gradient(145deg, #8ceaff, #2059a7);
+      box-shadow: inset -12px -12px 24px rgba(0,0,0,.32);
+    }
+
+    .arm.left { width: 34px; height: 176px; left: 42px; top: 116px; transform: rotate(16deg); }
+    .arm.right { width: 34px; height: 176px; right: 42px; top: 116px; transform: rotate(-16deg); }
+    .leg.left { width: 42px; height: 154px; left: 105px; top: 275px; transform: rotate(3deg); }
+    .leg.right { width: 42px; height: 154px; right: 105px; top: 275px; transform: rotate(-3deg); }
+
+    .body-glow {
+      position: absolute;
+      inset: 46px 0 auto;
+      height: 360px;
+      border-radius: 50%;
+      background: radial-gradient(circle, rgba(53,167,255,.24), transparent 65%);
+      transform: translateZ(-80px);
     }
 
     .grid {
       display: grid;
-      grid-template-columns: repeat(2, minmax(0, 1fr));
-      gap: 12px;
+      grid-template-columns: repeat(12, 1fr);
+      gap: 16px;
+      margin-top: 16px;
     }
 
-    .dashboard-label {
-      color: #65726c;
-      letter-spacing: 0;
-      font-size: .82rem;
-      text-transform: none;
-      gap: 6px;
+    .card {
+      padding: 18px;
+      min-height: 150px;
     }
 
-    .dashboard-label input,
-    .dashboard-label select {
-      width: 100%;
-      min-height: 44px;
-      border: 1px solid var(--line);
-      border-radius: 7px;
-      padding: 10px 11px;
-      color: var(--ink);
-      background: white;
-      outline: none;
-    }
+    .span-3 { grid-column: span 3; }
+    .span-4 { grid-column: span 4; }
+    .span-5 { grid-column: span 5; }
+    .span-6 { grid-column: span 6; }
+    .span-7 { grid-column: span 7; }
+    .span-8 { grid-column: span 8; }
+    .span-12 { grid-column: span 12; }
 
-    .dashboard-label input:focus,
-    .dashboard-label select:focus {
-      border-color: var(--mint);
-      box-shadow: 0 0 0 3px rgba(47, 143, 108, .14);
-    }
-
-    .unit-row {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 8px;
-      margin-bottom: 14px;
-    }
-
-    .seg {
-      border: 1px solid var(--line);
-      border-radius: 7px;
-      min-height: 42px;
-      background: white;
-      color: #65726c;
-      cursor: pointer;
-      font-weight: 800;
-    }
-
-    .seg.active {
-      background: var(--mint);
-      color: white;
-      border-color: var(--mint);
-    }
-
-    .actions {
+    .section-title {
       display: flex;
-      gap: 10px;
-      margin-top: 15px;
+      justify-content: space-between;
+      gap: 14px;
+      align-items: start;
+      margin-bottom: 12px;
     }
 
-    .primary, .ghost {
-      min-height: 44px;
-      border-radius: 7px;
-      border: 1px solid transparent;
-      padding: 0 14px;
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      gap: 8px;
-      cursor: pointer;
-      font-weight: 850;
-      flex: 1;
-    }
-
-    .primary {
-      background: var(--ink);
-      color: white;
-    }
-
-    .ghost {
-      background: white;
-      border-color: var(--line);
-      color: var(--ink);
-      flex: 0 0 48px;
-      padding: 0;
-    }
-
-    .hero {
-      min-height: 260px;
-      display: grid;
-      grid-template-columns: 1.1fr .9fr;
-      gap: 18px;
-      margin-bottom: 18px;
-    }
-
-    .score {
-      position: relative;
-      overflow: hidden;
-      padding: 22px;
-      background: var(--ink);
-      color: white;
-      border-radius: 8px;
-      min-height: 260px;
-      box-shadow: var(--shadow);
-    }
-
-    .score::after {
-      content: "";
-      position: absolute;
-      right: -70px;
-      bottom: -70px;
-      width: 210px;
-      height: 210px;
-      border-radius: 50%;
-      border: 34px solid rgba(215, 243, 107, .45);
-    }
-
-    .score .kicker {
-      color: rgba(255,255,255,.67);
-      font-weight: 800;
-      font-size: .78rem;
-      text-transform: uppercase;
-    }
-
-    .body-fat {
-      margin: 22px 0 4px;
-      font-size: clamp(3.7rem, 9vw, 6.2rem);
-      line-height: .9;
-      font-weight: 950;
+    h2, h3 {
+      margin: 0;
       letter-spacing: 0;
     }
 
-    .score p {
-      margin: 0;
-      max-width: 440px;
-      color: rgba(255,255,255,.72);
-      line-height: 1.55;
-    }
-
-    .figure {
-      min-height: 260px;
-      padding: 22px;
-      display: grid;
-      place-items: center;
-      background: linear-gradient(180deg, #ffffff, #eef5ec);
-      border: 1px solid var(--line);
-      border-radius: 8px;
-      box-shadow: var(--shadow);
-    }
-
-    .body-visual {
-      width: min(190px, 70%);
-      aspect-ratio: 1 / 1.62;
-      display: grid;
-      place-items: center;
-    }
-
-    .body-visual svg {
-      width: 100%;
-      height: 100%;
-      filter: drop-shadow(0 16px 22px rgba(23,32,28,.14));
-    }
-
-    .metrics {
-      display: grid;
-      grid-template-columns: repeat(4, minmax(0, 1fr));
-      gap: 12px;
-      margin-bottom: 18px;
-    }
+    .muted { color: var(--muted); }
 
     .metric {
-      padding: 15px;
-      min-height: 112px;
       display: grid;
-      align-content: space-between;
-    }
-
-    .metric span {
-      color: #65726c;
-      font-size: .76rem;
-      font-weight: 850;
-      text-transform: uppercase;
+      gap: 12px;
     }
 
     .metric strong {
-      font-size: clamp(1.25rem, 2.3vw, 2rem);
+      font-size: clamp(2rem, 4vw, 3.1rem);
       line-height: 1;
     }
 
-    .bar {
-      height: 8px;
-      overflow: hidden;
-      border-radius: 999px;
-      background: #edf1ee;
+    .mini-ring {
+      width: 82px;
+      aspect-ratio: 1;
+      border-radius: 50%;
+      background:
+        radial-gradient(circle, rgba(13,16,22,1) 0 57%, transparent 58%),
+        conic-gradient(var(--accent, var(--blue)) 0 var(--value), rgba(255,255,255,.08) var(--value) 100%);
+      animation: popIn .7s ease both;
     }
 
-    .bar i {
-      display: block;
-      height: 100%;
-      width: var(--value, 50%);
-      border-radius: inherit;
-      background: var(--mint);
+    @keyframes popIn {
+      from { transform: scale(.72); opacity: 0; }
+      to { transform: scale(1); opacity: 1; }
     }
 
-    .details {
+    .badge-row {
       display: grid;
-      grid-template-columns: 1.08fr .92fr;
-      gap: 18px;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 10px;
+    }
+
+    .badge-card {
+      min-height: 104px;
+      display: grid;
+      align-content: center;
+      justify-items: center;
+      gap: 8px;
+      text-align: center;
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      background: rgba(255,255,255,.045);
+    }
+
+    .badge-icon {
+      width: 44px;
+      height: 44px;
+      border-radius: 50%;
+      display: grid;
+      place-items: center;
+      background: linear-gradient(145deg, var(--amber), #ff7a45);
+      color: #2a1100;
+      font-weight: 950;
+      box-shadow: 0 14px 34px rgba(255,202,92,.18);
+    }
+
+    .coach-card {
+      min-height: 300px;
+      display: grid;
+      align-content: space-between;
+      background:
+        linear-gradient(145deg, rgba(53,167,255,.16), transparent),
+        linear-gradient(145deg, rgba(142,124,255,.14), rgba(255,255,255,.04));
+    }
+
+    .coach-card p {
+      color: var(--soft);
+      font-size: 1.05rem;
+      line-height: 1.65;
     }
 
     .chart {
-      height: 230px;
+      height: 260px;
       display: grid;
-      grid-template-columns: repeat(7, 1fr);
+      grid-template-columns: repeat(9, 1fr);
       align-items: end;
       gap: 10px;
-      padding-top: 12px;
+      padding-top: 22px;
     }
 
-    .col {
-      display: grid;
-      gap: 8px;
-      justify-items: center;
-      color: #65726c;
+    .bar {
+      position: relative;
+      min-height: 18px;
+      height: var(--h);
+      border-radius: 6px 6px 2px 2px;
+      background: linear-gradient(180deg, var(--blue), var(--green));
+      animation: rise .85s ease both;
+      animation-delay: var(--delay);
+      box-shadow: 0 12px 24px rgba(53,167,255,.18);
+    }
+
+    .bar::after {
+      content: attr(data-label);
+      position: absolute;
+      left: 50%;
+      bottom: -28px;
+      transform: translateX(-50%);
+      color: var(--muted);
       font-size: .76rem;
       font-weight: 750;
     }
 
-    .col i {
-      width: 100%;
-      min-height: 18px;
-      height: var(--h);
-      border-radius: 6px 6px 2px 2px;
-      background: linear-gradient(180deg, var(--lime), var(--mint));
+    @keyframes rise {
+      from { height: 0; opacity: .2; }
+      to { height: var(--h); opacity: 1; }
     }
 
-    .history {
+    .timeline {
       display: grid;
-      gap: 10px;
-      max-height: 276px;
-      overflow: auto;
-      padding-right: 2px;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: 12px;
     }
 
-    .history-item {
-      display: flex;
-      justify-content: space-between;
-      gap: 10px;
-      align-items: center;
-      padding: 12px;
-      box-shadow: none;
-    }
-
-    .history-item b { font-size: .95rem; }
-    .history-item small { color: #65726c; display: block; margin-top: 2px; }
-    .pill { color: var(--mint-dark); font-weight: 950; }
-
-    .commerce {
-      margin-top: 18px;
+    .photo {
+      min-height: 210px;
+      border-radius: var(--radius);
+      border: 1px solid var(--line);
+      background:
+        linear-gradient(180deg, transparent, rgba(0,0,0,.7)),
+        radial-gradient(circle at 50% 26%, rgba(53,167,255,.26), transparent 32%),
+        linear-gradient(145deg, #151b26, #090b10);
+      padding: 14px;
       display: grid;
-      gap: 18px;
+      align-content: end;
     }
 
-    .commerce-hero {
-      min-height: 260px;
-      border-radius: 8px;
-      background: #0b0d10;
-      color: white;
-      display: grid;
-      grid-template-columns: 1.1fr .9fr;
-      gap: 18px;
+    .xp-track {
+      height: 12px;
       overflow: hidden;
-      box-shadow: var(--shadow);
+      border-radius: 999px;
+      background: rgba(255,255,255,.08);
     }
 
-    .commerce-copy {
-      padding: 28px;
+    .xp-fill {
+      height: 100%;
+      width: 72%;
+      border-radius: inherit;
+      background: linear-gradient(90deg, var(--violet), var(--blue), var(--green));
+      animation: xp 1.4s ease both;
+    }
+
+    @keyframes xp {
+      from { width: 0; }
+      to { width: 72%; }
+    }
+
+    .store {
       display: grid;
-      align-content: center;
       gap: 14px;
-    }
-
-    .commerce-kicker {
-      color: var(--blue);
-      font-size: 11px;
-      font-weight: 900;
-      letter-spacing: 4px;
-      text-transform: uppercase;
-    }
-
-    .commerce-title {
-      margin: 0;
-      font-family: Impact, Haettenschweiler, "Arial Narrow Bold", "Roboto Condensed", Arial, sans-serif;
-      font-size: clamp(2.6rem, 6vw, 5rem);
-      line-height: .88;
-      text-transform: uppercase;
-      letter-spacing: 0;
-    }
-
-    .commerce-copy p {
-      margin: 0;
-      max-width: 560px;
-      color: rgba(255,255,255,.72);
-      line-height: 1.6;
-    }
-
-    .qr-preview {
-      min-height: 260px;
-      display: grid;
-      place-items: center;
-      background:
-        linear-gradient(135deg, rgba(17,132,255,.25), transparent),
-        #121821;
-      padding: 28px;
-    }
-
-    .qr-card {
-      width: min(230px, 100%);
-      aspect-ratio: 1;
-      border-radius: 8px;
-      background:
-        linear-gradient(90deg, #111 12px, transparent 1%) 0 0 / 34px 34px,
-        linear-gradient(#111 12px, transparent 1%) 0 0 / 34px 34px,
-        white;
-      border: 14px solid white;
-      display: grid;
-      place-items: center;
-      color: var(--ink);
-      font-weight: 950;
-      text-align: center;
     }
 
     .product-grid {
       display: grid;
       grid-template-columns: repeat(2, minmax(0, 1fr));
-      gap: 14px;
+      gap: 12px;
     }
 
-    .product-card {
-      padding: 20px;
-      min-height: 220px;
-      display: grid;
-      align-content: space-between;
-      gap: 14px;
-    }
-
-    .product-card h3 {
-      margin: 0;
-      font-size: 1.35rem;
-    }
-
-    .price {
-      font-size: 3rem;
-      line-height: 1;
-      font-weight: 950;
-    }
-
-    .buy-btn, .unlock-btn {
-      min-height: 46px;
-      border: 0;
-      border-radius: 7px;
-      background: var(--blue);
-      color: white;
-      padding: 0 16px;
-      font-weight: 900;
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      gap: 8px;
-    }
-
-    .commerce-grid {
-      display: grid;
-      grid-template-columns: .9fr 1.1fr;
-      gap: 18px;
-    }
-
-    .checkout-form {
+    .product {
       display: grid;
       gap: 12px;
     }
 
-    .checkout-form label {
-      color: #65726c;
-      letter-spacing: 0;
-      font-size: .82rem;
-      text-transform: none;
-      gap: 6px;
+    .product strong {
+      font-size: 1.4rem;
     }
 
-    .checkout-form input {
-      width: 100%;
+    .btn {
+      min-height: 46px;
+      width: fit-content;
+      border: 0;
+      border-radius: 7px;
+      padding: 0 16px;
+      background: linear-gradient(135deg, var(--blue), var(--violet));
+      color: white;
+      font-weight: 900;
+      cursor: pointer;
+      box-shadow: 0 16px 36px rgba(53,167,255,.22);
+    }
+
+    .form {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 12px;
+    }
+
+    label {
+      display: grid;
+      gap: 7px;
+      color: var(--muted);
+      font-size: .82rem;
+      font-weight: 850;
+    }
+
+    input {
       min-height: 44px;
       border: 1px solid var(--line);
       border-radius: 7px;
-      padding: 10px 11px;
-      color: var(--ink);
-      background: white;
+      padding: 10px 12px;
+      background: rgba(255,255,255,.06);
+      color: var(--text);
       outline: none;
     }
 
-    .order-table {
-      width: 100%;
-      border-collapse: collapse;
-      font-size: .94rem;
+    input:focus {
+      border-color: rgba(53,167,255,.58);
+      box-shadow: 0 0 0 4px rgba(53,167,255,.12);
     }
 
-    .order-table th,
-    .order-table td {
-      border-bottom: 1px solid var(--line);
-      padding: 11px 8px;
-      text-align: left;
+    .thank-you {
+      display: none;
+      padding: 26px;
+      min-height: 260px;
+      align-content: center;
+      gap: 12px;
     }
 
-    .badge {
-      display: inline-flex;
-      min-height: 26px;
-      align-items: center;
-      border-radius: 999px;
-      padding: 0 10px;
-      background: #edf6f0;
-      color: var(--mint-dark);
-      font-weight: 850;
-      font-size: .78rem;
+    .thank-you.active {
+      display: grid;
     }
 
-    .hidden { display: none; }
-
-    @media (max-width: 920px) {
-      .baseline-wrap {
-        width: min(100% - 44px, 720px);
-        margin: 0 auto;
-      }
-
-      header, .layout, .hero, .details, .commerce-hero, .commerce-grid {
+    @media (max-width: 1100px) {
+      .hero, .score-card {
         grid-template-columns: 1fr;
       }
-
-      header { align-items: stretch; }
-      .tabs { width: 100%; }
-      .metrics { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+      .silhouette-card { min-height: 420px; }
+      .span-3, .span-4, .span-5, .span-6, .span-7, .span-8 { grid-column: span 12; }
     }
 
-    @media (max-width: 640px) {
-      .baseline-screen { padding-top: 26px; }
-      .baseline-wrap { width: min(100% - 26px, 680px); }
-      .step-label { letter-spacing: 4px; }
-      .baseline-title { font-size: clamp(3rem, 14vw, 4rem); }
-      .baseline-copy { max-width: 345px; margin-bottom: 34px; }
-      .baseline-grid, .goal-grid { grid-template-columns: 1fr; }
-      .scan-button { width: 100%; }
-      .product-grid { grid-template-columns: 1fr; }
-    }
-
-    @media (max-width: 560px) {
-      .app { width: min(100% - 22px, 1180px); padding-top: 16px; }
-      .panel { padding: 14px; }
-      .grid { grid-template-columns: 1fr; }
-      .metrics { grid-template-columns: 1fr; }
-      .score { min-height: 230px; }
-      .figure { min-height: 210px; }
-      .body-fat { font-size: 4.2rem; }
-      .tabs { grid-template-columns: 1fr; }
+    @media (max-width: 760px) {
+      .app { width: min(100% - 22px, 1440px); padding-top: 10px; }
+      .topbar { align-items: stretch; flex-direction: column; }
+      .nav { overflow-x: auto; justify-content: start; }
+      .score-card { min-height: auto; padding: 22px; }
+      .headline { font-size: clamp(3.5rem, 17vw, 5.4rem); }
+      .score-row, .badge-row, .timeline, .product-grid, .form { grid-template-columns: 1fr; display: grid; }
+      .chart { gap: 6px; }
+      .ring { width: min(250px, 82vw); }
     }
   </style>
 </head>
 <body>
-  <section class="screen baseline-screen" id="baselineScreen">
-    <div class="baseline-wrap">
-      <p class="step-label">// Step 01 - Athlete Profile</p>
-      <h1 class="baseline-title">Set Your Baseline</h1>
-      <p class="baseline-copy">We use this to personalize your scorecard, coach report, and goal predictions.</p>
-
-      <form class="baseline-form" id="baselineForm" novalidate>
-        <div class="baseline-grid">
-          <label class="baseline-field" data-field="baselineName">Name
-            <input id="baselineName" type="text" value="Umang Awasthi" autocomplete="name" />
-            <span class="field-error"></span>
-          </label>
-          <label class="baseline-field" data-field="baselineAge">Age
-            <input id="baselineAge" type="number" min="14" max="90" inputmode="numeric" />
-            <span class="field-error"></span>
-          </label>
-          <label class="baseline-field" data-field="baselineGender">Gender
-            <select id="baselineGender">
-              <option value="male">Male</option>
-              <option value="female">Female</option>
-            </select>
-            <span class="field-error"></span>
-          </label>
-          <label class="baseline-field" data-field="baselineHeight">Height (cm)
-            <input id="baselineHeight" type="number" min="90" max="230" inputmode="decimal" />
-            <span class="field-error"></span>
-          </label>
-          <label class="baseline-field" data-field="baselineWeight">Current Weight (kg)
-            <input id="baselineWeight" type="number" min="30" max="260" inputmode="decimal" />
-            <span class="field-error"></span>
-          </label>
-          <label class="baseline-field" data-field="baselineTarget">Target Weight (kg) - Optional
-            <input id="baselineTarget" type="number" min="30" max="260" inputmode="decimal" />
-            <span class="field-error"></span>
-          </label>
-        </div>
-
-        <p class="goal-label">Fitness Goal</p>
-        <div class="goal-grid" id="goalCards" aria-label="Fitness goal">
-          <button class="goal-card selected" type="button" data-goal="fat-loss" data-body-fat="14">
-            <strong>Fat Loss</strong>
-            <span>Drop body fat while preserving muscle.</span>
-          </button>
-          <button class="goal-card" type="button" data-goal="muscle-gain" data-body-fat="16">
-            <strong>Muscle Gain</strong>
-            <span>Add lean mass progressively.</span>
-          </button>
-          <button class="goal-card" type="button" data-goal="recomposition" data-body-fat="15">
-            <strong>Recomposition</strong>
-            <span>Lose fat and build muscle together.</span>
-          </button>
-          <button class="goal-card" type="button" data-goal="general-fitness" data-body-fat="18">
-            <strong>General Fitness</strong>
-            <span>Stay healthy and balanced.</span>
-          </button>
-        </div>
-
-        <div class="baseline-actions">
-          <button class="scan-button" type="submit">
-            Continue to Scan
-            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-              <path d="M5 12h14" />
-              <path d="m13 5 7 7-7 7" />
-            </svg>
-          </button>
-          <button class="scan-button" id="storePreviewBtn" type="button" style="background:#111820;">
-            Preview PDF Store
-            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-              <path d="M5 12h14" />
-              <path d="m13 5 7 7-7 7" />
-            </svg>
-          </button>
-          <div class="baseline-note" id="baselineNote" role="status"></div>
-        </div>
-      </form>
-    </div>
-  </section>
-
-  <main class="app" id="metricsApp">
-    <header>
+  <main class="app">
+    <header class="topbar">
       <div class="brand">
-        <div class="mark" aria-hidden="true">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round">
-            <path d="M6 20V10" />
-            <path d="M18 20V10" />
-            <path d="M4 10h16" />
-            <path d="M8 6h8" />
-            <path d="M10 3h4" />
-          </svg>
-        </div>
+        <div class="logo">PM</div>
         <div>
-          <h1>Physique Metrics</h1>
-          <p class="subtitle" id="athleteSubtitle">Track body composition, shape changes, and training progress.</p>
+          <h1>Physique Meter AI</h1>
+          <p>Premium progress intelligence for serious transformations</p>
         </div>
       </div>
-      <nav class="tabs" aria-label="Views">
-        <button class="tab" data-view="baseline">Baseline</button>
-        <button class="tab active" data-view="dashboard">Scorecard</button>
-        <button class="tab" data-view="products">PDF Store</button>
-        <button class="tab" data-view="measure">Adjust</button>
-        <button class="tab" data-view="history">History</button>
+      <nav class="nav" aria-label="Sections">
+        <button class="active" data-scroll="dashboard">Dashboard</button>
+        <button data-scroll="progress">Progress</button>
+        <button data-scroll="store">PDF Store</button>
+        <button onclick="location.href='admin/'">Admin</button>
       </nav>
     </header>
 
-    <section class="layout">
-      <aside class="panel" id="measure">
-        <h2>Measurement Adjustments</h2>
-        <div class="unit-row" aria-label="Unit system">
-          <button class="seg active" data-unit="metric">Metric</button>
-          <button class="seg" data-unit="imperial">Imperial</button>
+    <section class="hero" id="dashboard">
+      <article class="glass score-card">
+        <div>
+          <div class="eyebrow">// Today’s Readiness</div>
+          <h2 class="headline">Build The Body You Can Prove.</h2>
+          <p class="lead">
+            Your physique score is rising. Shoulder-to-waist ratio is improving, streak is intact,
+            and your next milestone is close enough to feel real.
+          </p>
+          <div class="score-row">
+            <div class="score-pill"><span>Streak</span><strong>18 days</strong></div>
+            <div class="score-pill"><span>Level</span><strong>Level 7</strong></div>
+            <div class="score-pill"><span>XP</span><strong>7,240</strong></div>
+            <div class="score-pill"><span>Goal ETA</span><strong>Aug 18</strong></div>
+          </div>
         </div>
-        <div class="grid">
-          <label class="dashboard-label">Sex
-            <select id="sex">
-              <option value="male">Male</option>
-              <option value="female">Female</option>
-            </select>
-          </label>
-          <label class="dashboard-label">Age
-            <input id="age" type="number" min="14" max="90" value="29" />
-          </label>
-          <label class="dashboard-label">Height <span class="unitLabel">(cm)</span>
-            <input id="height" type="number" min="90" max="230" value="178" />
-          </label>
-          <label class="dashboard-label">Weight <span class="weightLabel">(kg)</span>
-            <input id="weight" type="number" min="30" max="260" value="82" />
-          </label>
-          <label class="dashboard-label">Neck <span class="unitLabel">(cm)</span>
-            <input id="neck" type="number" min="20" max="80" value="39" />
-          </label>
-          <label class="dashboard-label">Waist <span class="unitLabel">(cm)</span>
-            <input id="waist" type="number" min="40" max="180" value="88" />
-          </label>
-          <label class="dashboard-label hipWrap hidden">Hips <span class="unitLabel">(cm)</span>
-            <input id="hips" type="number" min="50" max="190" value="96" />
-          </label>
-          <label class="dashboard-label">Goal Body Fat %
-            <input id="goal" type="number" min="3" max="45" value="14" />
-          </label>
-        </div>
-        <div class="actions">
-          <button class="primary" id="saveBtn">
-            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-              <path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2Z" />
-              <path d="M17 21v-8H7v8" />
-              <path d="M7 3v5h8" />
-            </svg>
-            Save check-in
-          </button>
-          <button class="ghost" id="resetBtn" title="Reset sample data" aria-label="Reset sample data">
-            <svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.35" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-              <path d="M3 12a9 9 0 1 0 3-6.7" />
-              <path d="M3 3v6h6" />
-            </svg>
-          </button>
-        </div>
-      </aside>
-
-      <section id="dashboard">
-        <div class="hero">
-          <article class="score">
-            <div class="kicker">Estimated body fat</div>
-            <div class="body-fat"><span id="bf">17.6</span>%</div>
-            <p id="summary">Lean, athletic range. Keep measurements consistent and compare trend lines rather than single days.</p>
-          </article>
-          <article class="figure" aria-label="Physique visualization">
-            <div class="body-visual">
-              <svg viewBox="0 0 160 260" role="img" aria-label="Human body shape">
-                <defs>
-                  <linearGradient id="skin" x1="0" x2="1" y1="0" y2="1">
-                    <stop stop-color="#d7f36b" />
-                    <stop offset="1" stop-color="#2f8f6c" />
-                  </linearGradient>
-                </defs>
-                <circle cx="80" cy="27" r="23" fill="#17201c" />
-                <path id="torso" d="M52 61 C64 51 96 51 108 61 L125 132 C129 150 115 170 101 160 L96 240 C95 251 65 251 64 240 L59 160 C45 170 31 150 35 132 Z" fill="url(#skin)" />
-                <path d="M50 73 C30 86 22 110 18 142" stroke="#17201c" stroke-width="16" stroke-linecap="round" fill="none" />
-                <path d="M110 73 C130 86 138 110 142 142" stroke="#17201c" stroke-width="16" stroke-linecap="round" fill="none" />
-                <path d="M66 245 L61 258" stroke="#17201c" stroke-width="17" stroke-linecap="round" />
-                <path d="M94 245 L99 258" stroke="#17201c" stroke-width="17" stroke-linecap="round" />
-              </svg>
+        <div class="ring-stack">
+          <div class="ring">
+            <div class="ring-inner">
+              <div><strong>84</strong><span>Physique Score</span></div>
             </div>
-          </article>
+          </div>
+          <p class="muted">+6.8% improvement over the last 30 days</p>
         </div>
+      </article>
 
-        <div class="metrics">
-          <article class="metric">
-            <span>BMI</span>
-            <strong id="bmi">25.9</strong>
-            <div class="bar"><i id="bmiBar"></i></div>
-          </article>
-          <article class="metric">
-            <span>Lean Mass</span>
-            <strong id="lean">67.6 kg</strong>
-            <div class="bar"><i id="leanBar"></i></div>
-          </article>
-          <article class="metric">
-            <span>Fat Mass</span>
-            <strong id="fat">14.4 kg</strong>
-            <div class="bar"><i id="fatBar"></i></div>
-          </article>
-          <article class="metric">
-            <span>To Goal</span>
-            <strong id="goalOut">-4.2 kg</strong>
-            <div class="bar"><i id="goalBar"></i></div>
-          </article>
+      <article class="glass silhouette-card">
+        <div class="silhouette-stage" aria-label="3D human silhouette">
+          <div class="body-glow"></div>
+          <div class="human">
+            <div class="torso"></div>
+            <div class="arm left"></div>
+            <div class="arm right"></div>
+            <div class="leg left"></div>
+            <div class="leg right"></div>
+          </div>
         </div>
-
-        <div class="details">
-          <article class="panel">
-            <h2>Progress Trend</h2>
-            <div class="chart" id="chart" aria-label="Recent body fat trend"></div>
-          </article>
-          <article class="panel">
-            <h2>Recent Check-Ins</h2>
-            <div class="history" id="history"></div>
-          </article>
-        </div>
-      </section>
+      </article>
     </section>
 
-    <section class="commerce" id="products">
-      <div class="commerce-hero">
-        <div class="commerce-copy">
-          <div class="commerce-kicker">// PDF Products</div>
-          <h2 class="commerce-title">Gym Transformation Guides</h2>
-          <p>Sell PDF plans with PhonePe QR payment, lead collection, UTR tracking, payment screenshots, and secure backend order verification.</p>
-        </div>
-        <div class="qr-preview">
-          <div class="qr-card">PhonePe<br />Admin QR</div>
-        </div>
-      </div>
-
-      <div class="product-grid" id="productGrid">
-        <article class="panel product-card">
-          <div>
-            <h3>Weight Gain Shake PDF</h3>
-            <p class="subtitle">High-calorie shake recipes for clean weight gain and daily consistency.</p>
-          </div>
-          <div class="price">₹49</div>
-          <button class="buy-btn" data-product="Weight Gain Shake PDF" data-price="49">Buy Now →</button>
-        </article>
-
-        <article class="panel product-card">
-          <div>
-            <h3>Vegetarian Muscle Gain Guide</h3>
-            <p class="subtitle">Indian vegetarian muscle-gain meal plan, protein options, and weekly structure.</p>
-          </div>
-          <div class="price">₹99</div>
-          <button class="buy-btn" data-product="Vegetarian Muscle Gain Guide" data-price="99">Buy Now →</button>
-        </article>
-      </div>
-
-      <div class="commerce-grid">
-        <article class="panel">
-          <h2>Checkout</h2>
-          <p class="subtitle" id="selectedProduct">Select a PDF product to start checkout.</p>
-          <form class="checkout-form" id="checkoutForm">
-            <label>Name
-              <input id="customerName" type="text" placeholder="Your name" required />
-            </label>
-            <label>WhatsApp optional
-              <input id="customerWhatsApp" type="tel" placeholder="+91..." />
-            </label>
-            <label>Email
-              <input id="customerEmail" type="email" placeholder="you@example.com" required />
-            </label>
-            <label>Product
-              <input id="customerProduct" type="text" value="Weight Gain Shake PDF" readonly />
-            </label>
-            <label>Amount
-              <input id="customerAmount" type="text" value="₹49" readonly />
-            </label>
-            <label>UTR ID
-              <input id="customerUtr" type="text" placeholder="UPI transaction / UTR ID" />
-            </label>
-            <label>Payment Screenshot
-              <input id="paymentScreenshot" type="file" accept="image/*" />
-            </label>
-            <button class="unlock-btn" type="submit">Save Lead & Unlock Payment</button>
-          </form>
-        </article>
-
-        <article class="panel">
-          <h2>Payment & Download</h2>
-          <p class="subtitle">Scan the admin PhonePe QR, then confirm payment. In production this connects to database, Google Sheets, and PDF storage.</p>
-          <div class="qr-preview" style="min-height: 190px; border-radius: 8px; margin: 12px 0;">
-            <div class="qr-card" style="width: 150px;">PhonePe<br />QR</div>
-          </div>
-          <button class="unlock-btn" id="paidBtn" type="button">Submit Payment Details</button>
-          <p class="subtitle" id="downloadState">PDF access is handled after manual admin verification.</p>
-        </article>
-      </div>
-
+    <section class="grid">
+      <article class="glass card metric span-3">
+        <div class="section-title"><span class="eyebrow">Body Fat</span><div class="mini-ring" style="--value:63%;--accent:var(--green)"></div></div>
+        <strong>14.8%</strong>
+        <span class="muted">Down 1.2% this month</span>
+      </article>
+      <article class="glass card metric span-3">
+        <div class="section-title"><span class="eyebrow">Lean Mass</span><div class="mini-ring" style="--value:78%;--accent:var(--blue)"></div></div>
+        <strong>57.7kg</strong>
+        <span class="muted">Stable while cutting</span>
+      </article>
+      <article class="glass card metric span-3">
+        <div class="section-title"><span class="eyebrow">Consistency</span><div class="mini-ring" style="--value:91%;--accent:var(--amber)"></div></div>
+        <strong>91%</strong>
+        <span class="muted">Weekly check-ins complete</span>
+      </article>
+      <article class="glass card metric span-3">
+        <div class="section-title"><span class="eyebrow">Projection</span><div class="mini-ring" style="--value:69%;--accent:var(--violet)"></div></div>
+        <strong>10 wks</strong>
+        <span class="muted">Estimated target completion</span>
+      </article>
     </section>
 
-    <section class="commerce hidden" id="thankYou">
-      <article class="commerce-hero">
-        <div class="commerce-copy">
-          <div class="commerce-kicker">// Order Submitted</div>
-          <h2 class="commerce-title">Thank You</h2>
-          <p>Your payment details have been submitted. Admin will verify your UTR ID and payment screenshot, then send the PDF. No Google Sheet data or PDF download link is exposed publicly.</p>
-          <button class="buy-btn" id="backToStoreBtn" type="button">Back to Store</button>
+    <section class="grid">
+      <article class="glass card span-7">
+        <div class="section-title">
+          <div><span class="eyebrow">Smooth Trend</span><h2>Weight & Score Momentum</h2></div>
+          <span class="muted">Recharts-ready data model</span>
         </div>
-        <div class="qr-preview">
-          <div class="qr-card">Pending<br />Verification</div>
+        <div class="chart" aria-label="Animated progress chart">
+          <div class="bar" style="--h:54%;--delay:.05s" data-label="W1"></div>
+          <div class="bar" style="--h:58%;--delay:.1s" data-label="W2"></div>
+          <div class="bar" style="--h:52%;--delay:.15s" data-label="W3"></div>
+          <div class="bar" style="--h:65%;--delay:.2s" data-label="W4"></div>
+          <div class="bar" style="--h:72%;--delay:.25s" data-label="W5"></div>
+          <div class="bar" style="--h:69%;--delay:.3s" data-label="W6"></div>
+          <div class="bar" style="--h:78%;--delay:.35s" data-label="W7"></div>
+          <div class="bar" style="--h:84%;--delay:.4s" data-label="W8"></div>
+          <div class="bar" style="--h:91%;--delay:.45s" data-label="Now"></div>
         </div>
+      </article>
+
+      <article class="glass card coach-card span-5">
+        <div>
+          <span class="eyebrow">AI Coach</span>
+          <h2>Insight Of The Week</h2>
+          <p>
+            Your shoulder-to-waist ratio is improving compared to the previous check-in.
+            Upper chest still trails shoulder development, so bias incline pressing and keep waist measurements consistent.
+          </p>
+        </div>
+        <button class="btn">Generate Weekly Report</button>
+      </article>
+    </section>
+
+    <section class="grid">
+      <article class="glass card span-6">
+        <div class="section-title">
+          <div><span class="eyebrow">Achievements</span><h2>Unlocked Badges</h2></div>
+        </div>
+        <div class="badge-row">
+          <div class="badge-card"><div class="badge-icon">18</div><strong>Streak</strong><span class="muted">18 days</span></div>
+          <div class="badge-card"><div class="badge-icon">A</div><strong>Lean Cut</strong><span class="muted">-1.2% BF</span></div>
+          <div class="badge-card"><div class="badge-icon">XP</div><strong>Level 7</strong><span class="muted">760 XP left</span></div>
+          <div class="badge-card"><div class="badge-icon">✓</div><strong>Check-In</strong><span class="muted">4/4 weeks</span></div>
+        </div>
+      </article>
+
+      <article class="glass card span-6">
+        <span class="eyebrow">XP Progress</span>
+        <h2>Level 8 Is Close</h2>
+        <p class="muted">Complete two more photo check-ins and one verified weigh-in to unlock Level 8.</p>
+        <div class="xp-track"><div class="xp-fill"></div></div>
+        <p class="muted">7,240 / 8,000 XP</p>
+      </article>
+    </section>
+
+    <section class="grid" id="progress">
+      <article class="glass card span-12">
+        <div class="section-title">
+          <div><span class="eyebrow">Transformation Timeline</span><h2>Progress That Feels Visible</h2></div>
+          <span class="muted">Front / side / back check-ins</span>
+        </div>
+        <div class="timeline">
+          <div class="photo"><strong>Week 1</strong><span class="muted">Baseline captured</span></div>
+          <div class="photo"><strong>Week 4</strong><span class="muted">Waist tighter</span></div>
+          <div class="photo"><strong>Week 8</strong><span class="muted">Shoulders wider</span></div>
+          <div class="photo"><strong>Today</strong><span class="muted">Score +6.8%</span></div>
+        </div>
+      </article>
+    </section>
+
+    <section class="grid" id="store">
+      <article class="glass card span-12 store" id="storePanel">
+        <div class="section-title">
+          <div><span class="eyebrow">PDF Store</span><h2>Sell Transformation Products</h2></div>
+          <span class="muted">PhonePe QR / manual UPI verification</span>
+        </div>
+        <div class="product-grid" id="productGrid"></div>
+      </article>
+
+      <article class="glass card span-6" id="checkoutPanel">
+        <h2>Checkout</h2>
+        <p class="muted" id="selectedProduct">Select a PDF product to start checkout.</p>
+        <form class="form" id="checkoutForm">
+          <label>Name<input id="customerName" required placeholder="Your name" /></label>
+          <label>WhatsApp<input id="customerWhatsApp" placeholder="+91..." /></label>
+          <label>Email<input id="customerEmail" required type="email" placeholder="you@example.com" /></label>
+          <label>Product<input id="customerProduct" readonly value="Weight Gain Shake PDF" /></label>
+          <label>Amount<input id="customerAmount" readonly value="₹49" /></label>
+          <label>UTR ID<input id="customerUtr" placeholder="UPI transaction ID" /></label>
+          <label>Payment Screenshot<input id="paymentScreenshot" type="file" accept="image/*" /></label>
+          <button class="btn" type="submit">Submit Order</button>
+        </form>
+      </article>
+
+      <article class="glass card span-6">
+        <h2>PhonePe Payment</h2>
+        <p class="muted">Scan the admin PhonePe QR. Your PDF is sent only after admin verifies UTR ID and screenshot.</p>
+        <div class="qr-preview" style="min-height: 230px; border-radius: 8px; margin-top: 12px;">
+          <div class="qr-card">PhonePe<br />QR</div>
+        </div>
+        <p class="muted" id="downloadState">PDF access is handled after manual admin verification.</p>
+      </article>
+
+      <article class="glass thank-you span-12" id="thankYou">
+        <span class="eyebrow">Order Submitted</span>
+        <h2 class="headline" style="font-size:clamp(3rem,8vw,6rem)">Thank You</h2>
+        <p class="lead">Your payment details were submitted. Admin will verify your UTR ID and payment screenshot, then send the PDF.</p>
+        <button class="btn" id="backToStoreBtn">Back to Store</button>
       </article>
     </section>
   </main>
 
   <script>
     const $ = (id) => document.getElementById(id);
-    const fields = ["sex", "age", "height", "weight", "neck", "waist", "hips", "goal"];
-    const baselineFields = ["baselineName", "baselineAge", "baselineGender", "baselineHeight", "baselineWeight", "baselineTarget"];
-    let unit = "metric";
-    let selectedGoal = "fat-loss";
-    let selectedPdf = { product: "Weight Gain Shake PDF", price: "49" };
     const defaultProducts = [
-      {
-        name: "Weight Gain Shake PDF",
-        price: "49",
-        description: "High-calorie shake recipes for clean weight gain and daily consistency.",
-        fileName: "weight-gain-shake.pdf"
-      },
-      {
-        name: "Vegetarian Muscle Gain Guide",
-        price: "99",
-        description: "Indian vegetarian muscle-gain meal plan, protein options, and weekly structure.",
-        fileName: "vegetarian-muscle-gain-guide.pdf"
-      }
+      { name: "Weight Gain Shake PDF", price: "49", description: "High-calorie shake recipes for clean weight gain.", fileName: "weight-gain-shake.pdf" },
+      { name: "Vegetarian Muscle Gain Guide", price: "99", description: "Indian vegetarian muscle-gain meal plan.", fileName: "vegetarian-muscle-gain-guide.pdf" }
     ];
-    const sample = [
-      { date: "May 02", bf: 20.1, weight: 84.4 },
-      { date: "May 09", bf: 19.4, weight: 83.7 },
-      { date: "May 16", bf: 18.9, weight: 83.1 },
-      { date: "May 23", bf: 18.1, weight: 82.5 },
-      { date: "May 30", bf: 17.9, weight: 82.2 },
-      { date: "Jun 06", bf: 17.7, weight: 82.0 }
-    ];
-    let entries = JSON.parse(localStorage.getItem("physiqueEntries") || "null") || sample;
+    let selectedPdf = { product: "Weight Gain Shake PDF", price: "49" };
 
-    function toMetric(value, kind) {
-      if (unit === "metric") return value;
-      return kind === "weight" ? value * 0.45359237 : value * 2.54;
-    }
-
-    function fromMetric(value, kind) {
-      if (unit === "metric") return value;
-      return kind === "weight" ? value / 0.45359237 : value / 2.54;
-    }
-
-    function round(value, places = 1) {
-      return Number.isFinite(value) ? value.toFixed(places) : "0.0";
-    }
-
-    function getGoalCard() {
-      return document.querySelector(".goal-card.selected");
-    }
-
-    function estimateMeasurements(sex, height, weight) {
-      const bmi = weight / Math.pow(height / 100, 2);
-      const neck = sex === "male" ? height * .22 : height * .19;
-      const waist = sex === "male"
-        ? height * (.43 + Math.max(0, bmi - 22) * .008)
-        : height * (.39 + Math.max(0, bmi - 21) * .008);
-      const hips = sex === "female" ? height * (.55 + Math.max(0, bmi - 21) * .006) : height * .52;
-      return {
-        neck: Math.round(neck),
-        waist: Math.round(waist),
-        hips: Math.round(hips)
-      };
-    }
-
-    function clearBaselineErrors() {
-      document.querySelectorAll(".baseline-field").forEach(field => {
-        field.classList.remove("invalid");
-        field.querySelector(".field-error").textContent = "";
-      });
-      $("baselineNote").textContent = "";
-    }
-
-    function setFieldError(id, message) {
-      const field = document.querySelector(`[data-field="${id}"]`);
-      field.classList.add("invalid");
-      field.querySelector(".field-error").textContent = message;
-    }
-
-    function validateBaseline() {
-      clearBaselineErrors();
-      const required = [
-        ["baselineName", "Enter your name."],
-        ["baselineAge", "Enter your age."],
-        ["baselineGender", "Choose a gender."],
-        ["baselineHeight", "Enter height."],
-        ["baselineWeight", "Enter weight."]
-      ];
-      let valid = true;
-
-      required.forEach(([id, message]) => {
-        if (!$(id).value.trim()) {
-          setFieldError(id, message);
-          valid = false;
-        }
-      });
-
-      const age = parseFloat($("baselineAge").value);
-      const height = parseFloat($("baselineHeight").value);
-      const weight = parseFloat($("baselineWeight").value);
-      const target = parseFloat($("baselineTarget").value);
-
-      if ($("baselineAge").value && (age < 14 || age > 90)) {
-        setFieldError("baselineAge", "Use 14-90.");
-        valid = false;
-      }
-      if ($("baselineHeight").value && (height < 90 || height > 230)) {
-        setFieldError("baselineHeight", "Use 90-230 cm.");
-        valid = false;
-      }
-      if ($("baselineWeight").value && (weight < 30 || weight > 260)) {
-        setFieldError("baselineWeight", "Use 30-260 kg.");
-        valid = false;
-      }
-      if ($("baselineTarget").value && (target < 30 || target > 260)) {
-        setFieldError("baselineTarget", "Use 30-260 kg.");
-        valid = false;
-      }
-      if (!getGoalCard()) {
-        $("baselineNote").textContent = "Choose a fitness goal.";
-        valid = false;
-      }
-
-      if (!valid && !$("baselineNote").textContent) {
-        $("baselineNote").textContent = "Complete the highlighted fields to continue.";
-      }
-      return valid;
-    }
-
-    function baselineDataFromForm(completed = false) {
-      const goalCard = getGoalCard();
-      return {
-        name: $("baselineName").value.trim(),
-        age: $("baselineAge").value.trim(),
-        gender: $("baselineGender").value,
-        height: $("baselineHeight").value.trim(),
-        weight: $("baselineWeight").value.trim(),
-        target: $("baselineTarget").value.trim(),
-        fitnessGoal: goalCard?.dataset.goal || "fat-loss",
-        goalBodyFat: goalCard?.dataset.bodyFat || "14",
-        completed
-      };
-    }
-
-    function saveBaseline(completed = false) {
-      const data = baselineDataFromForm(completed);
-      localStorage.setItem("physiqueBaseline", JSON.stringify(data));
-      return data;
-    }
-
-    function populateBaseline(data) {
-      if (!data) return;
-      $("baselineName").value = data.name || "Umang Awasthi";
-      $("baselineAge").value = data.age || "";
-      $("baselineGender").value = data.gender || "male";
-      $("baselineHeight").value = data.height || "";
-      $("baselineWeight").value = data.weight || "";
-      $("baselineTarget").value = data.target || "";
-      selectedGoal = data.fitnessGoal || "fat-loss";
-      document.querySelectorAll(".goal-card").forEach(card => {
-        card.classList.toggle("selected", card.dataset.goal === selectedGoal);
-      });
-    }
-
-    function applyBaselineToDashboard(data) {
-      const height = parseFloat(data.height);
-      const weight = parseFloat(data.weight);
-      const sex = data.gender || "male";
-      const estimates = estimateMeasurements(sex, height, weight);
-      unit = "metric";
-      $("sex").value = sex;
-      $("age").value = data.age || 29;
-      $("height").value = round(height);
-      $("weight").value = round(weight);
-      $("neck").value = estimates.neck;
-      $("waist").value = estimates.waist;
-      $("hips").value = estimates.hips;
-      $("goal").value = data.goalBodyFat || 14;
-      document.querySelector(".hipWrap").classList.toggle("hidden", sex !== "female");
-      document.querySelectorAll(".seg").forEach(btn => btn.classList.toggle("active", btn.dataset.unit === unit));
-      document.querySelectorAll(".unitLabel").forEach(label => label.textContent = "(cm)");
-      document.querySelector(".weightLabel").textContent = "(kg)";
-      $("athleteSubtitle").textContent = data.name
-        ? `${data.name} - ${labelForGoal(data.fitnessGoal)} scorecard`
-        : "Track body composition, shape changes, and training progress.";
-      update();
-    }
-
-    function labelForGoal(goal) {
-      const labels = {
-        "fat-loss": "Fat Loss",
-        "muscle-gain": "Muscle Gain",
-        "recomposition": "Recomposition",
-        "general-fitness": "General Fitness"
-      };
-      return labels[goal] || "Athlete";
-    }
-
-    function showDashboard() {
-      document.body.classList.add("dashboard-active");
-      window.scrollTo({ top: 0, behavior: "smooth" });
-    }
-
-    function showBaseline() {
-      document.body.classList.remove("dashboard-active");
-      window.scrollTo({ top: 0, behavior: "smooth" });
-    }
-
-    function calculate() {
-      const sex = $("sex").value;
-      const height = toMetric(parseFloat($("height").value), "length");
-      const weight = toMetric(parseFloat($("weight").value), "weight");
-      const neck = toMetric(parseFloat($("neck").value), "length");
-      const waist = toMetric(parseFloat($("waist").value), "length");
-      const hips = toMetric(parseFloat($("hips").value), "length");
-      const goal = parseFloat($("goal").value);
-      let bf;
-
-      if (sex === "male") {
-        bf = 495 / (1.0324 - 0.19077 * Math.log10(waist - neck) + 0.15456 * Math.log10(height)) - 450;
-      } else {
-        bf = 495 / (1.29579 - 0.35004 * Math.log10(waist + hips - neck) + 0.22100 * Math.log10(height)) - 450;
-      }
-
-      bf = Math.min(60, Math.max(3, bf));
-      const bmi = weight / Math.pow(height / 100, 2);
-      const fatMass = weight * bf / 100;
-      const leanMass = weight - fatMass;
-      const targetWeight = leanMass / (1 - goal / 100);
-      const toGoal = targetWeight - weight;
-      return { bf, bmi, fatMass, leanMass, weight, toGoal, goal };
-    }
-
-    function update() {
-      const result = calculate();
-      const weightUnit = unit === "metric" ? "kg" : "lb";
-      $("bf").textContent = round(result.bf);
-      $("bmi").textContent = round(result.bmi);
-      $("lean").textContent = `${round(fromMetric(result.leanMass, "weight"))} ${weightUnit}`;
-      $("fat").textContent = `${round(fromMetric(result.fatMass, "weight"))} ${weightUnit}`;
-      $("goalOut").textContent = `${result.toGoal > 0 ? "+" : ""}${round(fromMetric(result.toGoal, "weight"))} ${weightUnit}`;
-      $("summary").textContent = summaryFor(result.bf, result.goal);
-      $("bmiBar").style.setProperty("--value", `${Math.min(100, result.bmi * 2.7)}%`);
-      $("leanBar").style.setProperty("--value", `${Math.min(100, 100 - result.bf)}%`);
-      $("fatBar").style.setProperty("--value", `${Math.min(100, result.bf * 2.2)}%`);
-      $("goalBar").style.setProperty("--value", `${Math.min(100, 100 - Math.abs(result.toGoal) * 9)}%`);
-      renderChart(result.bf);
-      renderHistory();
-      updateFigure(result.bf);
-    }
-
-    function summaryFor(bf, goal) {
-      const baseline = JSON.parse(localStorage.getItem("physiqueBaseline") || "null");
-      const targetNote = baseline?.target ? ` Target weight: ${baseline.target} kg.` : "";
-      if (bf <= goal + 1) return `You are right around your goal. Maintenance habits and repeatable check-ins matter most now.${targetNote}`;
-      if (bf < 15) return `Very lean range. Small changes will show quickly, so watch recovery and training performance.${targetNote}`;
-      if (bf < 22) return `Athletic range. Keep measurements consistent and compare trend lines rather than single days.${targetNote}`;
-      return `Good baseline captured. A steady trend over the next few check-ins will make the next move obvious.${targetNote}`;
-    }
-
-    function renderChart(current) {
-      const values = [...entries.slice(-6).map(e => e.bf), current];
-      const max = Math.max(...values, 30);
-      const min = Math.min(...values, 6);
-      $("chart").innerHTML = values.map((value, index) => {
-        const pct = 22 + ((value - min) / Math.max(1, max - min)) * 76;
-        const label = index === values.length - 1 ? "Now" : entries.slice(-6)[index]?.date.split(" ")[0] || "";
-        return `<div class="col"><i style="--h:${pct}%"></i><span>${label}</span></div>`;
-      }).join("");
-    }
-
-    function renderHistory() {
-      $("history").innerHTML = entries.slice(-6).reverse().map(entry => `
-        <div class="history-item">
-          <div><b>${entry.date}</b><small>${round(entry.weight)} ${unit === "metric" ? "kg" : "lb"}</small></div>
-          <div class="pill">${round(entry.bf)}%</div>
-        </div>
-      `).join("");
-    }
-
-    function updateFigure(bf) {
-      const torso = document.getElementById("torso");
-      const width = Math.min(16, Math.max(-7, (bf - 16) * .9));
-      torso.setAttribute("d", `M${52 - width} 61 C64 51 96 51 ${108 + width} 61 L${125 + width} 132 C${129 + width} 150 ${115 + width * .4} 170 101 160 L96 240 C95 251 65 251 64 240 L59 160 C45 170 ${31 - width * .4} 150 ${35 - width} 132 Z`);
-    }
-
-    function save() {
-      const result = calculate();
-      const today = new Date().toLocaleDateString("en-US", { month: "short", day: "2-digit" });
-      entries.push({ date: today, bf: result.bf, weight: fromMetric(result.weight, "weight") });
-      entries = entries.slice(-18);
-      localStorage.setItem("physiqueEntries", JSON.stringify(entries));
-      update();
-    }
-
-    function setUnit(nextUnit) {
-      if (unit === nextUnit) return;
-      const oldUnit = unit;
-      unit = nextUnit;
-      ["height", "neck", "waist", "hips"].forEach(id => {
-        const metric = oldUnit === "metric" ? parseFloat($(id).value) : parseFloat($(id).value) * 2.54;
-        $(id).value = round(fromMetric(metric, "length"));
-      });
-      const metricWeight = oldUnit === "metric" ? parseFloat($("weight").value) : parseFloat($("weight").value) * 0.45359237;
-      $("weight").value = round(fromMetric(metricWeight, "weight"));
-      document.querySelectorAll(".seg").forEach(btn => btn.classList.toggle("active", btn.dataset.unit === unit));
-      document.querySelectorAll(".unitLabel").forEach(label => label.textContent = unit === "metric" ? "(cm)" : "(in)");
-      document.querySelector(".weightLabel").textContent = unit === "metric" ? "(kg)" : "(lb)";
-      update();
-    }
-
-    document.querySelectorAll(".goal-card").forEach(card => {
-      card.addEventListener("click", () => {
-        selectedGoal = card.dataset.goal;
-        document.querySelectorAll(".goal-card").forEach(item => item.classList.remove("selected"));
-        card.classList.add("selected");
-        clearBaselineErrors();
-      });
-    });
-
-    baselineFields.forEach(id => {
-      $(id).addEventListener("input", () => {
-        saveBaseline(false);
-        clearBaselineErrors();
-      });
-      $(id).addEventListener("change", () => saveBaseline(false));
-    });
-
-    $("baselineForm").addEventListener("submit", (event) => {
-      event.preventDefault();
-      if (!validateBaseline()) return;
-      const baseline = saveBaseline(true);
-      applyBaselineToDashboard(baseline);
-      showDashboard();
-    });
-
-    $("storePreviewBtn").addEventListener("click", () => {
-      const demoBaseline = {
-        name: "Umang Awasthi",
-        age: "21",
-        gender: "male",
-        height: "181",
-        weight: "63",
-        target: "70",
-        fitnessGoal: "muscle-gain",
-        goalBodyFat: "16",
-        completed: true
-      };
-      populateBaseline(demoBaseline);
-      applyBaselineToDashboard(demoBaseline);
-      showDashboard();
-      setTimeout(() => $("products").scrollIntoView({ behavior: "smooth", block: "start" }), 100);
-    });
-
-    document.querySelectorAll(".buy-btn").forEach(button => {
-      button.addEventListener("click", () => {
-      selectedPdf = {
-          product: button.dataset.product,
-          price: button.dataset.price
-        };
-        $("selectedProduct").textContent = `${selectedPdf.product} selected - ₹${selectedPdf.price}. Enter customer details to continue.`;
-        $("customerProduct").value = selectedPdf.product;
-        $("customerAmount").value = `₹${selectedPdf.price}`;
-        $("customerName").focus();
-      });
-    });
-
-    function getPdfProducts() {
+    function getProducts() {
       return JSON.parse(localStorage.getItem("pdfProducts") || "null") || defaultProducts;
     }
 
-    function selectPdfProduct(product, price) {
-      selectedPdf = { product, price };
-      $("selectedProduct").textContent = `${selectedPdf.product} selected - ₹${selectedPdf.price}. Enter customer details to continue.`;
-      $("customerProduct").value = selectedPdf.product;
-      $("customerAmount").value = `₹${selectedPdf.price}`;
-      $("customerName").focus();
-    }
-
-    function renderPdfProducts() {
-      $("productGrid").innerHTML = getPdfProducts().map(product => `
-        <article class="panel product-card">
-          <div>
-            <h3>${product.name}</h3>
-            <p class="subtitle">${product.description || "PDF guide for your fitness business."}</p>
-            <p class="subtitle">PDF: ${product.fileName || "Uploaded PDF"}</p>
-          </div>
+    function renderProducts() {
+      $("productGrid").innerHTML = getProducts().map(product => `
+        <article class="glass card product">
+          <strong>${product.name}</strong>
+          <span class="muted">${product.description || "Premium PDF guide"}</span>
+          <span class="muted">PDF: ${product.fileName || "Uploaded PDF"}</span>
           <div class="price">₹${product.price}</div>
-          <button class="buy-btn" data-product="${product.name}" data-price="${product.price}">Buy Now →</button>
+          <button class="btn" data-name="${product.name}" data-price="${product.price}">Buy Now</button>
         </article>
       `).join("");
-      document.querySelectorAll(".buy-btn").forEach(button => {
-        button.addEventListener("click", () => selectPdfProduct(button.dataset.product, button.dataset.price));
+
+      document.querySelectorAll("[data-name]").forEach(button => {
+        button.addEventListener("click", () => {
+          selectedPdf = { product: button.dataset.name, price: button.dataset.price };
+          $("selectedProduct").textContent = `${selectedPdf.product} selected - ₹${selectedPdf.price}`;
+          $("customerProduct").value = selectedPdf.product;
+          $("customerAmount").value = `₹${selectedPdf.price}`;
+          $("checkoutPanel").scrollIntoView({ behavior: "smooth", block: "start" });
+        });
       });
     }
+
+    document.querySelectorAll("[data-scroll]").forEach(button => {
+      button.addEventListener("click", () => {
+        document.querySelectorAll("[data-scroll]").forEach(item => item.classList.remove("active"));
+        button.classList.add("active");
+        $(button.dataset.scroll).scrollIntoView({ behavior: "smooth", block: "start" });
+      });
+    });
 
     $("checkoutForm").addEventListener("submit", (event) => {
       event.preventDefault();
-      const name = $("customerName").value.trim();
-      const email = $("customerEmail").value.trim();
-      const whatsapp = $("customerWhatsApp").value.trim();
-      const utrId = $("customerUtr").value.trim();
-      const screenshot = $("paymentScreenshot").files[0]?.name || "";
-      if (!name || !email) return;
-      const today = new Date().toLocaleDateString("en-US", { month: "short", day: "2-digit" });
-      const order = { name, email, whatsapp, utrId, screenshot, product: selectedPdf.product, amount: selectedPdf.price, date: today, status: "Pending", paid: false, pdfSent: false };
+      const order = {
+        date: new Date().toLocaleDateString("en-US", { month: "short", day: "2-digit" }),
+        name: $("customerName").value.trim(),
+        whatsapp: $("customerWhatsApp").value.trim(),
+        email: $("customerEmail").value.trim(),
+        product: selectedPdf.product,
+        amount: selectedPdf.price,
+        utrId: $("customerUtr").value.trim(),
+        screenshot: $("paymentScreenshot").files[0]?.name || "",
+        status: "Pending",
+        pdfSent: false
+      };
       localStorage.setItem("latestPdfOrder", JSON.stringify(order));
-      $("downloadState").textContent = `Lead saved for ${name}. Scan PhonePe QR, then submit payment details.`;
-      renderCommerce(order);
-    });
-
-    $("paidBtn").addEventListener("click", () => {
-      const order = JSON.parse(localStorage.getItem("latestPdfOrder") || "null");
-      if (!order) {
-        $("downloadState").textContent = "Enter customer details first, then confirm payment.";
-        return;
-      }
-      order.paid = false;
-      order.status = "Pending";
-      localStorage.setItem("latestPdfOrder", JSON.stringify(order));
-      $("products").classList.add("hidden");
-      $("thankYou").classList.remove("hidden");
-      $("thankYou").scrollIntoView({ behavior: "smooth", block: "start" });
-      renderCommerce(order);
+      $("storePanel").style.display = "none";
+      $("checkoutPanel").style.display = "none";
+      $("thankYou").classList.add("active");
+      $("thankYou").scrollIntoView({ behavior: "smooth", block: "center" });
     });
 
     $("backToStoreBtn").addEventListener("click", () => {
-      $("thankYou").classList.add("hidden");
-      $("products").classList.remove("hidden");
-      $("products").scrollIntoView({ behavior: "smooth", block: "start" });
+      $("storePanel").style.display = "";
+      $("checkoutPanel").style.display = "";
+      $("thankYou").classList.remove("active");
+      $("store").scrollIntoView({ behavior: "smooth", block: "start" });
     });
 
-    function renderCommerce(order = JSON.parse(localStorage.getItem("latestPdfOrder") || "null")) {
-      if (!order) return;
-      $("downloadState").textContent = `${order.product} is pending admin verification.`;
-    }
-
-    fields.forEach(id => $(id).addEventListener("input", update));
-    $("sex").addEventListener("change", () => {
-      document.querySelector(".hipWrap").classList.toggle("hidden", $("sex").value !== "female");
-      update();
-    });
-    $("saveBtn").addEventListener("click", save);
-    $("resetBtn").addEventListener("click", () => {
-      entries = sample;
-      localStorage.removeItem("physiqueEntries");
-      update();
-    });
-    document.querySelectorAll(".seg").forEach(btn => btn.addEventListener("click", () => setUnit(btn.dataset.unit)));
-    document.querySelectorAll(".tab").forEach(btn => {
-      btn.addEventListener("click", () => {
-        document.querySelectorAll(".tab").forEach(tab => tab.classList.remove("active"));
-        if (btn.dataset.view !== "baseline") btn.classList.add("active");
-        if (btn.dataset.view === "baseline") showBaseline();
-        if (btn.dataset.view === "products") $("products").scrollIntoView({ behavior: "smooth", block: "start" });
-        if (btn.dataset.view === "measure") $("measure").scrollIntoView({ behavior: "smooth", block: "start" });
-        if (btn.dataset.view === "history") $("history").scrollIntoView({ behavior: "smooth", block: "center" });
-        if (btn.dataset.view === "dashboard") $("dashboard").scrollIntoView({ behavior: "smooth", block: "start" });
-      });
-    });
-
-    const storedBaseline = JSON.parse(localStorage.getItem("physiqueBaseline") || "null");
-    populateBaseline(storedBaseline);
-    if (location.hash === "#products" && !storedBaseline?.completed) {
-      const demoBaseline = {
-        name: "Umang Awasthi",
-        age: "21",
-        gender: "male",
-        height: "181",
-        weight: "63",
-        target: "70",
-        fitnessGoal: "muscle-gain",
-        goalBodyFat: "16",
-        completed: true
-      };
-      populateBaseline(demoBaseline);
-      applyBaselineToDashboard(demoBaseline);
-      showDashboard();
-      setTimeout(() => $("products").scrollIntoView({ behavior: "auto", block: "start" }), 50);
-    } else if (storedBaseline?.completed) {
-      applyBaselineToDashboard(storedBaseline);
-      showDashboard();
-    } else {
-      update();
-    }
-    renderPdfProducts();
-    renderCommerce();
+    renderProducts();
   </script>
 </body>
 </html>
