@@ -15,7 +15,11 @@ sequenceDiagram
   A->>P: Store pending order and lead
   A-->>W: Return PhonePe QR details
   C->>W: Scans PhonePe QR and pays
-  W->>A: Admin confirms payment
+  C->>W: Submits UTR ID and screenshot
+  W->>A: Store pending verification
+  A-->>W: Show pending access message
+  A->>A: Admin logs in with ADMIN_PASSWORD
+  A->>A: Admin verifies or rejects order
   A->>P: Mark paid and unlock download
   A->>S: Append Date, Name, WhatsApp, Email, Product, Amount, UTR ID, Payment Screenshot, Status, PDF Sent
   A->>D: Resolve PDF download URL

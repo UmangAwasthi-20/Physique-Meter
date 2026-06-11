@@ -161,9 +161,10 @@ Checkout flow:
 3. Customer enters name, WhatsApp, email, UTR ID, and payment screenshot.
 4. Backend stores pending order and lead.
 5. Customer scans PhonePe admin QR.
-6. Admin confirms payment.
-7. Download access unlocks.
-8. Lead is synced to Google Sheets.
+6. Customer submits UTR ID and payment screenshot.
+7. Admin logs in at `/admin` and verifies or rejects the order.
+8. Download access unlocks or PDF is sent only after admin verification.
+9. Lead is synced to Google Sheets.
 
 Google Sheet columns:
 

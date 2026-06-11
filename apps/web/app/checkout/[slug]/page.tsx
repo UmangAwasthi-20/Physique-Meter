@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { CheckCircle, Download, QrCode } from "lucide-react";
+import { CheckCircle, QrCode } from "lucide-react";
 import { useMemo, useState } from "react";
 
 const products: Record<string, { name: string; price: number; downloadUrl: string }> = {
@@ -20,7 +20,7 @@ const products: Record<string, { name: string; price: number; downloadUrl: strin
 export default function CheckoutPage({ params }: { params: { slug: string } }) {
   const product = products[params.slug] || products["weight-gain-shake-pdf"];
   const [submitted, setSubmitted] = useState(false);
-  const [paid, setPaid] = useState(false);
+  const [paymentSubmitted, setPaymentSubmitted] = useState(false);
   const upiLink = useMemo(() => `upi://pay?pa=your-upi-id@ybl&pn=Physique%20Meter%20AI&am=${product.price}&cu=INR`, [product.price]);
 
   return (
@@ -33,10 +33,12 @@ export default function CheckoutPage({ params }: { params: { slug: string } }) {
           <form className="form" onSubmit={(event) => { event.preventDefault(); setSubmitted(true); }}>
             <label className="field">Name<input required placeholder="Your name" /></label>
             <label className="field">Email<input required type="email" placeholder="you@example.com" /></label>
-            <label className="field">Phone optional<input type="tel" placeholder="+91..." /></label>
+            <label className="field">WhatsApp optional<input type="tel" placeholder="+91..." /></label>
+            <label className="field">UTR ID<input placeholder="UPI transaction / UTR ID" /></label>
+            <label className="field">Payment Screenshot<input type="file" accept="image/*" /></label>
             <button className="button" type="submit">Save Details</button>
           </form>
-          {submitted && <p className="muted"><CheckCircle size={16} /> Details saved. Complete payment to unlock download.</p>}
+          {submitted && <p className="muted"><CheckCircle size={16} /> Details saved. Complete payment and submit UTR/screenshot for admin verification.</p>}
         </article>
 
         <article className="card span-6">
@@ -49,15 +51,13 @@ export default function CheckoutPage({ params }: { params: { slug: string } }) {
             </div>
           </div>
           <p className="muted">In production, the admin confirms payment from the admin panel or via PhonePe gateway callback.</p>
-          <button className="button" onClick={() => setPaid(true)} disabled={!submitted}>I Have Paid</button>
+          <button className="button" onClick={() => setPaymentSubmitted(true)} disabled={!submitted}>Submit Payment Details</button>
         </article>
 
         <article className="card span-12">
           <h2>Download Access</h2>
-          {paid ? (
-            <a className="button" href={product.downloadUrl}>
-              <Download size={18} /> Download PDF
-            </a>
+          {paymentSubmitted ? (
+            <p className="muted">Payment details submitted. Admin will verify UTR/screenshot before download access is unlocked or PDF is sent.</p>
           ) : (
             <p className="muted">Download unlocks after customer details and successful payment confirmation.</p>
           )}

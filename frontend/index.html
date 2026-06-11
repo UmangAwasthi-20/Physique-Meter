@@ -1038,7 +1038,7 @@
         <div class="commerce-copy">
           <div class="commerce-kicker">// PDF Products</div>
           <h2 class="commerce-title">Gym Transformation Guides</h2>
-          <p>Sell PDF plans with PhonePe QR payment, lead collection, UTR tracking, payment screenshots, Google Sheet sync, and an admin panel for orders.</p>
+          <p>Sell PDF plans with PhonePe QR payment, lead collection, UTR tracking, payment screenshots, and secure backend order verification.</p>
         </div>
         <div class="qr-preview">
           <div class="qr-card">PhonePe<br />Admin QR</div>
@@ -1095,33 +1095,16 @@
           <div class="qr-preview" style="min-height: 190px; border-radius: 8px; margin: 12px 0;">
             <div class="qr-card" style="width: 150px;">PhonePe<br />QR</div>
           </div>
-          <button class="unlock-btn" id="paidBtn" type="button">I Have Paid</button>
+          <button class="unlock-btn" id="paidBtn" type="button">Submit Payment Details</button>
           <p class="subtitle" id="downloadState">Download locked until payment is confirmed.</p>
         </article>
       </div>
 
-      <div class="commerce-grid">
-        <article class="panel">
-          <h2>Customer Dashboard</h2>
-          <table class="order-table">
-            <thead><tr><th>PDF</th><th>Status</th><th>PDF Sent</th></tr></thead>
-            <tbody id="customerOrders">
-              <tr><td>Weight Gain Shake PDF</td><td><span class="badge">Pending</span></td><td>No</td></tr>
-            </tbody>
-          </table>
-        </article>
-
-        <article class="panel">
-          <h2>Admin Panel</h2>
-          <table class="order-table">
-            <thead><tr><th>Date</th><th>Name</th><th>WhatsApp</th><th>Email</th><th>Product</th><th>Amount</th><th>UTR ID</th><th>Payment Screenshot</th><th>Status</th><th>PDF Sent</th></tr></thead>
-            <tbody id="adminLeads">
-              <tr><td>Today</td><td>Lead preview</td><td>+91...</td><td>buyer@example.com</td><td>Vegetarian Guide</td><td>₹99</td><td>Pending</td><td>screenshot.jpg</td><td><span class="badge">Pending</span></td><td>No</td></tr>
-            </tbody>
-          </table>
-          <p class="subtitle" style="margin-top: 12px;">Google Sheet columns: Date, Name, WhatsApp, Email, Product, Amount, UTR ID, Payment Screenshot, Status, PDF Sent. Status options: Pending, Verified, Rejected, PDF Sent.</p>
-        </article>
-      </div>
+      <article class="panel">
+        <h2>Access Message</h2>
+        <p class="subtitle">Your purchase status and download access appear here only for your order. Admin order data and Google Sheet data are never shown on this public page.</p>
+        <p class="subtitle" id="customerAccessState">No submitted order yet.</p>
+      </article>
     </section>
   </main>
 
@@ -1486,6 +1469,7 @@
       const order = { name, email, whatsapp, utrId, screenshot, product: selectedPdf.product, amount: selectedPdf.price, date: today, status: "Pending", paid: false, pdfSent: false };
       localStorage.setItem("latestPdfOrder", JSON.stringify(order));
       $("downloadState").textContent = `Lead saved for ${name}. Pay ₹${selectedPdf.price} with PhonePe QR to unlock download.`;
+      $("customerAccessState").textContent = `${order.product} is pending payment verification.`;
       renderCommerce(order);
     });
 
@@ -1495,36 +1479,19 @@
         $("downloadState").textContent = "Enter customer details first, then confirm payment.";
         return;
       }
-      order.paid = true;
-      order.status = "Verified";
+      order.paid = false;
+      order.status = "Pending";
       localStorage.setItem("latestPdfOrder", JSON.stringify(order));
-      $("downloadState").innerHTML = `Payment confirmed. <a href="#" download="${order.product}.pdf">Download ${order.product}</a>`;
+      $("downloadState").textContent = "Payment details submitted. Admin will verify UTR/screenshot before download access is unlocked.";
+      $("customerAccessState").textContent = `${order.product} is pending admin verification.`;
       renderCommerce(order);
     });
 
     function renderCommerce(order = JSON.parse(localStorage.getItem("latestPdfOrder") || "null")) {
       if (!order) return;
-      $("customerOrders").innerHTML = `
-        <tr>
-          <td>${order.product}</td>
-          <td><span class="badge">${order.status}</span></td>
-          <td>${order.pdfSent ? "Yes" : "No"}</td>
-        </tr>
-      `;
-      $("adminLeads").innerHTML = `
-        <tr>
-          <td>${order.date}</td>
-          <td>${order.name}</td>
-          <td>${order.whatsapp || "-"}</td>
-          <td>${order.email}</td>
-          <td>${order.product}</td>
-          <td>₹${order.amount}</td>
-          <td>${order.utrId || "-"}</td>
-          <td>${order.screenshot || "-"}</td>
-          <td><span class="badge">${order.status}</span></td>
-          <td>${order.pdfSent ? "Yes" : "No"}</td>
-        </tr>
-      `;
+      $("customerAccessState").textContent = order.paid
+        ? `${order.product} download is unlocked.`
+        : `${order.product} is pending payment verification.`;
     }
 
     fields.forEach(id => $(id).addEventListener("input", update));

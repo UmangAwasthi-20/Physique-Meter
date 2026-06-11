@@ -1,7 +1,7 @@
 from datetime import datetime, timezone
 from uuid import uuid4
 
-from fastapi import APIRouter, HTTPException
+from fastapi import APIRouter, Depends, Header, HTTPException
 
 from ..config import settings
 from ..schemas import OrderCreateRequest, PaymentConfirmRequest, ProductPayload
@@ -33,24 +33,30 @@ PRODUCTS = {
 ORDERS = {}
 
 
+def require_admin(x_admin_password: str | None = Header(default=None)):
+    if not x_admin_password or x_admin_password != settings.admin_password:
+        raise HTTPException(status_code=401, detail="Admin authentication required")
+    return True
+
+
 @router.get("/products")
 def list_products():
     return {"ok": True, "products": [product for product in PRODUCTS.values() if product["active"]]}
 
 
 @router.post("/admin/products")
-def upsert_product(payload: ProductPayload):
+def upsert_product(payload: ProductPayload, _admin: bool = Depends(require_admin)):
     PRODUCTS[payload.slug] = payload.model_dump()
     return {"ok": True, "product": PRODUCTS[payload.slug]}
 
 
 @router.get("/admin/orders")
-def admin_orders():
+def admin_orders(_admin: bool = Depends(require_admin)):
     return {"ok": True, "orders": list(ORDERS.values())}
 
 
 @router.get("/admin/storage")
-def admin_storage():
+def admin_storage(_admin: bool = Depends(require_admin)):
     return {"ok": True, "storage": storage_provider_status()}
 
 
@@ -93,7 +99,7 @@ def create_order(payload: OrderCreateRequest):
 
 
 @router.post("/orders/confirm-payment")
-def confirm_payment(payload: PaymentConfirmRequest):
+def confirm_payment(payload: PaymentConfirmRequest, _admin: bool = Depends(require_admin)):
     order = ORDERS.get(payload.order_id)
     if not order:
         raise HTTPException(status_code=404, detail="Order not found")
