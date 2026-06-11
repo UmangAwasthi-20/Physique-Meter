@@ -1045,7 +1045,7 @@
         </div>
       </div>
 
-      <div class="product-grid">
+      <div class="product-grid" id="productGrid">
         <article class="panel product-card">
           <div>
             <h3>Weight Gain Shake PDF</h3>
@@ -1130,6 +1130,20 @@
     let unit = "metric";
     let selectedGoal = "fat-loss";
     let selectedPdf = { product: "Weight Gain Shake PDF", price: "49" };
+    const defaultProducts = [
+      {
+        name: "Weight Gain Shake PDF",
+        price: "49",
+        description: "High-calorie shake recipes for clean weight gain and daily consistency.",
+        fileName: "weight-gain-shake.pdf"
+      },
+      {
+        name: "Vegetarian Muscle Gain Guide",
+        price: "99",
+        description: "Indian vegetarian muscle-gain meal plan, protein options, and weekly structure.",
+        fileName: "vegetarian-muscle-gain-guide.pdf"
+      }
+    ];
     const sample = [
       { date: "May 02", bf: 20.1, weight: 84.4 },
       { date: "May 09", bf: 19.4, weight: 83.7 },
@@ -1474,6 +1488,35 @@
       });
     });
 
+    function getPdfProducts() {
+      return JSON.parse(localStorage.getItem("pdfProducts") || "null") || defaultProducts;
+    }
+
+    function selectPdfProduct(product, price) {
+      selectedPdf = { product, price };
+      $("selectedProduct").textContent = `${selectedPdf.product} selected - ₹${selectedPdf.price}. Enter customer details to continue.`;
+      $("customerProduct").value = selectedPdf.product;
+      $("customerAmount").value = `₹${selectedPdf.price}`;
+      $("customerName").focus();
+    }
+
+    function renderPdfProducts() {
+      $("productGrid").innerHTML = getPdfProducts().map(product => `
+        <article class="panel product-card">
+          <div>
+            <h3>${product.name}</h3>
+            <p class="subtitle">${product.description || "PDF guide for your fitness business."}</p>
+            <p class="subtitle">PDF: ${product.fileName || "Uploaded PDF"}</p>
+          </div>
+          <div class="price">₹${product.price}</div>
+          <button class="buy-btn" data-product="${product.name}" data-price="${product.price}">Buy Now →</button>
+        </article>
+      `).join("");
+      document.querySelectorAll(".buy-btn").forEach(button => {
+        button.addEventListener("click", () => selectPdfProduct(button.dataset.product, button.dataset.price));
+      });
+    }
+
     $("checkoutForm").addEventListener("submit", (event) => {
       event.preventDefault();
       const name = $("customerName").value.trim();
@@ -1563,6 +1606,7 @@
     } else {
       update();
     }
+    renderPdfProducts();
     renderCommerce();
   </script>
 </body>

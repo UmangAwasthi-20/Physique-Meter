@@ -99,6 +99,18 @@
     }
 
     .hidden { display: none; }
+
+    .admin-grid {
+      display: grid;
+      grid-template-columns: minmax(280px, 420px) 1fr;
+      gap: 16px;
+      align-items: start;
+      margin-bottom: 16px;
+    }
+
+    @media (max-width: 850px) {
+      .admin-grid { grid-template-columns: 1fr; }
+    }
   </style>
 </head>
 <body>
@@ -116,6 +128,36 @@
         <button type="submit">Login</button>
       </form>
       <p id="loginError"></p>
+    </section>
+
+    <section class="admin-grid hidden" id="productPanel">
+      <article class="panel">
+        <h2>Upload PDF Product</h2>
+        <form id="productForm">
+          <label>PDF Name
+            <input id="pdfName" type="text" placeholder="Gym Transformation Guide" required />
+          </label>
+          <label>Price (INR)
+            <input id="pdfPrice" type="number" min="1" placeholder="99" required />
+          </label>
+          <label>Description
+            <input id="pdfDescription" type="text" placeholder="Short product description" />
+          </label>
+          <label>PDF File
+            <input id="pdfFile" type="file" accept="application/pdf" required />
+          </label>
+          <button type="submit">Save Product</button>
+        </form>
+        <p>Saved products appear immediately on the normal public PDF Store page in this preview.</p>
+      </article>
+
+      <article class="panel">
+        <h2>Current Products</h2>
+        <table>
+          <thead><tr><th>Product</th><th>Amount</th><th>PDF</th></tr></thead>
+          <tbody id="productRows"></tbody>
+        </table>
+      </article>
     </section>
 
     <section class="panel hidden" id="adminPanel">
@@ -161,13 +203,48 @@
 
   <script>
     const loginPanel = document.getElementById("loginPanel");
+    const productPanel = document.getElementById("productPanel");
     const adminPanel = document.getElementById("adminPanel");
     const error = document.getElementById("loginError");
     const previewPassword = localStorage.getItem("ADMIN_PASSWORD") || "admin";
+    const defaultProducts = [
+      {
+        name: "Weight Gain Shake PDF",
+        price: "49",
+        description: "High-calorie shake recipes for clean weight gain and daily consistency.",
+        fileName: "weight-gain-shake.pdf"
+      },
+      {
+        name: "Vegetarian Muscle Gain Guide",
+        price: "99",
+        description: "Indian vegetarian muscle-gain meal plan, protein options, and weekly structure.",
+        fileName: "vegetarian-muscle-gain-guide.pdf"
+      }
+    ];
+
+    function getProducts() {
+      return JSON.parse(localStorage.getItem("pdfProducts") || "null") || defaultProducts;
+    }
+
+    function saveProducts(products) {
+      localStorage.setItem("pdfProducts", JSON.stringify(products));
+    }
+
+    function renderProducts() {
+      document.getElementById("productRows").innerHTML = getProducts().map((product) => `
+        <tr>
+          <td>${product.name}</td>
+          <td>₹${product.price}</td>
+          <td>${product.fileName || "Uploaded PDF"}</td>
+        </tr>
+      `).join("");
+    }
 
     function showAdmin() {
       loginPanel.classList.add("hidden");
+      productPanel.classList.remove("hidden");
       adminPanel.classList.remove("hidden");
+      renderProducts();
       const order = JSON.parse(localStorage.getItem("latestPdfOrder") || "null");
       if (order) {
         document.getElementById("adminRows").innerHTML = `
@@ -188,6 +265,21 @@
     }
 
     if (sessionStorage.getItem("isAdmin") === "true") showAdmin();
+
+    document.getElementById("productForm").addEventListener("submit", (event) => {
+      event.preventDefault();
+      const products = getProducts();
+      const file = document.getElementById("pdfFile").files[0];
+      products.unshift({
+        name: document.getElementById("pdfName").value.trim(),
+        price: document.getElementById("pdfPrice").value.trim(),
+        description: document.getElementById("pdfDescription").value.trim(),
+        fileName: file?.name || "Uploaded PDF"
+      });
+      saveProducts(products);
+      event.target.reset();
+      renderProducts();
+    });
 
     document.querySelectorAll("[data-status]").forEach((button) => {
       button.addEventListener("click", () => {

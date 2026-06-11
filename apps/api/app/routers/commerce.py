@@ -1,7 +1,7 @@
 from datetime import datetime, timezone
 from uuid import uuid4
 
-from fastapi import APIRouter, Depends, Header, HTTPException
+from fastapi import APIRouter, Depends, File, Form, Header, HTTPException, UploadFile
 
 from ..config import settings
 from ..schemas import OrderCreateRequest, PaymentConfirmRequest, ProductPayload
@@ -48,6 +48,27 @@ def list_products():
 def upsert_product(payload: ProductPayload, _admin: bool = Depends(require_admin)):
     PRODUCTS[payload.slug] = payload.model_dump()
     return {"ok": True, "product": PRODUCTS[payload.slug]}
+
+
+@router.post("/admin/products/upload")
+async def upload_product(
+    name: str = Form(...),
+    price_inr: int = Form(...),
+    description: str = Form(""),
+    pdf: UploadFile = File(...),
+    _admin: bool = Depends(require_admin)
+):
+    slug = name.lower().replace(" ", "-")
+    product = {
+        "slug": slug,
+        "name": name,
+        "description": description,
+        "price_inr": price_inr,
+        "pdf_url": f"uploaded://{pdf.filename}",
+        "active": True
+    }
+    PRODUCTS[slug] = product
+    return {"ok": True, "product": product}
 
 
 @router.get("/admin/orders")

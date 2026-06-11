@@ -145,6 +145,7 @@ Copy `.env.example` to `.env` and add your real `GEMINI_API_KEY`.
 - `POST /commerce/orders`
 - `POST /commerce/orders/confirm-payment`
 - `POST /commerce/admin/products`
+- `POST /commerce/admin/products/upload`
 - `GET /commerce/admin/orders`
 - `GET /commerce/admin/sheet-orders`
 
