@@ -1,0 +1,39 @@
+from pydantic import BaseModel, EmailStr, Field
+
+
+class SignupRequest(BaseModel):
+    name: str
+    email: EmailStr
+    password: str = Field(min_length=8)
+
+
+class LoginRequest(BaseModel):
+    email: EmailStr
+    password: str
+
+
+class BaselineRequest(BaseModel):
+    gender: str
+    age: int
+    height_cm: float
+    current_weight_kg: float
+    target_weight_kg: float | None = None
+    fitness_goal: str
+
+
+class MetricsRequest(BaseModel):
+    sex: str = "male"
+    height_cm: float
+    weight_kg: float
+    goal_body_fat: float = 14
+    neck_cm: float | None = None
+    waist_cm: float | None = None
+    hips_cm: float | None = None
+
+
+class ReportRequest(BaseModel):
+    weight_kg: float
+    body_fat_percent: float | None = None
+    shoulder_waist_ratio: float | None = None
+    previous_shoulder_waist_ratio: float | None = None
+    notes: str | None = None

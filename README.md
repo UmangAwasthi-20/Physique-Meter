@@ -1,61 +1,137 @@
-# Physique Meter
+# Physique Meter AI
 
-Physique Meter is a two-step fitness web app:
+AI-powered physique analysis and progress tracking platform.
 
-- a dark baseline onboarding UI inspired by the provided reference screenshot
-- a body-composition scorecard with body-fat estimate, BMI, lean mass, fat mass, goal tracking, history, and responsive layout
+Live website: https://umangawasthi-20.github.io/Physique-Meter/
+
+Repository: https://github.com/UmangAwasthi-20/Physique-Meter
+
+## Features
+
+- Login and signup flow
+- User dashboard
+- Progress history
+- Dark mode UI
+- Mobile responsive layout
+- AI physique report
+- Strengths and weaknesses
+- Suggested focus areas
+- Weekly progress summary
+- Progress photo timeline
+- Weight graph
+- PDF report export
+- Transformation comparison view
+- Goal tracker
+
+Example AI report:
+
+> Your shoulder-to-waist ratio appears improved compared to the previous upload. Upper chest development is lagging behind shoulder development, so prioritize incline pressing and controlled volume.
+
+## Tech Stack
+
+- Frontend: Next.js, React, TypeScript
+- Backend: FastAPI, Python
+- Database: PostgreSQL
+- Computer vision: OpenCV, MediaPipe
+- AI: Gemini API
+- Export: ReportLab PDF
+- Current live static demo: GitHub Pages
+
+## Screenshots
+
+The current GitHub Pages demo starts with the dark baseline onboarding screen and then opens the physique scorecard.
+
+![Baseline onboarding](docs/screenshots/baseline-preview.png)
+
+## Architecture
+
+```mermaid
+flowchart LR
+  U["User"] --> W["Next.js Web App"]
+  W --> A["FastAPI Backend"]
+  A --> P["PostgreSQL"]
+  A --> V["OpenCV + MediaPipe"]
+  A --> G["Gemini API"]
+  A --> R["PDF Export"]
+```
+
+More detail: [docs/architecture.md](docs/architecture.md)
+
+Demo video script: [docs/demo-video-script.md](docs/demo-video-script.md)
 
 ## Project Structure
 
-- `index.html` - GitHub Pages entry point
-- `frontend/index.html` - frontend app source copy
-- `backend/server.js` - small Node.js backend/API server
-- `shared/physique.js` - shared body-composition calculation logic
+- `index.html` - live GitHub Pages static demo
+- `frontend/index.html` - exported static frontend copy
+- `apps/web` - portfolio Next.js frontend
+- `apps/api` - FastAPI backend with AI, CV, progress, auth, and PDF routes
+- `database/schema.sql` - PostgreSQL schema
+- `shared/physique.js` - shared physique metrics calculator
+- `docs` - architecture and demo materials
 - `.github/workflows/pages.yml` - GitHub Pages deployment workflow
-- `outputs/physique-metrics.html` - exported standalone deliverable
 
-## Run The Frontend
+## Run Static Demo
 
-Open `index.html` directly in a browser, or visit the GitHub Pages deployment:
+Open `index.html` directly in a browser, or visit:
 
-`https://umangawasthi-20.github.io/Physique-Meter/`
+```text
+https://umangawasthi-20.github.io/Physique-Meter/
+```
 
-## Run With Backend
-
-Install Node.js, then run:
+## Run Next.js Frontend
 
 ```bash
-npm start
+cd apps/web
+npm install
+npm run dev
 ```
 
 Open:
 
-`http://localhost:3000`
-
-## Backend API
-
-Health check:
-
-```http
-GET /api/health
+```text
+http://localhost:3000
 ```
 
-Calculate metrics:
+## Run FastAPI Backend
 
-```http
-POST /api/metrics
-Content-Type: application/json
-
-{
-  "sex": "male",
-  "heightCm": 178,
-  "weightKg": 82,
-  "goalBodyFat": 14
-}
+```bash
+python -m venv .venv
+.venv\Scripts\activate
+pip install -r apps/api/requirements.txt
+uvicorn apps.api.app.main:app --reload --port 8000
 ```
 
-The API returns body-fat estimate, BMI, lean mass, fat mass, goal delta, and estimated body measurements.
+Open API docs:
 
-## Deploy
+```text
+http://localhost:8000/docs
+```
 
-Push to `main`. GitHub Actions deploys the static site through GitHub Pages.
+## Run PostgreSQL
+
+```bash
+docker compose up -d
+```
+
+Copy `.env.example` to `.env` and add your real `GEMINI_API_KEY`.
+
+## API Highlights
+
+- `POST /auth/signup`
+- `POST /auth/login`
+- `POST /analysis/metrics`
+- `POST /analysis/photo`
+- `POST /analysis/report`
+- `GET /progress/history`
+- `GET /reports/latest.pdf`
+
+## Deployment Notes
+
+The current live website deploys the static `index.html` through GitHub Pages.
+
+For production full-stack deployment:
+
+- Deploy `apps/web` to Vercel or another Next.js host.
+- Deploy `apps/api` to Render, Railway, Fly.io, or a VM.
+- Use managed PostgreSQL.
+- Store `GEMINI_API_KEY`, `DATABASE_URL`, and `JWT_SECRET` as environment secrets.
