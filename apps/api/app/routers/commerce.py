@@ -9,6 +9,7 @@ from ..services.google_sheets import append_lead_to_sheet
 from ..services.pdf_storage import resolve_pdf_url, storage_provider_status
 
 router = APIRouter(prefix="/commerce", tags=["commerce"])
+STATUS_OPTIONS = ["Pending", "Verified", "Rejected", "PDF Sent"]
 
 PRODUCTS = {
     "weight-gain-shake-pdf": {
@@ -68,10 +69,13 @@ def create_order(payload: OrderCreateRequest):
         "amount_inr": product["price_inr"],
         "customer_name": payload.name,
         "customer_email": payload.email,
-        "customer_phone": payload.phone,
+        "customer_whatsapp": payload.whatsapp,
         "payment_method": "phonepe_qr",
-        "payment_status": "pending",
+        "utr_id": payload.utr_id,
+        "payment_screenshot_url": payload.payment_screenshot_url,
+        "status": "Pending",
         "download_unlocked": False,
+        "pdf_sent": False,
         "download_url": None,
         "created_at": now
     }
@@ -93,19 +97,34 @@ def confirm_payment(payload: PaymentConfirmRequest):
     order = ORDERS.get(payload.order_id)
     if not order:
         raise HTTPException(status_code=404, detail="Order not found")
+    if payload.status not in STATUS_OPTIONS:
+        raise HTTPException(status_code=400, detail="Invalid status")
 
     product = PRODUCTS[order["product_slug"]]
-    order["payment_status"] = "paid"
-    order["download_unlocked"] = True
+    order["status"] = payload.status
+    if payload.utr_id:
+        order["utr_id"] = payload.utr_id
+    if payload.payment_screenshot_url:
+        order["payment_screenshot_url"] = payload.payment_screenshot_url
+    order["download_unlocked"] = payload.status in ["Verified", "PDF Sent"]
     order["download_url"] = resolve_pdf_url(product)
-    order["paid_at"] = datetime.now(timezone.utc).isoformat()
+    if payload.status in ["Verified", "PDF Sent"]:
+        order["paid_at"] = datetime.now(timezone.utc).isoformat()
+    if payload.status == "PDF Sent":
+        order["pdf_sent"] = True
+        order["pdf_sent_at"] = datetime.now(timezone.utc).isoformat()
 
     lead = {
+        "date": order.get("paid_at") or order["created_at"],
         "name": order["customer_name"],
         "email": order["customer_email"],
-        "phone": order["customer_phone"] or "",
-        "purchase": order["product_name"],
-        "date": order["paid_at"]
+        "whatsapp": order["customer_whatsapp"] or "",
+        "product": order["product_name"],
+        "amount": order["amount_inr"],
+        "utr_id": order.get("utr_id") or "",
+        "payment_screenshot": order.get("payment_screenshot_url") or "",
+        "status": order["status"],
+        "pdf_sent": order["pdf_sent"]
     }
     order["google_sheet_synced"] = append_lead_to_sheet(lead)
     return {"ok": True, "order": order}

@@ -23,15 +23,20 @@ def append_lead_to_sheet(lead: dict) -> bool:
         )
         service = build("sheets", "v4", credentials=credentials)
         values = [[
+            lead["date"],
             lead["name"],
+            lead.get("whatsapp", ""),
             lead["email"],
-            lead.get("phone", ""),
-            lead["purchase"],
-            lead["date"]
+            lead["product"],
+            lead["amount"],
+            lead.get("utr_id", ""),
+            lead.get("payment_screenshot", ""),
+            lead["status"],
+            "Yes" if lead.get("pdf_sent") else "No"
         ]]
         service.spreadsheets().values().append(
             spreadsheetId=settings.google_sheets_spreadsheet_id,
-            range="Leads!A:E",
+            range="Leads!A:J",
             valueInputOption="USER_ENTERED",
             body={"values": values}
         ).execute()

@@ -1038,7 +1038,7 @@
         <div class="commerce-copy">
           <div class="commerce-kicker">// PDF Products</div>
           <h2 class="commerce-title">Gym Transformation Guides</h2>
-          <p>Sell PDF plans with PhonePe QR payment, lead collection, customer download access, Google Sheet sync, and an admin panel for orders.</p>
+          <p>Sell PDF plans with PhonePe QR payment, lead collection, UTR tracking, payment screenshots, Google Sheet sync, and an admin panel for orders.</p>
         </div>
         <div class="qr-preview">
           <div class="qr-card">PhonePe<br />Admin QR</div>
@@ -1076,8 +1076,14 @@
             <label>Email
               <input id="customerEmail" type="email" placeholder="you@example.com" required />
             </label>
-            <label>Phone optional
-              <input id="customerPhone" type="tel" placeholder="+91..." />
+            <label>WhatsApp optional
+              <input id="customerWhatsApp" type="tel" placeholder="+91..." />
+            </label>
+            <label>UTR ID
+              <input id="customerUtr" type="text" placeholder="UPI transaction / UTR ID" />
+            </label>
+            <label>Payment Screenshot
+              <input id="paymentScreenshot" type="file" accept="image/*" />
             </label>
             <button class="unlock-btn" type="submit">Save Lead & Unlock Payment</button>
           </form>
@@ -1098,9 +1104,9 @@
         <article class="panel">
           <h2>Customer Dashboard</h2>
           <table class="order-table">
-            <thead><tr><th>PDF</th><th>Status</th><th>Access</th></tr></thead>
+            <thead><tr><th>PDF</th><th>Status</th><th>PDF Sent</th></tr></thead>
             <tbody id="customerOrders">
-              <tr><td>Weight Gain Shake PDF</td><td><span class="badge">Demo</span></td><td>Locked</td></tr>
+              <tr><td>Weight Gain Shake PDF</td><td><span class="badge">Pending</span></td><td>No</td></tr>
             </tbody>
           </table>
         </article>
@@ -1108,12 +1114,12 @@
         <article class="panel">
           <h2>Admin Panel</h2>
           <table class="order-table">
-            <thead><tr><th>Name</th><th>Email</th><th>Purchase</th><th>Date</th></tr></thead>
+            <thead><tr><th>Date</th><th>Name</th><th>WhatsApp</th><th>Email</th><th>Product</th><th>Amount</th><th>UTR ID</th><th>Payment Screenshot</th><th>Status</th><th>PDF Sent</th></tr></thead>
             <tbody id="adminLeads">
-              <tr><td>Lead preview</td><td>buyer@example.com</td><td>Vegetarian Guide</td><td>Today</td></tr>
+              <tr><td>Today</td><td>Lead preview</td><td>+91...</td><td>buyer@example.com</td><td>Vegetarian Guide</td><td>₹99</td><td>Pending</td><td>screenshot.jpg</td><td><span class="badge">Pending</span></td><td>No</td></tr>
             </tbody>
           </table>
-          <p class="subtitle" style="margin-top: 12px;">Admin can upload PDFs, change prices, view orders, export customer data, and sync paid leads to Google Sheets.</p>
+          <p class="subtitle" style="margin-top: 12px;">Google Sheet columns: Date, Name, WhatsApp, Email, Product, Amount, UTR ID, Payment Screenshot, Status, PDF Sent. Status options: Pending, Verified, Rejected, PDF Sent.</p>
         </article>
       </div>
     </section>
@@ -1472,10 +1478,12 @@
       event.preventDefault();
       const name = $("customerName").value.trim();
       const email = $("customerEmail").value.trim();
-      const phone = $("customerPhone").value.trim();
+      const whatsapp = $("customerWhatsApp").value.trim();
+      const utrId = $("customerUtr").value.trim();
+      const screenshot = $("paymentScreenshot").files[0]?.name || "";
       if (!name || !email) return;
       const today = new Date().toLocaleDateString("en-US", { month: "short", day: "2-digit" });
-      const order = { name, email, phone, product: selectedPdf.product, date: today, paid: false };
+      const order = { name, email, whatsapp, utrId, screenshot, product: selectedPdf.product, amount: selectedPdf.price, date: today, status: "Pending", paid: false, pdfSent: false };
       localStorage.setItem("latestPdfOrder", JSON.stringify(order));
       $("downloadState").textContent = `Lead saved for ${name}. Pay ₹${selectedPdf.price} with PhonePe QR to unlock download.`;
       renderCommerce(order);
@@ -1488,6 +1496,7 @@
         return;
       }
       order.paid = true;
+      order.status = "Verified";
       localStorage.setItem("latestPdfOrder", JSON.stringify(order));
       $("downloadState").innerHTML = `Payment confirmed. <a href="#" download="${order.product}.pdf">Download ${order.product}</a>`;
       renderCommerce(order);
@@ -1498,16 +1507,22 @@
       $("customerOrders").innerHTML = `
         <tr>
           <td>${order.product}</td>
-          <td><span class="badge">${order.paid ? "Paid" : "Pending"}</span></td>
-          <td>${order.paid ? "Download unlocked" : "Locked"}</td>
+          <td><span class="badge">${order.status}</span></td>
+          <td>${order.pdfSent ? "Yes" : "No"}</td>
         </tr>
       `;
       $("adminLeads").innerHTML = `
         <tr>
+          <td>${order.date}</td>
           <td>${order.name}</td>
+          <td>${order.whatsapp || "-"}</td>
           <td>${order.email}</td>
           <td>${order.product}</td>
-          <td>${order.date}</td>
+          <td>₹${order.amount}</td>
+          <td>${order.utrId || "-"}</td>
+          <td>${order.screenshot || "-"}</td>
+          <td><span class="badge">${order.status}</span></td>
+          <td>${order.pdfSent ? "Yes" : "No"}</td>
         </tr>
       `;
     }

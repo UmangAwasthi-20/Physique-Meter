@@ -60,13 +60,17 @@ CREATE TABLE IF NOT EXISTS orders (
   user_id UUID REFERENCES users(id) ON DELETE SET NULL,
   customer_name TEXT NOT NULL,
   customer_email TEXT NOT NULL,
-  customer_phone TEXT,
+  customer_whatsapp TEXT,
   amount_inr INTEGER NOT NULL,
   payment_method TEXT NOT NULL DEFAULT 'phonepe_qr',
-  payment_status TEXT NOT NULL DEFAULT 'pending',
+  utr_id TEXT,
+  payment_screenshot_url TEXT,
+  status TEXT NOT NULL DEFAULT 'Pending' CHECK (status IN ('Pending', 'Verified', 'Rejected', 'PDF Sent')),
   download_unlocked BOOLEAN NOT NULL DEFAULT FALSE,
+  pdf_sent BOOLEAN NOT NULL DEFAULT FALSE,
   created_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
-  paid_at TIMESTAMPTZ
+  paid_at TIMESTAMPTZ,
+  pdf_sent_at TIMESTAMPTZ
 );
 
 CREATE TABLE IF NOT EXISTS leads (
@@ -74,8 +78,13 @@ CREATE TABLE IF NOT EXISTS leads (
   order_id UUID REFERENCES orders(id) ON DELETE SET NULL,
   name TEXT NOT NULL,
   email TEXT NOT NULL,
-  phone TEXT,
+  whatsapp TEXT,
   purchase TEXT NOT NULL,
+  amount_inr INTEGER NOT NULL,
+  utr_id TEXT,
+  payment_screenshot_url TEXT,
+  status TEXT NOT NULL DEFAULT 'Pending' CHECK (status IN ('Pending', 'Verified', 'Rejected', 'PDF Sent')),
+  pdf_sent BOOLEAN NOT NULL DEFAULT FALSE,
   purchased_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
   google_sheet_synced BOOLEAN NOT NULL DEFAULT FALSE
 );

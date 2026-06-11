@@ -52,9 +52,14 @@ class OrderCreateRequest(BaseModel):
     product_slug: str
     name: str
     email: EmailStr
-    phone: str | None = None
+    whatsapp: str | None = None
+    utr_id: str | None = None
+    payment_screenshot_url: str | None = None
 
 
 class PaymentConfirmRequest(BaseModel):
     order_id: str
+    status: str = "Verified"
+    utr_id: str | None = None
+    payment_screenshot_url: str | None = None
     admin_note: str | None = None

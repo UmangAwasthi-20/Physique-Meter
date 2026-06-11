@@ -17,7 +17,7 @@ sequenceDiagram
   C->>W: Scans PhonePe QR and pays
   W->>A: Admin confirms payment
   A->>P: Mark paid and unlock download
-  A->>S: Append name, email, purchase, date
+  A->>S: Append Date, Name, WhatsApp, Email, Product, Amount, UTR ID, Payment Screenshot, Status, PDF Sent
   A->>D: Resolve PDF download URL
   A-->>W: Return unlocked download access
 ```
@@ -28,6 +28,18 @@ sequenceDiagram
 | --- | ---: |
 | Weight Gain Shake PDF | ₹49 |
 | Vegetarian Muscle Gain Guide | ₹99 |
+
+## Google Sheet Columns
+
+| Date | Name | WhatsApp | Email | Product | Amount | UTR ID | Payment Screenshot | Status | PDF Sent |
+| --- | --- | --- | --- | --- | ---: | --- | --- | --- | --- |
+
+Status options:
+
+- Pending
+- Verified
+- Rejected
+- PDF Sent
 
 ## Recommended Production Setup
 

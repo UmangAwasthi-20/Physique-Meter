@@ -158,12 +158,24 @@ Checkout flow:
 
 1. Customer opens product page.
 2. Customer clicks Buy Now.
-3. Customer enters name, email, and optional phone.
+3. Customer enters name, WhatsApp, email, UTR ID, and payment screenshot.
 4. Backend stores pending order and lead.
 5. Customer scans PhonePe admin QR.
 6. Admin confirms payment.
 7. Download access unlocks.
 8. Lead is synced to Google Sheets.
+
+Google Sheet columns:
+
+| Date | Name | WhatsApp | Email | Product | Amount | UTR ID | Payment Screenshot | Status | PDF Sent |
+| --- | --- | --- | --- | --- | ---: | --- | --- | --- | --- |
+
+Status options:
+
+- Pending
+- Verified
+- Rejected
+- PDF Sent
 
 ## Deployment Notes
 
