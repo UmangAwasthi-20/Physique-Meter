@@ -63,6 +63,11 @@ export default async function AdminPage({ searchParams }: { searchParams?: Promi
               <tr><td>Jun 11, 2026</td><td>Lead User</td><td>+91...</td><td>lead@example.com</td><td>Vegetarian Muscle Gain Guide</td><td>₹99</td><td>Pending</td><td>Not uploaded</td><td><span className="badge">Pending</span></td><td>No</td></tr>
             </tbody>
           </table>
+          <div style={{ display: "flex", gap: 8, flexWrap: "wrap", marginTop: 16 }}>
+            {["Pending", "Verified", "Rejected", "PDF Sent"].map(status => (
+              <button className="button secondary" key={status}>{status}</button>
+            ))}
+          </div>
           <button className="button" style={{ marginTop: 16 }}><Download size={18} /> Download Customer Data</button>
         </article>
       </section>

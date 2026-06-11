@@ -1073,11 +1073,17 @@
             <label>Name
               <input id="customerName" type="text" placeholder="Your name" required />
             </label>
+            <label>WhatsApp optional
+              <input id="customerWhatsApp" type="tel" placeholder="+91..." />
+            </label>
             <label>Email
               <input id="customerEmail" type="email" placeholder="you@example.com" required />
             </label>
-            <label>WhatsApp optional
-              <input id="customerWhatsApp" type="tel" placeholder="+91..." />
+            <label>Product
+              <input id="customerProduct" type="text" value="Weight Gain Shake PDF" readonly />
+            </label>
+            <label>Amount
+              <input id="customerAmount" type="text" value="₹49" readonly />
             </label>
             <label>UTR ID
               <input id="customerUtr" type="text" placeholder="UPI transaction / UTR ID" />
@@ -1096,10 +1102,24 @@
             <div class="qr-card" style="width: 150px;">PhonePe<br />QR</div>
           </div>
           <button class="unlock-btn" id="paidBtn" type="button">Submit Payment Details</button>
-          <p class="subtitle" id="downloadState">Download locked until payment is confirmed.</p>
+          <p class="subtitle" id="downloadState">PDF access is handled after manual admin verification.</p>
         </article>
       </div>
 
+    </section>
+
+    <section class="commerce hidden" id="thankYou">
+      <article class="commerce-hero">
+        <div class="commerce-copy">
+          <div class="commerce-kicker">// Order Submitted</div>
+          <h2 class="commerce-title">Thank You</h2>
+          <p>Your payment details have been submitted. Admin will verify your UTR ID and payment screenshot, then send the PDF. No Google Sheet data or PDF download link is exposed publicly.</p>
+          <button class="buy-btn" id="backToStoreBtn" type="button">Back to Store</button>
+        </div>
+        <div class="qr-preview">
+          <div class="qr-card">Pending<br />Verification</div>
+        </div>
+      </article>
     </section>
   </main>
 
@@ -1443,11 +1463,13 @@
 
     document.querySelectorAll(".buy-btn").forEach(button => {
       button.addEventListener("click", () => {
-        selectedPdf = {
+      selectedPdf = {
           product: button.dataset.product,
           price: button.dataset.price
         };
         $("selectedProduct").textContent = `${selectedPdf.product} selected - ₹${selectedPdf.price}. Enter customer details to continue.`;
+        $("customerProduct").value = selectedPdf.product;
+        $("customerAmount").value = `₹${selectedPdf.price}`;
         $("customerName").focus();
       });
     });
@@ -1463,7 +1485,7 @@
       const today = new Date().toLocaleDateString("en-US", { month: "short", day: "2-digit" });
       const order = { name, email, whatsapp, utrId, screenshot, product: selectedPdf.product, amount: selectedPdf.price, date: today, status: "Pending", paid: false, pdfSent: false };
       localStorage.setItem("latestPdfOrder", JSON.stringify(order));
-      $("downloadState").textContent = `Lead saved for ${name}. Pay ₹${selectedPdf.price} with PhonePe QR to unlock download.`;
+      $("downloadState").textContent = `Lead saved for ${name}. Scan PhonePe QR, then submit payment details.`;
       renderCommerce(order);
     });
 
@@ -1476,15 +1498,21 @@
       order.paid = false;
       order.status = "Pending";
       localStorage.setItem("latestPdfOrder", JSON.stringify(order));
-      $("downloadState").textContent = "Payment details submitted. Admin will verify UTR/screenshot before download access is unlocked.";
+      $("products").classList.add("hidden");
+      $("thankYou").classList.remove("hidden");
+      $("thankYou").scrollIntoView({ behavior: "smooth", block: "start" });
       renderCommerce(order);
+    });
+
+    $("backToStoreBtn").addEventListener("click", () => {
+      $("thankYou").classList.add("hidden");
+      $("products").classList.remove("hidden");
+      $("products").scrollIntoView({ behavior: "smooth", block: "start" });
     });
 
     function renderCommerce(order = JSON.parse(localStorage.getItem("latestPdfOrder") || "null")) {
       if (!order) return;
-      $("downloadState").textContent = order.paid
-        ? `${order.product} download is unlocked.`
-        : `${order.product} is pending admin verification.`;
+      $("downloadState").textContent = `${order.product} is pending admin verification.`;
     }
 
     fields.forEach(id => $(id).addEventListener("input", update));

@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { CheckCircle, QrCode } from "lucide-react";
 import { useMemo, useState } from "react";
+import { useRouter } from "next/navigation";
 
 const products: Record<string, { name: string; price: number; downloadUrl: string }> = {
   "weight-gain-shake-pdf": {
@@ -19,6 +20,7 @@ const products: Record<string, { name: string; price: number; downloadUrl: strin
 
 export default function CheckoutPage({ params }: { params: { slug: string } }) {
   const product = products[params.slug] || products["weight-gain-shake-pdf"];
+  const router = useRouter();
   const [submitted, setSubmitted] = useState(false);
   const [paymentSubmitted, setPaymentSubmitted] = useState(false);
   const upiLink = useMemo(() => `upi://pay?pa=your-upi-id@ybl&pn=Physique%20Meter%20AI&am=${product.price}&cu=INR`, [product.price]);
@@ -32,8 +34,10 @@ export default function CheckoutPage({ params }: { params: { slug: string } }) {
           <h2>Customer Details</h2>
           <form className="form" onSubmit={(event) => { event.preventDefault(); setSubmitted(true); }}>
             <label className="field">Name<input required placeholder="Your name" /></label>
-            <label className="field">Email<input required type="email" placeholder="you@example.com" /></label>
             <label className="field">WhatsApp optional<input type="tel" placeholder="+91..." /></label>
+            <label className="field">Email<input required type="email" placeholder="you@example.com" /></label>
+            <label className="field">Product<input readOnly value={product.name} /></label>
+            <label className="field">Amount<input readOnly value={`₹${product.price}`} /></label>
             <label className="field">UTR ID<input placeholder="UPI transaction / UTR ID" /></label>
             <label className="field">Payment Screenshot<input type="file" accept="image/*" /></label>
             <button className="button" type="submit">Save Details</button>
@@ -51,13 +55,13 @@ export default function CheckoutPage({ params }: { params: { slug: string } }) {
             </div>
           </div>
           <p className="muted">In production, the admin confirms payment from the admin panel or via PhonePe gateway callback.</p>
-          <button className="button" onClick={() => setPaymentSubmitted(true)} disabled={!submitted}>Submit Payment Details</button>
+          <button className="button" onClick={() => { setPaymentSubmitted(true); router.push("/thank-you"); }} disabled={!submitted}>Submit Payment Details</button>
         </article>
 
         <article className="card span-12">
           <h2>Download Access</h2>
           {paymentSubmitted ? (
-            <p className="muted">Payment details submitted. Admin will verify UTR/screenshot before download access is unlocked or PDF is sent.</p>
+            <p className="muted">Payment details submitted. Admin will verify UTR/screenshot before the PDF is sent.</p>
           ) : (
             <p className="muted">Download unlocks after customer details and successful payment confirmation.</p>
           )}

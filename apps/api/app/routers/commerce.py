@@ -5,7 +5,7 @@ from fastapi import APIRouter, Depends, Header, HTTPException
 
 from ..config import settings
 from ..schemas import OrderCreateRequest, PaymentConfirmRequest, ProductPayload
-from ..services.google_sheets import append_lead_to_sheet
+from ..services.google_sheets import append_lead_to_sheet, fetch_sheet_orders
 from ..services.pdf_storage import resolve_pdf_url, storage_provider_status
 
 router = APIRouter(prefix="/commerce", tags=["commerce"])
@@ -55,6 +55,11 @@ def admin_orders(_admin: bool = Depends(require_admin)):
     return {"ok": True, "orders": list(ORDERS.values())}
 
 
+@router.get("/admin/sheet-orders")
+def admin_sheet_orders(_admin: bool = Depends(require_admin)):
+    return {"ok": True, "orders": fetch_sheet_orders()}
+
+
 @router.get("/admin/storage")
 def admin_storage(_admin: bool = Depends(require_admin)):
     return {"ok": True, "storage": storage_provider_status()}
@@ -86,6 +91,19 @@ def create_order(payload: OrderCreateRequest):
         "created_at": now
     }
     ORDERS[order_id] = order
+    lead = {
+        "date": order["created_at"],
+        "name": order["customer_name"],
+        "email": order["customer_email"],
+        "whatsapp": order["customer_whatsapp"] or "",
+        "product": order["product_name"],
+        "amount": order["amount_inr"],
+        "utr_id": order.get("utr_id") or "",
+        "payment_screenshot": order.get("payment_screenshot_url") or "",
+        "status": order["status"],
+        "pdf_sent": order["pdf_sent"]
+    }
+    order["google_sheet_synced"] = append_lead_to_sheet(lead)
     return {
         "ok": True,
         "order": order,

@@ -150,6 +150,12 @@
           </tr>
         </tbody>
       </table>
+      <div class="status-actions">
+        <button type="button" data-status="Pending">Pending</button>
+        <button type="button" data-status="Verified">Verified</button>
+        <button type="button" data-status="Rejected">Rejected</button>
+        <button type="button" data-status="PDF Sent">PDF Sent</button>
+      </div>
     </section>
   </main>
 
@@ -182,6 +188,17 @@
     }
 
     if (sessionStorage.getItem("isAdmin") === "true") showAdmin();
+
+    document.querySelectorAll("[data-status]").forEach((button) => {
+      button.addEventListener("click", () => {
+        const order = JSON.parse(localStorage.getItem("latestPdfOrder") || "null");
+        if (!order) return;
+        order.status = button.dataset.status;
+        order.pdfSent = button.dataset.status === "PDF Sent";
+        localStorage.setItem("latestPdfOrder", JSON.stringify(order));
+        showAdmin();
+      });
+    });
 
     document.getElementById("adminLogin").addEventListener("submit", (event) => {
       event.preventDefault();

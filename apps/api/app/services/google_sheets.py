@@ -43,3 +43,33 @@ def append_lead_to_sheet(lead: dict) -> bool:
         return True
     except Exception:
         return False
+
+
+def fetch_sheet_orders() -> list[dict]:
+    """Read order rows from Google Sheets for the protected admin panel."""
+    if not settings.google_sheets_spreadsheet_id or not settings.google_service_account_json:
+        return []
+
+    try:
+        import json
+        from google.oauth2.service_account import Credentials
+        from googleapiclient.discovery import build
+
+        info = json.loads(settings.google_service_account_json)
+        credentials = Credentials.from_service_account_info(
+            info,
+            scopes=["https://www.googleapis.com/auth/spreadsheets.readonly"]
+        )
+        service = build("sheets", "v4", credentials=credentials)
+        result = service.spreadsheets().values().get(
+            spreadsheetId=settings.google_sheets_spreadsheet_id,
+            range="Leads!A:J"
+        ).execute()
+        rows = result.get("values", [])
+        if not rows:
+            return []
+
+        headers = rows[0]
+        return [dict(zip(headers, row)) for row in rows[1:]]
+    except Exception:
+        return []
