@@ -98,7 +98,8 @@
       font-size: .78rem;
     }
 
-    .hidden { display: none; }
+    [hidden] { display: none !important; }
+    .hidden { display: none !important; }
 
     .admin-grid {
       display: grid;
@@ -130,7 +131,8 @@
       <p id="loginError"></p>
     </section>
 
-    <section class="admin-grid hidden" id="productPanel">
+    <div id="adminContent" hidden>
+    <section class="admin-grid" id="productPanel">
       <article class="panel">
         <h2>Upload PDF Product</h2>
         <form id="productForm">
@@ -160,7 +162,7 @@
       </article>
     </section>
 
-    <section class="panel hidden" id="adminPanel">
+    <section class="panel" id="adminPanel">
       <h2>Google Sheet / Customer Data</h2>
       <table>
         <thead>
@@ -199,11 +201,12 @@
         <button type="button" data-status="PDF Sent">PDF Sent</button>
       </div>
     </section>
+    </div>
   </main>
 
   <script>
     const loginPanel = document.getElementById("loginPanel");
-    const productPanel = document.getElementById("productPanel");
+    const adminContent = document.getElementById("adminContent");
     const adminPanel = document.getElementById("adminPanel");
     const error = document.getElementById("loginError");
     const previewPassword = localStorage.getItem("ADMIN_PASSWORD") || "admin";
@@ -241,9 +244,8 @@
     }
 
     function showAdmin() {
-      loginPanel.classList.add("hidden");
-      productPanel.classList.remove("hidden");
-      adminPanel.classList.remove("hidden");
+      loginPanel.hidden = true;
+      adminContent.hidden = false;
       renderProducts();
       const order = JSON.parse(localStorage.getItem("latestPdfOrder") || "null");
       if (order) {
