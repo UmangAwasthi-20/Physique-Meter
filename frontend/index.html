@@ -52,7 +52,7 @@
       mask-image: linear-gradient(to bottom, rgba(0,0,0,.7), transparent 78%);
     }
 
-    button, input, select {
+button, input, select {
       font: inherit;
     }
 
@@ -577,7 +577,7 @@
       font-weight: 850;
     }
 
-    input {
+    input, select {
       min-height: 44px;
       border: 1px solid var(--line);
       border-radius: 7px;
@@ -636,6 +636,7 @@
       </div>
       <nav class="nav" aria-label="Sections">
         <button class="active" data-scroll="dashboard">Command Center</button>
+        <button data-scroll="scan">Start Scan</button>
         <button data-scroll="progress">Quest Log</button>
         <button data-scroll="store">Gear Store</button>
         <button onclick="location.href='admin/'">Admin</button>
@@ -702,6 +703,46 @@
         <div class="section-title"><span class="eyebrow">Boss Fight ETA</span><div class="mini-ring" style="--value:69%;--accent:var(--violet)"></div></div>
         <strong>10 wks</strong>
         <span class="muted">Until target physique battle</span>
+      </article>
+    </section>
+
+    <section class="grid" id="scan">
+      <article class="glass card span-5">
+        <div class="section-title">
+          <div><span class="eyebrow">Start Scan</span><h2>Enter Your Stats</h2></div>
+        </div>
+        <form class="form" id="scanForm">
+          <label>Name<input id="scanName" value="Umang Awasthi" /></label>
+          <label>Age<input id="scanAge" type="number" value="21" min="14" max="90" /></label>
+          <label>Gender
+            <select id="scanGender">
+              <option value="male">Male</option>
+              <option value="female">Female</option>
+            </select>
+          </label>
+          <label>Height (cm)<input id="scanHeight" type="number" value="181" min="90" max="230" /></label>
+          <label>Weight (kg)<input id="scanWeight" type="number" value="63" min="30" max="260" /></label>
+          <label>Target Weight (kg)<input id="scanTarget" type="number" value="70" min="30" max="260" /></label>
+          <label>Neck (cm)<input id="scanNeck" type="number" value="40" min="20" max="80" /></label>
+          <label>Waist (cm)<input id="scanWaist" type="number" value="78" min="40" max="180" /></label>
+          <button class="btn" type="submit">Run Physique Scan + Gain XP</button>
+        </form>
+      </article>
+
+      <article class="glass card coach-card span-7" id="scanResult">
+        <div>
+          <span class="eyebrow">Scan Result</span>
+          <h2 id="scanTitle">Ready To Enter The Arena</h2>
+          <p id="scanCopy">
+            Add your current stats and run a scan. Your Hero Score, XP, rank progress, and mission briefing will update instantly.
+          </p>
+        </div>
+        <div class="score-row">
+          <div class="score-pill"><span>Body Fat</span><strong id="resultBodyFat">--</strong></div>
+          <div class="score-pill"><span>BMI</span><strong id="resultBmi">--</strong></div>
+          <div class="score-pill"><span>XP Gain</span><strong id="resultXp">+0</strong></div>
+          <div class="score-pill"><span>Mission</span><strong id="resultMission">Locked</strong></div>
+        </div>
       </article>
     </section>
 
@@ -823,6 +864,8 @@
       { name: "Vegetarian Muscle Gain Guide", price: "99", description: "Indian vegetarian muscle-gain meal plan.", fileName: "vegetarian-muscle-gain-guide.pdf" }
     ];
     let selectedPdf = { product: "Weight Gain Shake PDF", price: "49" };
+    let heroScore = 84;
+    let totalXp = 7240;
 
     function getProducts() {
       return JSON.parse(localStorage.getItem("pdfProducts") || "null") || defaultProducts;
@@ -856,6 +899,44 @@
         button.classList.add("active");
         $(button.dataset.scroll).scrollIntoView({ behavior: "smooth", block: "start" });
       });
+    });
+
+    function calculateScan() {
+      const gender = $("scanGender").value;
+      const height = Number($("scanHeight").value);
+      const weight = Number($("scanWeight").value);
+      const neck = Number($("scanNeck").value);
+      const waist = Number($("scanWaist").value);
+      const bmi = weight / Math.pow(height / 100, 2);
+      let bodyFat;
+      if (gender === "male") {
+        bodyFat = 495 / (1.0324 - 0.19077 * Math.log10(Math.max(1, waist - neck)) + 0.15456 * Math.log10(height)) - 450;
+      } else {
+        const hips = height * .55;
+        bodyFat = 495 / (1.29579 - 0.35004 * Math.log10(Math.max(1, waist + hips - neck)) + 0.22100 * Math.log10(height)) - 450;
+      }
+      bodyFat = Math.min(60, Math.max(3, bodyFat));
+      const score = Math.round(Math.max(45, Math.min(99, 104 - bodyFat * 1.35 + Math.min(10, totalXp / 1000))));
+      const xpGain = Math.round(80 + Math.max(0, 25 - bodyFat) * 7);
+      return { bodyFat, bmi, score, xpGain };
+    }
+
+    $("scanForm").addEventListener("submit", (event) => {
+      event.preventDefault();
+      const result = calculateScan();
+      heroScore = result.score;
+      totalXp += result.xpGain;
+      document.querySelector(".ring-inner strong").textContent = heroScore;
+      document.querySelectorAll(".score-pill strong")[2].textContent = totalXp.toLocaleString();
+      $("resultBodyFat").textContent = `${result.bodyFat.toFixed(1)}%`;
+      $("resultBmi").textContent = result.bmi.toFixed(1);
+      $("resultXp").textContent = `+${result.xpGain}`;
+      $("resultMission").textContent = result.bodyFat < 16 ? "Refine" : "Cut";
+      $("scanTitle").textContent = `Scan Complete: Hero Score ${heroScore}`;
+      $("scanCopy").textContent = result.bodyFat < 16
+        ? "You entered a leaner zone. New mission unlocked: refine upper chest, keep waist stable, and protect recovery."
+        : "Your current boss is body-fat control. New mission unlocked: hit protein, track waist, and complete three training check-ins.";
+      $("scanResult").scrollIntoView({ behavior: "smooth", block: "center" });
     });
 
     $("checkoutForm").addEventListener("submit", (event) => {
