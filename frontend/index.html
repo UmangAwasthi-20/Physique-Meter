@@ -244,7 +244,7 @@ button, input, select {
 
     .quest-board {
       display: grid;
-      grid-template-columns: repeat(3, minmax(0, 1fr));
+      grid-template-columns: repeat(4, minmax(0, 1fr));
       gap: 10px;
       max-width: 680px;
     }
@@ -429,6 +429,11 @@ button, input, select {
     .avatar-top strong,
     .avatar-readout strong {
       display: block;
+    }
+
+    .avatar-top p {
+      max-width: 52ch;
+      overflow-wrap: anywhere;
     }
 
     .avatar-stage {
@@ -671,7 +676,7 @@ button, input, select {
     .avatar-readout {
       width: 100%;
       display: grid;
-      grid-template-columns: repeat(3, minmax(0, 1fr));
+      grid-template-columns: repeat(4, minmax(0, 1fr));
       gap: 10px;
       position: relative;
       z-index: 2;
@@ -690,6 +695,213 @@ button, input, select {
       color: var(--muted);
       font-size: .78rem;
       line-height: 1.35;
+    }
+
+    .avatar-stage.svg-stage {
+      width: min(390px, 78vw);
+      height: 390px;
+      display: grid;
+      place-items: center;
+      animation: floatBody 5.8s ease-in-out infinite;
+    }
+
+    .avatar-svg {
+      width: 100%;
+      height: 100%;
+      overflow: visible;
+      filter: drop-shadow(0 34px 60px rgba(53,167,255,.24));
+    }
+
+    .avatar-svg .body-region,
+    .avatar-svg .goal-region,
+    .avatar-svg .hair-region,
+    .avatar-svg .outfit-region,
+    .avatar-svg .shoe-region {
+      transition: x .45s ease, y .45s ease, width .45s ease, height .45s ease,
+        rx .45s ease, ry .45s ease, transform .45s ease, opacity .45s ease, fill .35s ease;
+      transform-box: fill-box;
+      transform-origin: center;
+    }
+
+    .avatar-svg .goal-region {
+      fill: rgba(97,228,157,.06);
+      stroke: rgba(97,228,157,.66);
+      stroke-width: 2;
+      stroke-dasharray: 7 6;
+      filter: drop-shadow(0 0 14px rgba(97,228,157,.36));
+    }
+
+    .avatar-svg .definition-line {
+      stroke: rgba(5,6,8,.22);
+      stroke-width: 2;
+      stroke-linecap: round;
+      opacity: var(--definition, .45);
+      transition: opacity .45s ease, transform .45s ease;
+    }
+
+    .avatar-svg .hologram-line {
+      stroke: rgba(53,167,255,.25);
+      stroke-width: 1;
+      opacity: .55;
+    }
+
+    .avatar-svg.hologram #currentAvatar .body-region,
+    .avatar-svg.hologram #currentAvatar .outfit-region,
+    .avatar-svg.hologram #currentAvatar .hair-region,
+    .avatar-svg.hologram #currentAvatar .shoe-region {
+      opacity: .72;
+      stroke: rgba(127,231,255,.55);
+      stroke-width: 1.5;
+      filter: drop-shadow(0 0 16px rgba(53,167,255,.34));
+    }
+
+    .avatar-svg.minimal #currentAvatar .definition-line,
+    .avatar-svg.minimal .hologram-line {
+      opacity: .12;
+    }
+
+    .avatar-controls {
+      display: grid;
+      grid-template-columns: repeat(5, minmax(0, 1fr));
+      gap: 8px;
+      position: relative;
+      z-index: 2;
+    }
+
+    .avatar-controls label {
+      gap: 5px;
+      font-size: .72rem;
+    }
+
+    .avatar-controls select {
+      min-height: 36px;
+      padding: 7px 8px;
+      font-size: .8rem;
+    }
+
+    .avatar-progress {
+      position: relative;
+      z-index: 2;
+      display: grid;
+      gap: 8px;
+    }
+
+    .avatar-progress-top {
+      display: flex;
+      justify-content: space-between;
+      gap: 12px;
+      color: var(--muted);
+      font-size: .78rem;
+      font-weight: 850;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+    }
+
+    .avatar-progress-bar {
+      height: 10px;
+      overflow: hidden;
+      border-radius: 999px;
+      border: 1px solid var(--line);
+      background: rgba(255,255,255,.08);
+    }
+
+    .avatar-progress-fill {
+      height: 100%;
+      width: var(--avatar-progress, 0%);
+      border-radius: inherit;
+      background: linear-gradient(90deg, var(--blue), var(--green));
+      box-shadow: 0 0 22px rgba(97,228,157,.36);
+      transition: width .55s ease;
+    }
+
+    .avatar-actions {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+      position: relative;
+      z-index: 2;
+    }
+
+    .mini-btn {
+      min-height: 34px;
+      border-radius: 7px;
+      border: 1px solid var(--line);
+      padding: 0 10px;
+      color: var(--soft);
+      background: rgba(255,255,255,.06);
+      cursor: pointer;
+      font-weight: 850;
+      font-size: .82rem;
+    }
+
+    .avatar-breakdown {
+      display: none;
+      position: relative;
+      z-index: 2;
+      padding: 12px;
+      border: 1px solid rgba(53,167,255,.26);
+      border-radius: var(--radius);
+      background: rgba(53,167,255,.08);
+      color: var(--soft);
+      font-size: .88rem;
+      line-height: 1.45;
+    }
+
+    .avatar-breakdown.active {
+      display: grid;
+      gap: 8px;
+    }
+
+    .face-detail {
+      fill: rgba(7,10,16,.72);
+      stroke: none;
+    }
+
+    .avatar-breakdown ul {
+      margin: 0;
+      padding-left: 18px;
+    }
+
+    .accuracy-note {
+      color: var(--muted);
+      font-size: .78rem;
+      line-height: 1.35;
+    }
+
+    .avatar-stage.celebrate::after {
+      content: "";
+      position: absolute;
+      inset: 14% 12%;
+      pointer-events: none;
+      background:
+        radial-gradient(circle, rgba(97,228,157,.9) 0 4px, transparent 5px) 12% 18% / 70px 70px,
+        radial-gradient(circle, rgba(53,167,255,.9) 0 4px, transparent 5px) 80% 24% / 86px 86px,
+        radial-gradient(circle, rgba(142,124,255,.9) 0 4px, transparent 5px) 28% 82% / 76px 76px;
+      animation: avatarCelebrate .9s ease-out both;
+    }
+
+    @keyframes avatarCelebrate {
+      from { transform: scale(.78); opacity: 0; }
+      35% { opacity: 1; }
+      to { transform: scale(1.12); opacity: 0; }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      .avatar-stage,
+      .ring,
+      .bar,
+      .mini-ring,
+      .xp-fill {
+        animation: none !important;
+      }
+
+      .avatar-svg .body-region,
+      .avatar-svg .goal-region,
+      .avatar-svg .hair-region,
+      .avatar-svg .outfit-region,
+      .avatar-progress-fill {
+        transition: none !important;
+      }
     }
 
     .grid {
@@ -1078,9 +1290,13 @@ button, input, select {
       .quest-board { grid-template-columns: 1fr; }
       .stage-workbench { grid-template-columns: 1fr; }
       .avatar-top { flex-direction: column; align-items: start; }
+      .avatar-top p { max-width: 31ch; }
       .avatar-top .status-chip { white-space: normal; }
       .avatar-stage { width: min(330px, 100%); }
+      .avatar-stage.svg-stage { width: min(320px, 100%); height: 350px; }
+      .avatar-controls { grid-template-columns: repeat(2, minmax(0, 1fr)); }
       .avatar-readout { grid-template-columns: 1fr; }
+      .avatar-progress-top { flex-direction: column; gap: 4px; }
       .power-label { font-size: .68rem; }
       .score-row, .badge-row, .timeline, .product-grid, .form { grid-template-columns: 1fr; display: grid; }
       .chart { gap: 6px; }
@@ -1163,34 +1379,148 @@ button, input, select {
           <div>
             <span class="eyebrow">Live Avatar</span>
             <h2 id="avatarTitle">Current Male Build</h2>
-            <p class="muted" id="avatarCaption">Your current shape reacts to stats. The ghost outline shows your target direction.</p>
+            <p class="muted" id="avatarCaption">Your avatar is built from your current measurements and updates as you progress.</p>
           </div>
           <span class="status-chip" id="avatarGoalChip">Target +7kg</span>
         </div>
-        <div class="avatar-stage" id="avatarStage" aria-label="Dynamic physique avatar">
-          <div class="body-glow"></div>
-          <div class="avatar-floor"></div>
-          <div class="target-ghost" id="targetGhost" aria-hidden="true"></div>
-          <div class="avatar-figure male" id="avatarFigure">
-            <div class="avatar-hair"></div>
-            <div class="avatar-head"></div>
-            <div class="avatar-neck"></div>
-            <div class="avatar-arm left"></div>
-            <div class="avatar-arm right"></div>
-            <div class="avatar-torso">
-              <div class="avatar-chest"></div>
-              <div class="avatar-core"></div>
-            </div>
-            <div class="avatar-body-fat"></div>
-            <div class="avatar-hips"></div>
-            <div class="avatar-leg left"></div>
-            <div class="avatar-leg right"></div>
+        <div class="avatar-controls" aria-label="Avatar personalization controls">
+          <label>Skin
+            <select id="avatarSkin">
+              <option value="#f2b184">Warm</option>
+              <option value="#d08a5b">Tan</option>
+              <option value="#8d5a3b">Deep</option>
+              <option value="#f5c7a4">Light</option>
+            </select>
+          </label>
+          <label>Hair
+            <select id="avatarHairStyle">
+              <option value="short">Short</option>
+              <option value="medium">Medium</option>
+              <option value="tied">Tied</option>
+            </select>
+          </label>
+          <label>Colour
+            <select id="avatarHairColor">
+              <option value="#171923">Black</option>
+              <option value="#3a2a22">Brown</option>
+              <option value="#6a4930">Auburn</option>
+              <option value="#d6b06a">Blonde</option>
+            </select>
+          </label>
+          <label>Outfit
+            <select id="avatarOutfit">
+              <option value="cyan">Cyan</option>
+              <option value="green">Green</option>
+              <option value="purple">Purple</option>
+              <option value="dark">Dark</option>
+            </select>
+          </label>
+          <label>Style
+            <select id="avatarStyle">
+              <option value="cartoon">Cartoon</option>
+              <option value="hologram">Hologram</option>
+              <option value="minimal">Minimal</option>
+            </select>
+          </label>
+        </div>
+        <div class="avatar-stage svg-stage" id="avatarStage" aria-label="Dynamic personalized body avatar">
+          <svg class="avatar-svg" id="avatarSvg" viewBox="0 0 320 420" role="img" aria-labelledby="avatarTitle">
+            <defs>
+              <radialGradient id="avatarFloorGlow" cx="50%" cy="50%" r="50%">
+                <stop offset="0%" stop-color="#61e49d" stop-opacity=".42" />
+                <stop offset="46%" stop-color="#35a7ff" stop-opacity=".18" />
+                <stop offset="100%" stop-color="#35a7ff" stop-opacity="0" />
+              </radialGradient>
+              <linearGradient id="skinShade" x1="0%" y1="0%" x2="100%" y2="100%">
+                <stop offset="0%" id="skinHi" stop-color="#ffd8bd" />
+                <stop offset="62%" id="skinBase" stop-color="#f2b184" />
+                <stop offset="100%" id="skinShadow" stop-color="#9f5d45" />
+              </linearGradient>
+              <linearGradient id="outfitShade" x1="0%" y1="0%" x2="100%" y2="100%">
+                <stop offset="0%" id="outfitHi" stop-color="#c6fff5" />
+                <stop offset="52%" id="outfitBase" stop-color="#61e49d" />
+                <stop offset="100%" id="outfitShadow" stop-color="#2384ff" />
+              </linearGradient>
+              <linearGradient id="limbShade" x1="0%" y1="0%" x2="100%" y2="100%">
+                <stop offset="0%" stop-color="#8ceaff" />
+                <stop offset="100%" stop-color="#2669b8" />
+              </linearGradient>
+            </defs>
+
+            <ellipse cx="160" cy="382" rx="96" ry="22" fill="url(#avatarFloorGlow)" />
+            <g id="goalAvatar" opacity=".62">
+              <rect id="goalNeck" class="goal-region" x="149" y="77" width="22" height="28" rx="10" />
+              <ellipse id="goalHead" class="goal-region" cx="160" cy="54" rx="28" ry="32" />
+              <rect id="goalShoulders" class="goal-region" x="96" y="101" width="128" height="38" rx="22" />
+              <rect id="goalChest" class="goal-region" x="100" y="124" width="120" height="70" rx="34" />
+              <rect id="goalWaist" class="goal-region" x="112" y="176" width="96" height="76" rx="34" />
+              <rect id="goalHips" class="goal-region" x="105" y="238" width="110" height="48" rx="24" />
+              <rect id="goalUpperArmL" class="goal-region" x="66" y="112" width="28" height="92" rx="16" transform="rotate(8 80 158)" />
+              <rect id="goalUpperArmR" class="goal-region" x="226" y="112" width="28" height="92" rx="16" transform="rotate(-8 240 158)" />
+              <rect id="goalForearmL" class="goal-region" x="58" y="190" width="26" height="86" rx="15" transform="rotate(12 71 233)" />
+              <rect id="goalForearmR" class="goal-region" x="236" y="190" width="26" height="86" rx="15" transform="rotate(-12 249 233)" />
+              <rect id="goalThighL" class="goal-region" x="112" y="278" width="34" height="82" rx="18" />
+              <rect id="goalThighR" class="goal-region" x="174" y="278" width="34" height="82" rx="18" />
+              <rect id="goalCalfL" class="goal-region" x="114" y="344" width="30" height="54" rx="16" />
+              <rect id="goalCalfR" class="goal-region" x="176" y="344" width="30" height="54" rx="16" />
+            </g>
+
+            <g id="currentAvatar">
+              <rect id="avatarNeck" class="body-region" x="149" y="77" width="22" height="28" rx="10" fill="url(#skinShade)" />
+              <rect id="upperArmL" class="body-region" x="66" y="112" width="28" height="92" rx="16" fill="url(#skinShade)" transform="rotate(8 80 158)" />
+              <rect id="upperArmR" class="body-region" x="226" y="112" width="28" height="92" rx="16" fill="url(#skinShade)" transform="rotate(-8 240 158)" />
+              <rect id="forearmL" class="body-region" x="58" y="190" width="26" height="86" rx="15" fill="url(#skinShade)" transform="rotate(12 71 233)" />
+              <rect id="forearmR" class="body-region" x="236" y="190" width="26" height="86" rx="15" fill="url(#skinShade)" transform="rotate(-12 249 233)" />
+              <rect id="thighL" class="body-region" x="112" y="278" width="34" height="82" rx="18" fill="url(#skinShade)" />
+              <rect id="thighR" class="body-region" x="174" y="278" width="34" height="82" rx="18" fill="url(#skinShade)" />
+              <rect id="calfL" class="body-region" x="114" y="344" width="30" height="54" rx="16" fill="url(#skinShade)" />
+              <rect id="calfR" class="body-region" x="176" y="344" width="30" height="54" rx="16" fill="url(#skinShade)" />
+              <ellipse id="shoeL" class="shoe-region" cx="128" cy="399" rx="22" ry="9" fill="#111821" />
+              <ellipse id="shoeR" class="shoe-region" cx="192" cy="399" rx="22" ry="9" fill="#111821" />
+              <rect id="avatarShoulders" class="outfit-region" x="96" y="101" width="128" height="38" rx="22" fill="url(#outfitShade)" />
+              <rect id="avatarChest" class="outfit-region" x="100" y="124" width="120" height="70" rx="34" fill="url(#outfitShade)" />
+              <rect id="avatarWaist" class="outfit-region" x="112" y="176" width="96" height="76" rx="34" fill="url(#outfitShade)" />
+              <rect id="avatarHips" class="outfit-region" x="105" y="238" width="110" height="48" rx="24" fill="#121821" />
+              <ellipse id="avatarHead" class="body-region" cx="160" cy="54" rx="28" ry="32" fill="url(#skinShade)" />
+              <path id="avatarHair" class="hair-region" d="M129 49 C133 20 151 16 160 21 C174 13 190 26 191 51 C177 43 171 41 160 48 C149 39 141 42 129 49Z" fill="#171923" />
+              <circle class="face-detail" cx="151" cy="57" r="2.1" />
+              <circle class="face-detail" cx="169" cy="57" r="2.1" />
+              <path class="face-detail" d="M153 70 C157 73 164 73 168 70" fill="none" stroke="rgba(7,10,16,.55)" stroke-width="2" stroke-linecap="round" />
+              <path id="chestLine" class="definition-line" d="M118 143 C138 134 181 134 202 143" fill="none" />
+              <path id="waistLineL" class="definition-line" d="M145 171 C141 193 141 216 146 234" fill="none" />
+              <path id="waistLineR" class="definition-line" d="M175 171 C179 193 179 216 174 234" fill="none" />
+              <path id="softnessGlow" class="body-region" d="M115 164 C134 145 188 145 205 164 C213 188 205 226 188 238 C174 248 145 248 132 238 C113 224 107 188 115 164Z" fill="rgba(255,255,255,.14)" opacity=".1" />
+            </g>
+
+            <path class="hologram-line" d="M64 374 C92 398 228 398 256 374" fill="none" />
+          </svg>
+        </div>
+        <div class="avatar-progress">
+          <div class="avatar-progress-top">
+            <span id="avatarProgressLabel">Progress 0%</span>
+            <span>This is a visual estimate, not a medical body scan.</span>
           </div>
+          <div class="avatar-progress-bar"><div class="avatar-progress-fill" id="avatarProgressFill"></div></div>
         </div>
         <div class="avatar-readout">
-          <div><strong id="avatarWeightReadout">63kg</strong><span>Current weight</span></div>
-          <div><strong id="avatarShapeReadout">Lean</strong><span>Shape class</span></div>
-          <div><strong id="avatarGoalReadout">70kg</strong><span>Target avatar</span></div>
+          <div><strong id="avatarWeightReadout">Current: 63kg</strong><span>Solid avatar</span></div>
+          <div><strong id="avatarGoalReadout">Goal: 70kg</strong><span>Glowing outline</span></div>
+          <div><strong id="avatarTargetReadout">Target: +7kg</strong><span>Change needed</span></div>
+          <div><strong id="avatarShapeReadout">Lean</strong><span>Shape blend</span></div>
+        </div>
+        <div class="avatar-actions">
+          <button class="mini-btn" type="button" id="avatarWhyBtn">Why does my avatar look like this?</button>
+        </div>
+        <div class="avatar-breakdown" id="avatarBreakdown">
+          <strong>Avatar breakdown</strong>
+          <ul>
+            <li>Height influenced avatar height.</li>
+            <li>Waist influenced torso width.</li>
+            <li>Lean mass influenced shoulder, arm, thigh, and calf volume.</li>
+            <li>Body-fat estimate influenced softness and definition.</li>
+            <li>Goal data created the glowing target outline.</li>
+          </ul>
+          <span class="accuracy-note">Cosmetic choices never change measured body proportions and are not stored in this preview.</span>
         </div>
       </article>
     </section>
@@ -1237,6 +1567,8 @@ button, input, select {
           <label>Target Weight (kg)<input id="scanTarget" type="number" value="70" min="30" max="260" /></label>
           <label>Neck (cm)<input id="scanNeck" type="number" value="40" min="20" max="80" /></label>
           <label>Waist (cm)<input id="scanWaist" type="number" value="78" min="40" max="180" /></label>
+          <label>Hips (cm)<input id="scanHips" type="number" value="92" min="45" max="190" /></label>
+          <label>Goal Body Fat %<input id="scanGoalBodyFat" type="number" value="15" min="3" max="45" /></label>
           <button class="btn" type="submit">Run Physique Scan + Gain XP</button>
         </form>
       </article>
@@ -1458,78 +1790,209 @@ button, input, select {
       });
     });
 
+    const clamp = (value, min, max) => Math.min(max, Math.max(min, value));
+    const round1 = (value) => Number(value).toFixed(1);
+    let avatarStartWeight = Number($("scanWeight").value) || 63;
+
     function calculateScan() {
       const gender = $("scanGender").value;
-      const height = Number($("scanHeight").value);
-      const weight = Number($("scanWeight").value);
+      const age = Number($("scanAge").value) || 21;
+      const height = Number($("scanHeight").value) || 170;
+      const weight = Number($("scanWeight").value) || 65;
       const target = Number($("scanTarget").value) || weight;
-      const neck = Number($("scanNeck").value);
-      const waist = Number($("scanWaist").value);
-      const bmi = weight / Math.pow(height / 100, 2);
+      const neck = Number($("scanNeck").value) || height * .21;
+      const waist = Number($("scanWaist").value) || height * .45;
+      const hips = Number($("scanHips").value) || height * (gender === "female" ? .58 : .51);
+      const goalBodyFat = Number($("scanGoalBodyFat").value) || (gender === "female" ? 22 : 15);
+      const heightM = height / 100;
+      const bmi = weight / Math.pow(heightM, 2);
       let bodyFat;
       if (gender === "male") {
         bodyFat = 495 / (1.0324 - 0.19077 * Math.log10(Math.max(1, waist - neck)) + 0.15456 * Math.log10(height)) - 450;
       } else {
-        const hips = height * .55;
         bodyFat = 495 / (1.29579 - 0.35004 * Math.log10(Math.max(1, waist + hips - neck)) + 0.22100 * Math.log10(height)) - 450;
       }
-      bodyFat = Math.min(60, Math.max(3, bodyFat));
-      const score = Math.round(Math.max(45, Math.min(99, 104 - bodyFat * 1.35 + Math.min(10, totalXp / 1000))));
+      bodyFat = clamp(bodyFat, 3, 60);
+      const leanMass = weight * (1 - bodyFat / 100);
+      const fatMass = weight - leanMass;
+      const score = Math.round(clamp(104 - bodyFat * 1.35 + Math.min(10, totalXp / 1000), 45, 99));
       const xpGain = Math.round(80 + Math.max(0, 25 - bodyFat) * 7);
-      return { gender, height, weight, target, waist, bodyFat, bmi, score, xpGain };
+      return { gender, age, height, weight, target, neck, waist, hips, goalBodyFat, bodyFat, bmi, leanMass, fatMass, score, xpGain };
     }
 
-    const clamp = (value, min, max) => Math.min(max, Math.max(min, value));
+    function colorMix(hexA, hexB, amount) {
+      const parse = (hex) => hex.replace("#", "").match(/.{1,2}/g).map(x => parseInt(x, 16));
+      const [r1, g1, b1] = parse(hexA);
+      const [r2, g2, b2] = parse(hexB);
+      const mix = (a, b) => Math.round(a + (b - a) * amount).toString(16).padStart(2, "0");
+      return `#${mix(r1, r2)}${mix(g1, g2)}${mix(b1, b2)}`;
+    }
 
-    function getShapeClass(bodyFat, bmi, targetDelta) {
-      if (bmi < 18.5) return targetDelta > 1 ? "Skinny Bulk" : "Very Lean";
-      if (bmi < 20.2 && bodyFat < 18) return targetDelta > 1 ? "Lean Starter" : "Skinny Lean";
-      if (bodyFat < 13 && bmi < 23) return "Defined Lean";
-      if (bodyFat < 18) return targetDelta > 2 ? "Lean Bulk" : "Lean";
-      if (bodyFat < 25) return targetDelta < -2 ? "Cut Phase" : "Balanced";
-      return "Fat Loss Quest";
+    function setRect(id, cx, y, width, height, radius) {
+      const node = $(id);
+      node.setAttribute("x", round1(cx - width / 2));
+      node.setAttribute("y", round1(y));
+      node.setAttribute("width", round1(width));
+      node.setAttribute("height", round1(height));
+      node.setAttribute("rx", round1(Math.min(radius, width / 2, height / 2)));
+    }
+
+    function setEllipse(id, cx, cy, rx, ry) {
+      const node = $(id);
+      node.setAttribute("cx", round1(cx));
+      node.setAttribute("cy", round1(cy));
+      node.setAttribute("rx", round1(rx));
+      node.setAttribute("ry", round1(ry));
+    }
+
+    function setLimb(id, cx, y, width, height, angle) {
+      const node = $(id);
+      node.setAttribute("x", round1(cx - width / 2));
+      node.setAttribute("y", round1(y));
+      node.setAttribute("width", round1(width));
+      node.setAttribute("height", round1(height));
+      node.setAttribute("rx", round1(Math.min(width / 2, 18)));
+      node.setAttribute("transform", `rotate(${angle} ${round1(cx)} ${round1(y + height / 2)})`);
+    }
+
+    function getShapeClass(bodyFat, bmi, leanNorm) {
+      if (leanNorm > .72 && bodyFat < 18) return "Muscular";
+      if (leanNorm > .55 && bodyFat < 23) return "Athletic";
+      if (bmi < 19.2 && bodyFat < 20) return "Slim";
+      if (bodyFat < 16) return "Lean";
+      if (bodyFat < 25 && bmi < 25.5) return "Average";
+      if (bodyFat < 32) return "Soft";
+      return "Overweight";
+    }
+
+    function buildAvatarMetrics(data, goal = false) {
+      const gender = data.gender || "male";
+      const targetDelta = data.target - data.weight;
+      const heightM = data.height / 100;
+      const bodyFat = goal ? clamp(data.goalBodyFat, 3, 45) : data.bodyFat;
+      const weight = goal ? data.target : data.weight;
+      const bmi = weight / Math.pow(heightM, 2);
+      const fatMass = weight * (bodyFat / 100);
+      const leanMass = goal
+        ? Math.max(weight * (1 - bodyFat / 100), data.leanMass + Math.max(0, targetDelta) * .45 - Math.max(0, -targetDelta) * .12)
+        : data.leanMass;
+      const ffmi = leanMass / Math.pow(heightM, 2);
+      const fatMassIndex = fatMass / Math.pow(heightM, 2);
+      const ageSoftness = clamp((data.age - 35) / 55, 0, .08);
+      const leanNorm = clamp((ffmi - 15.5) / 8, 0, 1);
+      const bmiNorm = clamp((bmi - 18) / 12, 0, 1);
+      const fatNorm = clamp(bodyFat / (gender === "female" ? 36 : 30) * .72 + fatMassIndex / 12 * .28, 0, 1);
+      const goalWaist = clamp(data.waist + targetDelta * .22 - (data.bodyFat - bodyFat) * .5, 48, 180);
+      const goalHips = clamp(data.hips + targetDelta * (gender === "female" ? .22 : .14), 48, 190);
+      const waist = goal ? goalWaist : data.waist;
+      const hips = goal ? goalHips : data.hips;
+      const waistRatio = waist / data.height;
+      const hipRatio = hips / data.height;
+      const neckRatio = data.neck / data.height;
+      const baseShoulder = gender === "male" ? 96 : 88;
+      const shoulderW = clamp(baseShoulder + leanNorm * 30 + bmiNorm * 8 - fatNorm * 5, gender === "male" ? 82 : 76, gender === "male" ? 132 : 116);
+      const chestW = clamp(shoulderW - 8 + leanNorm * 10 + fatNorm * 7, 74, gender === "male" ? 126 : 112);
+      const waistW = clamp(waistRatio * 184 + fatNorm * 15, 64, gender === "male" ? 132 : 126);
+      const hipsW = clamp(hipRatio * 176 + fatNorm * 8, gender === "female" ? 84 : 76, gender === "female" ? 138 : 124);
+      const upperArmW = clamp(18 + leanNorm * 11 + fatNorm * 5 + bmiNorm * 2, 17, 34);
+      const forearmW = clamp(upperArmW * .84, 15, 28);
+      const thighW = clamp(25 + leanNorm * 10 + fatNorm * 8 + bmiNorm * 3, 22, 46);
+      const calfW = clamp(20 + leanNorm * 8 + fatNorm * 4 + bmiNorm * 2, 18, 36);
+      const neckW = clamp(neckRatio * 112, 18, gender === "male" ? 34 : 30);
+      const heightScale = clamp(data.height / (gender === "male" ? 178 : 164), .9, 1.1);
+      const definition = clamp(.9 - fatNorm * .78 + leanNorm * .24 - ageSoftness, .15, .82);
+      const softness = clamp(fatNorm * .34 + ageSoftness * .35, .06, .34);
+      return { gender, heightScale, leanNorm, fatNorm, shoulderW, chestW, waistW, hipsW, upperArmW, forearmW, thighW, calfW, neckW, definition, softness };
+    }
+
+    function applyAvatarGeometry(metrics, goal = false) {
+      const prefix = goal ? "goal" : "avatar";
+      const center = 160;
+      const group = $(goal ? "goalAvatar" : "currentAvatar");
+      group.setAttribute("transform", `translate(160 382) scale(1 ${metrics.heightScale.toFixed(2)}) translate(-160 -382)`);
+      setEllipse(`${prefix}Head`, center, 54, 27, 31);
+      setRect(`${prefix}Neck`, center, 78, metrics.neckW, 28, 10);
+      setRect(`${prefix}Shoulders`, center, 101, metrics.shoulderW, 38, 22);
+      setRect(`${prefix}Chest`, center, 124, metrics.chestW, 70, 32);
+      setRect(`${prefix}Waist`, center, 176, metrics.waistW, 78, 34);
+      setRect(`${prefix}Hips`, center, 238, metrics.hipsW, 50, 25);
+
+      const armOffset = metrics.shoulderW / 2 + metrics.upperArmW * .78;
+      setLimb(`${goal ? "goalU" : "u"}pperArmL`, center - armOffset, 112, metrics.upperArmW, 88, 8);
+      setLimb(`${goal ? "goalU" : "u"}pperArmR`, center + armOffset, 112, metrics.upperArmW, 88, -8);
+      setLimb(`${goal ? "goalF" : "f"}orearmL`, center - armOffset - 7, 188, metrics.forearmW, 82, 12);
+      setLimb(`${goal ? "goalF" : "f"}orearmR`, center + armOffset + 7, 188, metrics.forearmW, 82, -12);
+
+      const legGap = 15;
+      setLimb(`${goal ? "goalT" : "t"}highL`, center - legGap - metrics.thighW / 2, 278, metrics.thighW, 78, 2);
+      setLimb(`${goal ? "goalT" : "t"}highR`, center + legGap + metrics.thighW / 2, 278, metrics.thighW, 78, -2);
+      setLimb(`${goal ? "goalC" : "c"}alfL`, center - legGap - metrics.calfW / 2, 344, metrics.calfW, 52, 1);
+      setLimb(`${goal ? "goalC" : "c"}alfR`, center + legGap + metrics.calfW / 2, 344, metrics.calfW, 52, -1);
+
+      if (!goal) {
+        setEllipse("shoeL", center - legGap - metrics.calfW / 2, 399, metrics.calfW * .86, 8.5);
+        setEllipse("shoeR", center + legGap + metrics.calfW / 2, 399, metrics.calfW * .86, 8.5);
+        $("avatarSvg").style.setProperty("--definition", metrics.definition.toFixed(2));
+        $("softnessGlow").setAttribute("opacity", metrics.softness.toFixed(2));
+        const softW = metrics.waistW + 18;
+        $("softnessGlow").setAttribute("d", `M${round1(center - softW / 2)} 164 C${round1(center - softW * .28)} 146 ${round1(center + softW * .28)} 146 ${round1(center + softW / 2)} 164 C${round1(center + softW * .62)} 190 ${round1(center + softW * .42)} 228 ${round1(center + metrics.hipsW / 2)} 240 C${round1(center + metrics.hipsW * .22)} 250 ${round1(center - metrics.hipsW * .22)} 250 ${round1(center - metrics.hipsW / 2)} 240 C${round1(center - softW * .42)} 228 ${round1(center - softW * .62)} 190 ${round1(center - softW / 2)} 164Z`);
+      }
+    }
+
+    function setAvatarCosmetics() {
+      const skin = $("avatarSkin").value;
+      $("skinBase").setAttribute("stop-color", skin);
+      $("skinHi").setAttribute("stop-color", colorMix(skin, "#ffffff", .42));
+      $("skinShadow").setAttribute("stop-color", colorMix(skin, "#211116", .42));
+      const outfit = {
+        cyan: ["#c6fff5", "#61e49d", "#2384ff"],
+        green: ["#dcffe5", "#62e072", "#087a73"],
+        purple: ["#eee8ff", "#8e7cff", "#3d2b96"],
+        dark: ["#596170", "#222a37", "#090d14"]
+      }[$("avatarOutfit").value];
+      $("outfitHi").setAttribute("stop-color", outfit[0]);
+      $("outfitBase").setAttribute("stop-color", outfit[1]);
+      $("outfitShadow").setAttribute("stop-color", outfit[2]);
+      $("avatarHair").setAttribute("fill", $("avatarHairColor").value);
+      const hairStyle = $("avatarHairStyle").value;
+      const gender = $("scanGender").value;
+      const hairPaths = {
+        short: "M129 49 C133 20 151 16 160 21 C174 13 190 26 191 51 C177 43 171 41 160 48 C149 39 141 42 129 49Z",
+        medium: "M128 50 C131 20 151 12 162 20 C184 18 194 36 191 70 C179 60 171 52 160 50 C149 54 137 61 128 76Z",
+        tied: "M129 49 C132 20 151 14 160 20 C177 15 190 28 191 50 C179 45 170 42 160 49 C149 41 139 43 129 49Z M190 62 C220 78 213 122 185 126 C197 104 197 82 190 62Z"
+      };
+      $("avatarHair").setAttribute("d", hairPaths[hairStyle] || hairPaths[gender === "female" ? "medium" : "short"]);
+      $("avatarSvg").classList.toggle("hologram", $("avatarStyle").value === "hologram");
+      $("avatarSvg").classList.toggle("minimal", $("avatarStyle").value === "minimal");
+    }
+
+    function getProgressPercent(data) {
+      const total = Math.abs(data.target - avatarStartWeight);
+      if (total < .5) return 100;
+      const current = Math.abs(data.weight - avatarStartWeight);
+      return clamp(Math.round(current / total * 100), 0, 100);
     }
 
     function updateAvatar(data = calculateScan()) {
-      const gender = data.gender || "male";
+      const currentMetrics = buildAvatarMetrics(data, false);
+      const goalMetrics = buildAvatarMetrics(data, true);
+      const shapeClass = getShapeClass(data.bodyFat, data.bmi, currentMetrics.leanNorm);
       const targetDelta = data.target - data.weight;
-      const heightScale = clamp(data.height / (gender === "male" ? 181 : 165), .9, 1.1);
-      const softness = clamp(data.bodyFat / (gender === "male" ? 18 : 25), .72, 1.42);
-      const definition = clamp(1.08 - data.bodyFat / 42, .22, .86);
-      const waistRatio = data.waist / data.height;
-      const massBias = clamp((data.bmi - 21) / 12, -.18, .16);
-      const skinnyBias = data.bmi < 20.2 ? clamp((20.2 - data.bmi) / 8, 0, .2) : 0;
-      const waistBias = clamp((waistRatio - .43) * 1.15, -.08, .22);
-      const baseShoulder = gender === "male" ? .96 : .88;
-      const baseHip = gender === "male" ? .88 : 1.02;
-      const torsoX = clamp(baseShoulder + massBias + waistBias - skinnyBias, .72, 1.16);
-      const torsoY = clamp(1 + (data.height - 170) / 210, .92, 1.1);
-      const hipX = clamp(baseHip + massBias * .7 + waistBias - skinnyBias * .7, .72, 1.18);
-      const limbX = clamp(.86 + (data.bmi - 18) / 28 - skinnyBias * .65, .66, 1.12);
-      const legX = clamp(.84 + (data.bmi - 18) / 30 - skinnyBias * .5, .68, 1.1);
-      const targetScale = clamp(1 + targetDelta / Math.max(data.weight, 1) * .35, .9, 1.1);
-      const shapeClass = getShapeClass(data.bodyFat, data.bmi, targetDelta);
-
-      $("avatarFigure").classList.toggle("female", gender === "female");
-      $("avatarFigure").classList.toggle("male", gender !== "female");
-      $("avatarStage").style.setProperty("--avatar-height", heightScale.toFixed(2));
-      $("avatarStage").style.setProperty("--torso-x", torsoX.toFixed(2));
-      $("avatarStage").style.setProperty("--torso-y", torsoY.toFixed(2));
-      $("avatarStage").style.setProperty("--hip-x", hipX.toFixed(2));
-      $("avatarStage").style.setProperty("--limb-x", limbX.toFixed(2));
-      $("avatarStage").style.setProperty("--leg-x", legX.toFixed(2));
-      $("avatarStage").style.setProperty("--softness", softness.toFixed(2));
-      $("avatarStage").style.setProperty("--softness-opacity", clamp(data.bodyFat / 100, .08, .32).toFixed(2));
-      $("avatarStage").style.setProperty("--definition", definition.toFixed(2));
-      $("avatarStage").style.setProperty("--target-scale", targetScale.toFixed(2));
-      $("avatarTitle").textContent = `Current ${gender === "female" ? "Female" : "Male"} Build`;
+      const progress = getProgressPercent(data);
+      applyAvatarGeometry(goalMetrics, true);
+      applyAvatarGeometry(currentMetrics, false);
+      setAvatarCosmetics();
+      $("avatarTitle").textContent = `Current ${data.gender === "female" ? "Female" : "Male"} Build`;
       $("avatarCaption").textContent = targetDelta === 0
-        ? "Current avatar and target outline are matched. Keep checking in to protect the build."
-        : `Current avatar reacts to your stats. Target outline is moving ${targetDelta > 0 ? "toward size gain" : "toward fat loss"}.`;
-      $("avatarGoalChip").textContent = targetDelta === 0 ? "Target Locked" : `Target ${targetDelta > 0 ? "+" : ""}${targetDelta.toFixed(1)}kg`;
-      $("avatarWeightReadout").textContent = `${data.weight.toFixed(1)}kg`;
+        ? "Your avatar is built from your current measurements and updates as you progress."
+        : `Your avatar is built from your current measurements. The glowing outline shows your ${targetDelta > 0 ? "size-gain" : "fat-loss"} target.`;
+      $("avatarGoalChip").textContent = targetDelta === 0 ? "Target Locked" : `Target ${targetDelta > 0 ? "+" : ""}${round1(targetDelta)}kg`;
+      $("avatarWeightReadout").textContent = `Current: ${round1(data.weight)}kg`;
+      $("avatarGoalReadout").textContent = `Goal: ${round1(data.target)}kg`;
+      $("avatarTargetReadout").textContent = `Target: ${targetDelta > 0 ? "+" : ""}${round1(targetDelta)}kg`;
       $("avatarShapeReadout").textContent = shapeClass;
-      $("avatarGoalReadout").textContent = `${data.target.toFixed(1)}kg`;
+      $("avatarProgressLabel").textContent = `Progress ${progress}%`;
+      $("avatarProgressFill").style.setProperty("--avatar-progress", `${progress}%`);
       return shapeClass;
     }
 
@@ -1550,12 +2013,29 @@ button, input, select {
         ? `Your avatar shifted into ${shapeClass}. New mission unlocked: refine upper chest, keep waist stable, and protect recovery.`
         : `Your avatar shifted into ${shapeClass}. New mission unlocked: hit protein, track waist, and complete three training check-ins.`;
       $("scanResult").scrollIntoView({ behavior: "smooth", block: "center" });
+      if (result.xpGain >= 120) triggerAvatarCelebration();
     });
 
-    ["scanGender", "scanHeight", "scanWeight", "scanTarget", "scanNeck", "scanWaist"].forEach(id => {
+    ["scanGender", "scanAge", "scanHeight", "scanWeight", "scanTarget", "scanNeck", "scanWaist", "scanHips", "scanGoalBodyFat"].forEach(id => {
       $(id).addEventListener("input", () => updateAvatar());
       $(id).addEventListener("change", () => updateAvatar());
     });
+
+    ["avatarSkin", "avatarHairStyle", "avatarHairColor", "avatarOutfit", "avatarStyle"].forEach(id => {
+      $(id).addEventListener("change", () => updateAvatar());
+    });
+
+    $("avatarWhyBtn").addEventListener("click", () => {
+      $("avatarBreakdown").classList.toggle("active");
+    });
+
+    function triggerAvatarCelebration() {
+      const stage = $("avatarStage");
+      stage.classList.remove("celebrate");
+      void stage.offsetWidth;
+      stage.classList.add("celebrate");
+      setTimeout(() => stage.classList.remove("celebrate"), 950);
+    }
 
     $("progressPhoto").addEventListener("change", (event) => {
       const file = event.target.files[0];
@@ -1581,6 +2061,7 @@ button, input, select {
           const progressWeight = currentWeight + (targetWeight - currentWeight) * .08;
           $("scanWeight").value = progressWeight.toFixed(1);
           updateAvatar();
+          triggerAvatarCelebration();
         }
 
         $("photoXpStatus").textContent = "Progress photo accepted. +120 XP added to your transformation meter.";
