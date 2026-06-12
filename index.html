@@ -432,8 +432,8 @@ button, input, select {
     }
 
     .avatar-stage {
-      width: min(390px, 78vw);
-      height: 430px;
+      width: min(330px, 72vw);
+      height: 370px;
       position: relative;
       place-self: center;
       transform-style: preserve-3d;
@@ -449,8 +449,8 @@ button, input, select {
       position: absolute;
       left: 50%;
       bottom: 6px;
-      width: 250px;
-      height: 58px;
+      width: 210px;
+      height: 48px;
       border-radius: 50%;
       transform: translateX(-50%) rotateX(68deg) translateZ(-70px);
       background: radial-gradient(circle, rgba(97,228,157,.28), rgba(53,167,255,.1) 42%, transparent 70%);
@@ -461,8 +461,8 @@ button, input, select {
       position: absolute;
       left: 50%;
       bottom: 42px;
-      width: 146px;
-      height: 280px;
+      width: 118px;
+      height: 238px;
       transform: translateX(-50%) scale(var(--target-scale, 1));
       transform-origin: bottom center;
       opacity: .18;
@@ -475,9 +475,9 @@ button, input, select {
     .avatar-figure {
       position: absolute;
       left: 50%;
-      bottom: 14px;
-      width: 278px;
-      height: 382px;
+      bottom: 10px;
+      width: 230px;
+      height: 320px;
       transform: translateX(-50%) scaleY(var(--avatar-height, 1));
       transform-origin: bottom center;
       filter: drop-shadow(0 36px 60px rgba(53,167,255,.2));
@@ -488,8 +488,8 @@ button, input, select {
       position: absolute;
       left: 50%;
       top: 0;
-      width: 62px;
-      height: 68px;
+      width: 52px;
+      height: 58px;
       border-radius: 50%;
       transform: translateX(-50%);
       background: linear-gradient(145deg, #ffe0c4, #f3a877 58%, #884b3d);
@@ -501,8 +501,8 @@ button, input, select {
       position: absolute;
       left: 50%;
       top: -10px;
-      width: 76px;
-      height: 40px;
+      width: 64px;
+      height: 34px;
       transform: translateX(-50%);
       border-radius: 50% 50% 22% 22%;
       background: linear-gradient(145deg, #232b38, #090b12);
@@ -511,8 +511,8 @@ button, input, select {
     }
 
     .avatar-figure.female .avatar-hair {
-      width: 82px;
-      height: 78px;
+      width: 70px;
+      height: 68px;
       top: -12px;
       border-radius: 50% 50% 46% 46%;
       clip-path: none;
@@ -535,8 +535,8 @@ button, input, select {
       position: absolute;
       left: 50%;
       top: 58px;
-      width: 26px;
-      height: 34px;
+      width: 22px;
+      height: 30px;
       transform: translateX(-50%);
       border-radius: 8px;
       background: linear-gradient(145deg, #f7c199, #b96856);
@@ -546,9 +546,9 @@ button, input, select {
     .avatar-torso {
       position: absolute;
       left: 50%;
-      top: 78px;
-      width: 150px;
-      height: 184px;
+      top: 70px;
+      width: 118px;
+      height: 150px;
       transform: translateX(-50%) scaleX(var(--torso-x, 1)) scaleY(var(--torso-y, 1));
       transform-origin: top center;
       border-radius: 45% 45% 30% 30% / 16% 16% 48% 48%;
@@ -560,8 +560,8 @@ button, input, select {
     }
 
     .avatar-figure.female .avatar-torso {
-      width: 136px;
-      height: 178px;
+      width: 108px;
+      height: 144px;
       border-radius: 44% 44% 42% 42% / 20% 20% 48% 48%;
       clip-path: polygon(18% 0, 82% 0, 94% 44%, 78% 100%, 22% 100%, 6% 44%);
       background: linear-gradient(145deg, #ffd3d9 0%, #61e49d 48%, #35a7ff 100%);
@@ -577,8 +577,8 @@ button, input, select {
 
     .avatar-chest {
       top: 32px;
-      width: 92px;
-      height: 34px;
+      width: 74px;
+      height: 28px;
       border: 2px solid rgba(5,6,8,.22);
       border-left: 0;
       border-right: 0;
@@ -587,9 +587,9 @@ button, input, select {
     }
 
     .avatar-core {
-      top: 82px;
-      width: 50px;
-      height: 62px;
+      top: 68px;
+      width: 42px;
+      height: 52px;
       border-left: 2px solid rgba(5,6,8,.24);
       border-right: 2px solid rgba(5,6,8,.18);
       opacity: var(--definition, .55);
@@ -598,9 +598,9 @@ button, input, select {
     .avatar-hips {
       position: absolute;
       left: 50%;
-      top: 250px;
-      width: 112px;
-      height: 48px;
+      top: 210px;
+      width: 90px;
+      height: 40px;
       transform: translateX(-50%) scaleX(var(--hip-x, 1));
       transform-origin: top center;
       border-radius: 34% 34% 46% 46%;
@@ -620,36 +620,36 @@ button, input, select {
     }
 
     .avatar-arm {
-      width: calc(30px * var(--limb-x, 1));
-      height: 172px;
-      top: 96px;
+      width: calc(24px * var(--limb-x, 1));
+      height: 140px;
+      top: 88px;
       z-index: 2;
     }
 
-    .avatar-arm.left { left: 48px; transform: rotate(14deg); }
-    .avatar-arm.right { right: 48px; transform: rotate(-14deg); }
+    .avatar-arm.left { left: 44px; transform: rotate(14deg); }
+    .avatar-arm.right { right: 44px; transform: rotate(-14deg); }
 
     .avatar-leg {
-      width: calc(36px * var(--leg-x, 1));
-      height: 148px;
-      top: 284px;
+      width: calc(28px * var(--leg-x, 1));
+      height: 122px;
+      top: 240px;
       z-index: 1;
     }
 
-    .avatar-leg.left { left: 101px; transform: rotate(3deg); }
-    .avatar-leg.right { right: 101px; transform: rotate(-3deg); }
+    .avatar-leg.left { left: 84px; transform: rotate(3deg); }
+    .avatar-leg.right { right: 84px; transform: rotate(-3deg); }
 
-    .avatar-figure.female .avatar-arm.left { left: 56px; }
-    .avatar-figure.female .avatar-arm.right { right: 56px; }
-    .avatar-figure.female .avatar-leg.left { left: 104px; }
-    .avatar-figure.female .avatar-leg.right { right: 104px; }
+    .avatar-figure.female .avatar-arm.left { left: 50px; }
+    .avatar-figure.female .avatar-arm.right { right: 50px; }
+    .avatar-figure.female .avatar-leg.left { left: 86px; }
+    .avatar-figure.female .avatar-leg.right { right: 86px; }
 
     .avatar-body-fat {
       position: absolute;
       left: 50%;
-      top: 118px;
-      width: 118px;
-      height: 106px;
+      top: 100px;
+      width: 96px;
+      height: 88px;
       transform: translateX(-50%) scaleX(var(--softness, 1));
       border-radius: 42%;
       background: radial-gradient(circle, rgba(255,255,255,.18), transparent 62%);
@@ -1482,7 +1482,9 @@ button, input, select {
     const clamp = (value, min, max) => Math.min(max, Math.max(min, value));
 
     function getShapeClass(bodyFat, bmi, targetDelta) {
-      if (bodyFat < 13 && bmi < 23) return "Shredded";
+      if (bmi < 18.5) return targetDelta > 1 ? "Skinny Bulk" : "Very Lean";
+      if (bmi < 20.2 && bodyFat < 18) return targetDelta > 1 ? "Lean Starter" : "Skinny Lean";
+      if (bodyFat < 13 && bmi < 23) return "Defined Lean";
       if (bodyFat < 18) return targetDelta > 2 ? "Lean Bulk" : "Lean";
       if (bodyFat < 25) return targetDelta < -2 ? "Cut Phase" : "Balanced";
       return "Fat Loss Quest";
@@ -1492,19 +1494,20 @@ button, input, select {
       const gender = data.gender || "male";
       const targetDelta = data.target - data.weight;
       const heightScale = clamp(data.height / (gender === "male" ? 181 : 165), .9, 1.1);
-      const softness = clamp(data.bodyFat / (gender === "male" ? 18 : 25), .8, 1.42);
+      const softness = clamp(data.bodyFat / (gender === "male" ? 18 : 25), .72, 1.42);
       const definition = clamp(1.08 - data.bodyFat / 42, .22, .86);
       const waistRatio = data.waist / data.height;
-      const goalLeanBias = clamp((data.weight - data.target) / 18, -.18, .22);
-      const bulkBias = clamp((data.target - data.weight) / 18, -.14, .2);
-      const baseShoulder = gender === "male" ? 1.08 : .94;
-      const baseHip = gender === "male" ? .94 : 1.1;
-      const torsoX = clamp(baseShoulder + bulkBias - Math.max(0, waistRatio - .44) * .8, .82, 1.28);
+      const massBias = clamp((data.bmi - 21) / 12, -.18, .16);
+      const skinnyBias = data.bmi < 20.2 ? clamp((20.2 - data.bmi) / 8, 0, .2) : 0;
+      const waistBias = clamp((waistRatio - .43) * 1.15, -.08, .22);
+      const baseShoulder = gender === "male" ? .96 : .88;
+      const baseHip = gender === "male" ? .88 : 1.02;
+      const torsoX = clamp(baseShoulder + massBias + waistBias - skinnyBias, .72, 1.16);
       const torsoY = clamp(1 + (data.height - 170) / 210, .92, 1.1);
-      const hipX = clamp(baseHip + Math.max(0, waistRatio - .43) * .8 - goalLeanBias, .86, 1.32);
-      const limbX = clamp(.92 + data.bmi / 42 + bulkBias, .88, 1.22);
-      const legX = clamp(.9 + data.bmi / 46 + bulkBias * .8, .86, 1.18);
-      const targetScale = clamp(1 + targetDelta / Math.max(data.weight, 1) * .45, .88, 1.12);
+      const hipX = clamp(baseHip + massBias * .7 + waistBias - skinnyBias * .7, .72, 1.18);
+      const limbX = clamp(.86 + (data.bmi - 18) / 28 - skinnyBias * .65, .66, 1.12);
+      const legX = clamp(.84 + (data.bmi - 18) / 30 - skinnyBias * .5, .68, 1.1);
+      const targetScale = clamp(1 + targetDelta / Math.max(data.weight, 1) * .35, .9, 1.1);
       const shapeClass = getShapeClass(data.bodyFat, data.bmi, targetDelta);
 
       $("avatarFigure").classList.toggle("female", gender === "female");
