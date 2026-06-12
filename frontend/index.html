@@ -164,12 +164,43 @@ button, input, select {
     }
 
     .score-card {
-      min-height: 520px;
+      min-height: 490px;
       padding: clamp(22px, 4vw, 42px);
       display: grid;
-      grid-template-columns: minmax(0, 1fr) 320px;
+      grid-template-columns: minmax(0, 1fr) 280px;
       gap: 24px;
+      align-items: stretch;
+    }
+
+    .hero-copy {
+      display: grid;
+      align-content: center;
+      gap: 16px;
+      min-width: 0;
+    }
+
+    .stage-chip {
+      width: fit-content;
+      display: inline-flex;
       align-items: center;
+      gap: 10px;
+      padding: 9px 12px;
+      border: 1px solid rgba(53,167,255,.34);
+      border-radius: 999px;
+      background: rgba(53,167,255,.1);
+      color: #bfe6ff;
+      font-size: .82rem;
+      font-weight: 900;
+      letter-spacing: 1.4px;
+      text-transform: uppercase;
+    }
+
+    .stage-dot {
+      width: 9px;
+      height: 9px;
+      border-radius: 50%;
+      background: var(--green);
+      box-shadow: 0 0 18px rgba(97,228,157,.9);
     }
 
     .eyebrow {
@@ -181,27 +212,88 @@ button, input, select {
     }
 
     .headline {
-      margin: 14px 0 12px;
-      max-width: 720px;
-      font-size: clamp(3rem, 5.8vw, 6.4rem);
-      line-height: .82;
+      margin: 0;
+      max-width: 640px;
+      font-size: clamp(2.9rem, 4.8vw, 5.15rem);
+      line-height: .9;
       letter-spacing: 0;
       font-family: Impact, Haettenschweiler, "Arial Narrow Bold", "Roboto Condensed", Arial, sans-serif;
       text-transform: uppercase;
+      overflow-wrap: anywhere;
+    }
+
+    .headline .accent {
+      display: block;
+      color: transparent;
+      background: linear-gradient(90deg, var(--green), var(--blue), #d7c9ff);
+      -webkit-background-clip: text;
+      background-clip: text;
+    }
+
+    .headline .accent span {
+      display: block;
     }
 
     .lead {
-      max-width: 620px;
+      max-width: 600px;
       color: var(--soft);
-      font-size: clamp(1rem, 1.6vw, 1.18rem);
-      line-height: 1.7;
+      font-size: clamp(1rem, 1.35vw, 1.12rem);
+      line-height: 1.55;
+      margin: 0;
+    }
+
+    .quest-board {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 10px;
+      max-width: 680px;
+    }
+
+    .quest-step {
+      min-height: 104px;
+      padding: 13px;
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      background: rgba(255,255,255,.055);
+    }
+
+    .quest-step b {
+      display: inline-grid;
+      place-items: center;
+      width: 30px;
+      height: 30px;
+      margin-bottom: 12px;
+      border-radius: 7px;
+      background: linear-gradient(145deg, rgba(97,228,157,.95), rgba(53,167,255,.9));
+      color: #041016;
+      font-size: .76rem;
+      font-weight: 950;
+    }
+
+    .quest-step strong {
+      display: block;
+      margin-bottom: 5px;
+      font-size: .95rem;
+    }
+
+    .quest-step span {
+      display: block;
+      color: var(--muted);
+      font-size: .84rem;
+      line-height: 1.35;
+    }
+
+    .hero-actions {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
     }
 
     .score-row {
       display: flex;
       gap: 12px;
       flex-wrap: wrap;
-      margin-top: 24px;
+      margin-top: 2px;
     }
 
     .score-pill {
@@ -228,13 +320,19 @@ button, input, select {
 
     .ring-stack {
       display: grid;
-      gap: 16px;
+      gap: 14px;
       justify-items: center;
       align-content: center;
+      padding: 18px;
+      border: 1px solid rgba(255,255,255,.12);
+      border-radius: var(--radius);
+      background:
+        radial-gradient(circle at 50% 28%, rgba(97,228,157,.14), transparent 45%),
+        rgba(255,255,255,.055);
     }
 
     .ring {
-      width: min(290px, 100%);
+      width: min(230px, 100%);
       aspect-ratio: 1;
       border-radius: 50%;
       display: grid;
@@ -244,6 +342,39 @@ button, input, select {
         conic-gradient(from -90deg, var(--green) 0 84%, rgba(255,255,255,.08) 84% 100%);
       animation: ringPulse 3.8s ease-in-out infinite;
       box-shadow: 0 0 80px rgba(97,228,157,.18);
+    }
+
+    .power-label {
+      width: 100%;
+      display: flex;
+      justify-content: space-between;
+      gap: 10px;
+      color: var(--muted);
+      font-size: .76rem;
+      font-weight: 900;
+      letter-spacing: 1.5px;
+      text-transform: uppercase;
+    }
+
+    .rank-card {
+      width: 100%;
+      padding: 13px;
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      background: rgba(5,6,8,.34);
+    }
+
+    .rank-card strong {
+      display: block;
+      font-size: 1.15rem;
+    }
+
+    .rank-card span {
+      display: block;
+      margin-top: 4px;
+      color: var(--muted);
+      font-size: .86rem;
+      line-height: 1.35;
     }
 
     @keyframes ringPulse {
@@ -613,11 +744,13 @@ button, input, select {
     }
 
     @media (max-width: 760px) {
-      .app { width: min(100% - 22px, 1440px); padding-top: 10px; }
+      .app { width: min(1440px, calc(100% - 22px)); padding-top: 10px; }
       .topbar { align-items: stretch; flex-direction: column; }
-      .nav { overflow-x: auto; justify-content: start; }
+      .nav { max-width: 100%; overflow-x: auto; justify-content: start; }
       .score-card { min-height: auto; padding: 22px; }
-      .headline { font-size: clamp(3.5rem, 17vw, 5.4rem); }
+      .headline { font-size: 2.85rem; line-height: .94; }
+      .score-card .lead { max-width: 32ch; }
+      .quest-board { grid-template-columns: 1fr; }
       .score-row, .badge-row, .timeline, .product-grid, .form { grid-template-columns: 1fr; display: grid; }
       .chart { gap: 6px; }
       .ring { width: min(250px, 82vw); }
@@ -645,27 +778,52 @@ button, input, select {
 
     <section class="hero" id="dashboard">
       <article class="glass score-card">
-        <div>
-          <div class="eyebrow">// Transformation Game Loaded</div>
-          <h2 class="headline">Enter The Arena. Upgrade Your Physique.</h2>
+        <div class="hero-copy">
+          <div class="stage-chip"><span class="stage-dot"></span> Transformation Game / Level 01</div>
+          <h2 class="headline">Build Your <span class="accent"><span>Real-World</span><span>Avatar.</span></span></h2>
           <p class="lead">
-            You are not tracking numbers anymore. You are leveling up a real-world character.
-            Every scan, check-in, photo, and verified metric adds XP to your transformation.
+            Enter your stats and Physique Meter turns them into Hero Score, XP, missions, and weekly stages.
+            This is your command center before the body scan begins.
           </p>
+          <div class="quest-board" aria-label="Transformation game steps">
+            <div class="quest-step">
+              <b>01</b>
+              <strong>Enter Stats</strong>
+              <span>Height, weight, waist, and goal baseline.</span>
+            </div>
+            <div class="quest-step">
+              <b>02</b>
+              <strong>Run Scan</strong>
+              <span>Reveal body-fat estimate, BMI, and score.</span>
+            </div>
+            <div class="quest-step">
+              <b>03</b>
+              <strong>Gain XP</strong>
+              <span>Every check-in levels up your timeline.</span>
+            </div>
+          </div>
+          <div class="hero-actions">
+            <button class="btn" type="button" data-jump="scan">Start Body Scan</button>
+            <button class="btn" type="button" data-jump="progress" style="background:rgba(255,255,255,.1);box-shadow:none;border:1px solid var(--line);">View Stages</button>
+          </div>
           <div class="score-row">
             <div class="score-pill"><span>Daily Streak</span><strong>18 days</strong></div>
             <div class="score-pill"><span>Rank</span><strong>Level 7</strong></div>
-            <div class="score-pill"><span>Total XP</span><strong>7,240</strong></div>
+            <div class="score-pill"><span>Total XP</span><strong id="totalXpValue">7,240</strong></div>
             <div class="score-pill"><span>Next Boss</span><strong>Aug 18</strong></div>
           </div>
         </div>
         <div class="ring-stack">
+          <div class="power-label"><span>Live Score</span><span>Online</span></div>
           <div class="ring">
             <div class="ring-inner">
-              <div><strong>84</strong><span>Hero Score</span></div>
+              <div><strong id="heroScoreValue">84</strong><span>Hero Score</span></div>
             </div>
           </div>
-          <p class="muted">+680 XP earned from the last 30-day quest</p>
+          <div class="rank-card">
+            <strong>Rank Path: Level 7</strong>
+            <span>+680 XP earned from the last 30-day quest. Complete today&apos;s scan to push toward Level 8.</span>
+          </div>
         </div>
       </article>
 
@@ -901,6 +1059,16 @@ button, input, select {
       });
     });
 
+    document.querySelectorAll("[data-jump]").forEach(button => {
+      button.addEventListener("click", () => {
+        const target = button.dataset.jump;
+        document.querySelectorAll("[data-scroll]").forEach(item => {
+          item.classList.toggle("active", item.dataset.scroll === target);
+        });
+        $(target).scrollIntoView({ behavior: "smooth", block: "start" });
+      });
+    });
+
     function calculateScan() {
       const gender = $("scanGender").value;
       const height = Number($("scanHeight").value);
@@ -926,8 +1094,8 @@ button, input, select {
       const result = calculateScan();
       heroScore = result.score;
       totalXp += result.xpGain;
-      document.querySelector(".ring-inner strong").textContent = heroScore;
-      document.querySelectorAll(".score-pill strong")[2].textContent = totalXp.toLocaleString();
+      $("heroScoreValue").textContent = heroScore;
+      $("totalXpValue").textContent = totalXp.toLocaleString();
       $("resultBodyFat").textContent = `${result.bodyFat.toFixed(1)}%`;
       $("resultBmi").textContent = result.bmi.toFixed(1);
       $("resultXp").textContent = `+${result.xpGain}`;
