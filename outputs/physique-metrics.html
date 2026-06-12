@@ -641,6 +641,120 @@ button, input, select {
       align-content: end;
     }
 
+    .stage-workbench {
+      display: grid;
+      grid-template-columns: minmax(0, 1.2fr) minmax(300px, .8fr);
+      gap: 14px;
+      align-items: stretch;
+    }
+
+    .photo-upload-panel {
+      display: grid;
+      gap: 14px;
+      padding: 16px;
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      background: rgba(255,255,255,.045);
+    }
+
+    .upload-zone {
+      min-height: 190px;
+      display: grid;
+      place-items: center;
+      text-align: center;
+      padding: 18px;
+      border: 1px dashed rgba(97,228,157,.45);
+      border-radius: var(--radius);
+      background:
+        radial-gradient(circle at 50% 20%, rgba(97,228,157,.16), transparent 36%),
+        rgba(5,6,8,.28);
+      cursor: pointer;
+    }
+
+    .upload-zone input {
+      position: absolute;
+      opacity: 0;
+      pointer-events: none;
+    }
+
+    .upload-zone strong {
+      display: block;
+      font-size: 1.1rem;
+      margin-bottom: 6px;
+    }
+
+    .photo-preview {
+      min-height: 210px;
+      overflow: hidden;
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      background:
+        radial-gradient(circle at 50% 26%, rgba(53,167,255,.2), transparent 34%),
+        linear-gradient(145deg, #151b26, #090b10);
+      display: grid;
+      place-items: center;
+      color: var(--muted);
+      text-align: center;
+    }
+
+    .photo-preview img {
+      width: 100%;
+      height: 100%;
+      max-height: 320px;
+      object-fit: cover;
+      display: block;
+    }
+
+    .review-list {
+      display: grid;
+      gap: 10px;
+    }
+
+    .review-item {
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      gap: 14px;
+      padding: 12px;
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      background: rgba(255,255,255,.05);
+    }
+
+    .review-item strong,
+    .review-item span {
+      display: block;
+    }
+
+    .review-item span {
+      margin-top: 3px;
+      color: var(--muted);
+      font-size: .86rem;
+      line-height: 1.35;
+    }
+
+    .status-chip {
+      white-space: nowrap;
+      padding: 7px 9px;
+      border-radius: 999px;
+      background: rgba(97,228,157,.12);
+      color: #a9ffd0;
+      border: 1px solid rgba(97,228,157,.28);
+      font-size: .75rem;
+      font-weight: 900;
+      text-transform: uppercase;
+    }
+
+    .privacy-note {
+      padding: 12px;
+      border: 1px solid rgba(53,167,255,.24);
+      border-radius: var(--radius);
+      background: rgba(53,167,255,.08);
+      color: var(--soft);
+      font-size: .9rem;
+      line-height: 1.45;
+    }
+
     .xp-track {
       height: 12px;
       overflow: hidden;
@@ -751,6 +865,7 @@ button, input, select {
       .headline { font-size: 2.85rem; line-height: .94; }
       .score-card .lead { max-width: 32ch; }
       .quest-board { grid-template-columns: 1fr; }
+      .stage-workbench { grid-template-columns: 1fr; }
       .score-row, .badge-row, .timeline, .product-grid, .form { grid-template-columns: 1fr; display: grid; }
       .chart { gap: 6px; }
       .ring { width: min(250px, 82vw); }
@@ -962,13 +1077,47 @@ button, input, select {
       <article class="glass card span-12">
         <div class="section-title">
           <div><span class="eyebrow">Quest Log</span><h2>Transformation Stages</h2></div>
-          <span class="muted">Your real-world campaign history</span>
+          <span class="muted">Upload a private check-in and watch progress immediately</span>
         </div>
-        <div class="timeline">
-          <div class="photo"><strong>Stage 01</strong><span class="muted">Origin scan captured</span></div>
-          <div class="photo"><strong>Stage 02</strong><span class="muted">Waist boss weakened</span></div>
-          <div class="photo"><strong>Stage 03</strong><span class="muted">Shoulder stat upgraded</span></div>
-          <div class="photo"><strong>Current Stage</strong><span class="muted">+680 XP gained</span></div>
+        <div class="stage-workbench">
+          <div class="timeline" id="stageTimeline">
+            <div class="photo"><strong>Stage 01</strong><span class="muted">Origin scan captured</span></div>
+            <div class="photo"><strong>Stage 02</strong><span class="muted">Waist boss weakened</span></div>
+            <div class="photo"><strong>Stage 03</strong><span class="muted">Shoulder stat upgraded</span></div>
+            <div class="photo" id="latestPhotoStage"><strong>Photo Check-In</strong><span class="muted">Upload to unlock XP</span></div>
+          </div>
+
+          <div class="photo-upload-panel">
+            <label class="upload-zone" for="progressPhoto">
+              <input id="progressPhoto" type="file" accept="image/jpeg,image/png,image/webp" />
+              <span>
+                <strong>Upload Your Progress Pic</strong>
+                <span class="muted">Private check-in preview. JPG, PNG, or WebP.</span>
+              </span>
+            </label>
+            <div class="photo-preview" id="photoPreview">
+              <span>No photo selected yet</span>
+            </div>
+            <div class="review-list">
+              <div class="review-item">
+                <div>
+                  <strong>Photo XP Reward</strong>
+                  <span id="photoXpStatus">Upload a check-in to gain +120 XP instantly.</span>
+                </div>
+                <span class="status-chip" id="photoXpChip">Locked</span>
+              </div>
+              <div class="review-item">
+                <div>
+                  <strong>Admin Physique Review</strong>
+                  <span id="photoReviewStatus">After upload, your physique review can be queued privately for admin feedback.</span>
+                </div>
+                <span class="status-chip" id="reviewChip">Safe</span>
+              </div>
+            </div>
+            <div class="privacy-note">
+              Your photo is not shown publicly on this page. In this preview it stays in your browser for immediate comparison; production should store it in private protected storage only.
+            </div>
+          </div>
         </div>
       </article>
     </section>
@@ -1024,6 +1173,7 @@ button, input, select {
     let selectedPdf = { product: "Weight Gain Shake PDF", price: "49" };
     let heroScore = 84;
     let totalXp = 7240;
+    let photoXpClaimed = false;
 
     function getProducts() {
       return JSON.parse(localStorage.getItem("pdfProducts") || "null") || defaultProducts;
@@ -1105,6 +1255,35 @@ button, input, select {
         ? "You entered a leaner zone. New mission unlocked: refine upper chest, keep waist stable, and protect recovery."
         : "Your current boss is body-fat control. New mission unlocked: hit protein, track waist, and complete three training check-ins.";
       $("scanResult").scrollIntoView({ behavior: "smooth", block: "center" });
+    });
+
+    $("progressPhoto").addEventListener("change", (event) => {
+      const file = event.target.files[0];
+      if (!file) return;
+      const allowedImageTypes = ["image/jpeg", "image/png", "image/webp"];
+      if (!allowedImageTypes.includes(file.type)) {
+        $("photoPreview").innerHTML = "<span>Please choose a JPG, PNG, or WebP image.</span>";
+        return;
+      }
+
+      const reader = new FileReader();
+      reader.onload = () => {
+        $("photoPreview").innerHTML = `<img src="${reader.result}" alt="Private progress photo preview" />`;
+        $("latestPhotoStage").style.background = `linear-gradient(180deg, transparent, rgba(0,0,0,.72)), url("${reader.result}") center/cover`;
+        $("latestPhotoStage").innerHTML = "<strong>Current Stage</strong><span class=\"muted\">Photo check-in captured</span>";
+
+        if (!photoXpClaimed) {
+          photoXpClaimed = true;
+          totalXp += 120;
+          $("totalXpValue").textContent = totalXp.toLocaleString();
+        }
+
+        $("photoXpStatus").textContent = "Progress photo accepted. +120 XP added to your transformation meter.";
+        $("photoXpChip").textContent = "+120 XP";
+        $("photoReviewStatus").textContent = "Admin physique review is queued privately. Feedback should focus on posture, symmetry, and next training priority.";
+        $("reviewChip").textContent = "Queued";
+      };
+      reader.readAsDataURL(file);
     });
 
     $("checkoutForm").addEventListener("submit", (event) => {
