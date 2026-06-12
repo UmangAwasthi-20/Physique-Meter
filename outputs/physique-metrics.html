@@ -1447,45 +1447,55 @@ button, input, select {
               </linearGradient>
             </defs>
 
-            <ellipse cx="160" cy="382" rx="96" ry="22" fill="url(#avatarFloorGlow)" />
-            <g id="goalAvatar" opacity=".62">
-              <rect id="goalNeck" class="goal-region" x="149" y="77" width="22" height="28" rx="10" />
-              <ellipse id="goalHead" class="goal-region" cx="160" cy="54" rx="28" ry="32" />
-              <rect id="goalShoulders" class="goal-region" x="96" y="101" width="128" height="38" rx="22" />
-              <rect id="goalChest" class="goal-region" x="100" y="124" width="120" height="70" rx="34" />
-              <rect id="goalWaist" class="goal-region" x="112" y="176" width="96" height="76" rx="34" />
-              <rect id="goalHips" class="goal-region" x="105" y="238" width="110" height="48" rx="24" />
-              <rect id="goalUpperArmL" class="goal-region" x="66" y="112" width="28" height="92" rx="16" transform="rotate(8 80 158)" />
-              <rect id="goalUpperArmR" class="goal-region" x="226" y="112" width="28" height="92" rx="16" transform="rotate(-8 240 158)" />
-              <rect id="goalForearmL" class="goal-region" x="58" y="190" width="26" height="86" rx="15" transform="rotate(12 71 233)" />
-              <rect id="goalForearmR" class="goal-region" x="236" y="190" width="26" height="86" rx="15" transform="rotate(-12 249 233)" />
-              <rect id="goalThighL" class="goal-region" x="112" y="278" width="34" height="82" rx="18" />
-              <rect id="goalThighR" class="goal-region" x="174" y="278" width="34" height="82" rx="18" />
-              <rect id="goalCalfL" class="goal-region" x="114" y="344" width="30" height="54" rx="16" />
-              <rect id="goalCalfR" class="goal-region" x="176" y="344" width="30" height="54" rx="16" />
+            <ellipse cx="160" cy="386" rx="96" ry="20" fill="url(#avatarFloorGlow)" />
+            <g id="goalAvatar" opacity=".55">
+              <path id="goalHead" class="goal-region" />
+              <path id="goalNeck" class="goal-region" />
+              <path id="goalShoulderL" class="goal-region" />
+              <path id="goalShoulderR" class="goal-region" />
+              <path id="goalChest" class="goal-region" />
+              <path id="goalAbdomen" class="goal-region" />
+              <path id="goalWaist" class="goal-region" />
+              <path id="goalPelvis" class="goal-region" />
+              <path id="goalUpperArmL" class="goal-region" />
+              <path id="goalUpperArmR" class="goal-region" />
+              <path id="goalForearmL" class="goal-region" />
+              <path id="goalForearmR" class="goal-region" />
+              <path id="goalHandL" class="goal-region" />
+              <path id="goalHandR" class="goal-region" />
+              <path id="goalThighL" class="goal-region" />
+              <path id="goalThighR" class="goal-region" />
+              <path id="goalCalfL" class="goal-region" />
+              <path id="goalCalfR" class="goal-region" />
+              <path id="goalFootL" class="goal-region" />
+              <path id="goalFootR" class="goal-region" />
             </g>
 
             <g id="currentAvatar">
-              <rect id="avatarNeck" class="body-region" x="149" y="77" width="22" height="28" rx="10" fill="url(#skinShade)" />
-              <rect id="upperArmL" class="body-region" x="66" y="112" width="28" height="92" rx="16" fill="url(#skinShade)" transform="rotate(8 80 158)" />
-              <rect id="upperArmR" class="body-region" x="226" y="112" width="28" height="92" rx="16" fill="url(#skinShade)" transform="rotate(-8 240 158)" />
-              <rect id="forearmL" class="body-region" x="58" y="190" width="26" height="86" rx="15" fill="url(#skinShade)" transform="rotate(12 71 233)" />
-              <rect id="forearmR" class="body-region" x="236" y="190" width="26" height="86" rx="15" fill="url(#skinShade)" transform="rotate(-12 249 233)" />
-              <rect id="thighL" class="body-region" x="112" y="278" width="34" height="82" rx="18" fill="url(#skinShade)" />
-              <rect id="thighR" class="body-region" x="174" y="278" width="34" height="82" rx="18" fill="url(#skinShade)" />
-              <rect id="calfL" class="body-region" x="114" y="344" width="30" height="54" rx="16" fill="url(#skinShade)" />
-              <rect id="calfR" class="body-region" x="176" y="344" width="30" height="54" rx="16" fill="url(#skinShade)" />
-              <ellipse id="shoeL" class="shoe-region" cx="128" cy="399" rx="22" ry="9" fill="#111821" />
-              <ellipse id="shoeR" class="shoe-region" cx="192" cy="399" rx="22" ry="9" fill="#111821" />
-              <rect id="avatarShoulders" class="outfit-region" x="96" y="101" width="128" height="38" rx="22" fill="url(#outfitShade)" />
-              <rect id="avatarChest" class="outfit-region" x="100" y="124" width="120" height="70" rx="34" fill="url(#outfitShade)" />
-              <rect id="avatarWaist" class="outfit-region" x="112" y="176" width="96" height="76" rx="34" fill="url(#outfitShade)" />
-              <rect id="avatarHips" class="outfit-region" x="105" y="238" width="110" height="48" rx="24" fill="#121821" />
-              <ellipse id="avatarHead" class="body-region" cx="160" cy="54" rx="28" ry="32" fill="url(#skinShade)" />
-              <path id="avatarHair" class="hair-region" d="M129 49 C133 20 151 16 160 21 C174 13 190 26 191 51 C177 43 171 41 160 48 C149 39 141 42 129 49Z" fill="#171923" />
-              <circle class="face-detail" cx="151" cy="57" r="2.1" />
-              <circle class="face-detail" cx="169" cy="57" r="2.1" />
-              <path class="face-detail" d="M153 70 C157 73 164 73 168 70" fill="none" stroke="rgba(7,10,16,.55)" stroke-width="2" stroke-linecap="round" />
+              <path id="avatarNeck" class="body-region" fill="url(#skinShade)" />
+              <path id="shoulderL" class="body-region" fill="url(#skinShade)" />
+              <path id="shoulderR" class="body-region" fill="url(#skinShade)" />
+              <path id="upperArmL" class="body-region" fill="url(#skinShade)" />
+              <path id="upperArmR" class="body-region" fill="url(#skinShade)" />
+              <path id="forearmL" class="body-region" fill="url(#skinShade)" />
+              <path id="forearmR" class="body-region" fill="url(#skinShade)" />
+              <path id="handL" class="body-region" fill="url(#skinShade)" />
+              <path id="handR" class="body-region" fill="url(#skinShade)" />
+              <path id="thighL" class="body-region" fill="url(#skinShade)" />
+              <path id="thighR" class="body-region" fill="url(#skinShade)" />
+              <path id="calfL" class="body-region" fill="url(#skinShade)" />
+              <path id="calfR" class="body-region" fill="url(#skinShade)" />
+              <path id="footL" class="shoe-region" fill="#111821" />
+              <path id="footR" class="shoe-region" fill="#111821" />
+              <path id="avatarChest" class="outfit-region" fill="url(#outfitShade)" />
+              <path id="avatarAbdomen" class="outfit-region" fill="url(#outfitShade)" />
+              <path id="avatarWaist" class="outfit-region" fill="url(#outfitShade)" />
+              <path id="avatarPelvis" class="outfit-region" fill="#121821" />
+              <path id="avatarHead" class="body-region" fill="url(#skinShade)" />
+              <path id="avatarHair" class="hair-region" d="M132 50 C135 28 149 21 160 24 C174 18 188 31 188 51 C178 45 170 43 160 48 C150 42 141 44 132 50Z" fill="#171923" />
+              <path id="avatarEyeL" class="face-detail" d="M150 58 C152 56 154 56 156 58 C154 60 152 60 150 58Z" />
+              <path id="avatarEyeR" class="face-detail" d="M164 58 C166 56 168 56 170 58 C168 60 166 60 164 58Z" />
+              <path id="avatarSmile" class="face-detail" d="M153 70 C157 73 164 73 168 70" fill="none" stroke="rgba(7,10,16,.55)" stroke-width="2" stroke-linecap="round" />
               <path id="chestLine" class="definition-line" d="M118 143 C138 134 181 134 202 143" fill="none" />
               <path id="waistLineL" class="definition-line" d="M145 171 C141 193 141 216 146 234" fill="none" />
               <path id="waistLineR" class="definition-line" d="M175 171 C179 193 179 216 174 234" fill="none" />
@@ -1828,31 +1838,74 @@ button, input, select {
       return `#${mix(r1, r2)}${mix(g1, g2)}${mix(b1, b2)}`;
     }
 
-    function setRect(id, cx, y, width, height, radius) {
-      const node = $(id);
-      node.setAttribute("x", round1(cx - width / 2));
-      node.setAttribute("y", round1(y));
-      node.setAttribute("width", round1(width));
-      node.setAttribute("height", round1(height));
-      node.setAttribute("rx", round1(Math.min(radius, width / 2, height / 2)));
+    function setPath(id, d) {
+      $(id).setAttribute("d", d);
     }
 
-    function setEllipse(id, cx, cy, rx, ry) {
-      const node = $(id);
-      node.setAttribute("cx", round1(cx));
-      node.setAttribute("cy", round1(cy));
-      node.setAttribute("rx", round1(rx));
-      node.setAttribute("ry", round1(ry));
+    function ovalPath(cx, cy, rx, ry) {
+      return `M${round1(cx)} ${round1(cy - ry)}
+        C${round1(cx + rx)} ${round1(cy - ry)} ${round1(cx + rx)} ${round1(cy + ry)} ${round1(cx)} ${round1(cy + ry)}
+        C${round1(cx - rx)} ${round1(cy + ry)} ${round1(cx - rx)} ${round1(cy - ry)} ${round1(cx)} ${round1(cy - ry)}Z`;
     }
 
-    function setLimb(id, cx, y, width, height, angle) {
-      const node = $(id);
-      node.setAttribute("x", round1(cx - width / 2));
-      node.setAttribute("y", round1(y));
-      node.setAttribute("width", round1(width));
-      node.setAttribute("height", round1(height));
-      node.setAttribute("rx", round1(Math.min(width / 2, 18)));
-      node.setAttribute("transform", `rotate(${angle} ${round1(cx)} ${round1(y + height / 2)})`);
+    function shoulderPath(side, center, neckW, shoulderW) {
+      const innerX = center + side * (neckW * .34);
+      const outerX = center + side * (shoulderW / 2);
+      const armX = center + side * (shoulderW / 2 + 15);
+      return `M${round1(innerX)} 94
+        C${round1(center + side * 22)} 96 ${round1(center + side * 42)} 100 ${round1(outerX)} 111
+        C${round1(armX)} 119 ${round1(armX)} 137 ${round1(outerX - side * 10)} 145
+        C${round1(center + side * 38)} 132 ${round1(center + side * 20)} 119 ${round1(innerX)} 112Z`;
+    }
+
+    function torsoPath(center, topY, bottomY, topW, bottomW, curve = 14) {
+      return `M${round1(center - topW / 2)} ${round1(topY)}
+        C${round1(center - topW / 2 - curve)} ${round1(topY + 18)} ${round1(center - bottomW / 2 - curve * .35)} ${round1(bottomY - 20)} ${round1(center - bottomW / 2)} ${round1(bottomY)}
+        C${round1(center - bottomW * .22)} ${round1(bottomY + 8)} ${round1(center + bottomW * .22)} ${round1(bottomY + 8)} ${round1(center + bottomW / 2)} ${round1(bottomY)}
+        C${round1(center + bottomW / 2 + curve * .35)} ${round1(bottomY - 20)} ${round1(center + topW / 2 + curve)} ${round1(topY + 18)} ${round1(center + topW / 2)} ${round1(topY)}
+        C${round1(center + topW * .24)} ${round1(topY - 8)} ${round1(center - topW * .24)} ${round1(topY - 8)} ${round1(center - topW / 2)} ${round1(topY)}Z`;
+    }
+
+    function pelvisPath(center, topY, bottomY, topW, hipW) {
+      return `M${round1(center - topW / 2)} ${round1(topY)}
+        C${round1(center - hipW / 2)} ${round1(topY + 12)} ${round1(center - hipW / 2)} ${round1(bottomY - 8)} ${round1(center - hipW * .34)} ${round1(bottomY)}
+        L${round1(center + hipW * .34)} ${round1(bottomY)}
+        C${round1(center + hipW / 2)} ${round1(bottomY - 8)} ${round1(center + hipW / 2)} ${round1(topY + 12)} ${round1(center + topW / 2)} ${round1(topY)}
+        C${round1(center + topW * .18)} ${round1(topY + 8)} ${round1(center - topW * .18)} ${round1(topY + 8)} ${round1(center - topW / 2)} ${round1(topY)}Z`;
+    }
+
+    function limbPath(x1, y1, x2, y2, w1, w2) {
+      const dx = x2 - x1;
+      const dy = y2 - y1;
+      const len = Math.max(1, Math.hypot(dx, dy));
+      const nx = -dy / len;
+      const ny = dx / len;
+      const p1x = x1 + nx * w1 / 2;
+      const p1y = y1 + ny * w1 / 2;
+      const p2x = x2 + nx * w2 / 2;
+      const p2y = y2 + ny * w2 / 2;
+      const p3x = x2 - nx * w2 / 2;
+      const p3y = y2 - ny * w2 / 2;
+      const p4x = x1 - nx * w1 / 2;
+      const p4y = y1 - ny * w1 / 2;
+      return `M${round1(p1x)} ${round1(p1y)}
+        C${round1((p1x + p2x) / 2)} ${round1((p1y + p2y) / 2)} ${round1(p2x)} ${round1(p2y)} ${round1(p2x)} ${round1(p2y)}
+        C${round1(x2 + dx * .02)} ${round1(y2 + dy * .02)} ${round1(p3x)} ${round1(p3y)} ${round1(p3x)} ${round1(p3y)}
+        C${round1((p3x + p4x) / 2)} ${round1((p3y + p4y) / 2)} ${round1(p4x)} ${round1(p4y)} ${round1(p4x)} ${round1(p4y)}
+        C${round1(x1 - dx * .02)} ${round1(y1 - dy * .02)} ${round1(p1x)} ${round1(p1y)} ${round1(p1x)} ${round1(p1y)}Z`;
+    }
+
+    function handPath(cx, cy, side, width, height) {
+      return `M${round1(cx)} ${round1(cy - height / 2)}
+        C${round1(cx + side * width * .65)} ${round1(cy - height * .42)} ${round1(cx + side * width * .66)} ${round1(cy + height * .35)} ${round1(cx + side * width * .18)} ${round1(cy + height / 2)}
+        C${round1(cx - side * width * .42)} ${round1(cy + height * .42)} ${round1(cx - side * width * .5)} ${round1(cy - height * .28)} ${round1(cx)} ${round1(cy - height / 2)}Z`;
+    }
+
+    function footPath(cx, cy, side, width, height) {
+      return `M${round1(cx - side * width * .42)} ${round1(cy - height * .35)}
+        C${round1(cx + side * width * .18)} ${round1(cy - height * .58)} ${round1(cx + side * width * .72)} ${round1(cy - height * .18)} ${round1(cx + side * width * .76)} ${round1(cy + height * .2)}
+        C${round1(cx + side * width * .42)} ${round1(cy + height * .55)} ${round1(cx - side * width * .56)} ${round1(cy + height * .48)} ${round1(cx - side * width * .7)} ${round1(cy + height * .06)}
+        C${round1(cx - side * width * .64)} ${round1(cy - height * .22)} ${round1(cx - side * width * .56)} ${round1(cy - height * .32)} ${round1(cx - side * width * .42)} ${round1(cy - height * .35)}Z`;
     }
 
     function getShapeClass(bodyFat, bmi, leanNorm) {
@@ -1874,68 +1927,117 @@ button, input, select {
       const bmi = weight / Math.pow(heightM, 2);
       const fatMass = weight * (bodyFat / 100);
       const leanMass = goal
-        ? Math.max(weight * (1 - bodyFat / 100), data.leanMass + Math.max(0, targetDelta) * .45 - Math.max(0, -targetDelta) * .12)
+        ? Math.max(weight * (1 - bodyFat / 100), data.leanMass + Math.max(0, targetDelta) * .35 - Math.max(0, -targetDelta) * .08)
         : data.leanMass;
       const ffmi = leanMass / Math.pow(heightM, 2);
       const fatMassIndex = fatMass / Math.pow(heightM, 2);
-      const ageSoftness = clamp((data.age - 35) / 55, 0, .08);
+      const ageSoftness = clamp((data.age - 35) / 55, 0, .07);
       const leanNorm = clamp((ffmi - 15.5) / 8, 0, 1);
       const bmiNorm = clamp((bmi - 18) / 12, 0, 1);
       const fatNorm = clamp(bodyFat / (gender === "female" ? 36 : 30) * .72 + fatMassIndex / 12 * .28, 0, 1);
-      const goalWaist = clamp(data.waist + targetDelta * .22 - (data.bodyFat - bodyFat) * .5, 48, 180);
-      const goalHips = clamp(data.hips + targetDelta * (gender === "female" ? .22 : .14), 48, 190);
+      const goalWaist = clamp(data.waist + targetDelta * .18 - (data.bodyFat - bodyFat) * .42, 48, 180);
+      const goalHips = clamp(data.hips + targetDelta * (gender === "female" ? .18 : .1), 48, 190);
       const waist = goal ? goalWaist : data.waist;
       const hips = goal ? goalHips : data.hips;
       const waistRatio = waist / data.height;
       const hipRatio = hips / data.height;
       const neckRatio = data.neck / data.height;
-      const baseShoulder = gender === "male" ? 96 : 88;
-      const shoulderW = clamp(baseShoulder + leanNorm * 30 + bmiNorm * 8 - fatNorm * 5, gender === "male" ? 82 : 76, gender === "male" ? 132 : 116);
-      const chestW = clamp(shoulderW - 8 + leanNorm * 10 + fatNorm * 7, 74, gender === "male" ? 126 : 112);
-      const waistW = clamp(waistRatio * 184 + fatNorm * 15, 64, gender === "male" ? 132 : 126);
-      const hipsW = clamp(hipRatio * 176 + fatNorm * 8, gender === "female" ? 84 : 76, gender === "female" ? 138 : 124);
-      const upperArmW = clamp(18 + leanNorm * 11 + fatNorm * 5 + bmiNorm * 2, 17, 34);
-      const forearmW = clamp(upperArmW * .84, 15, 28);
-      const thighW = clamp(25 + leanNorm * 10 + fatNorm * 8 + bmiNorm * 3, 22, 46);
-      const calfW = clamp(20 + leanNorm * 8 + fatNorm * 4 + bmiNorm * 2, 18, 36);
-      const neckW = clamp(neckRatio * 112, 18, gender === "male" ? 34 : 30);
+      const maleBias = gender === "male" ? 1 : 0;
+      const baseShoulder = gender === "male" ? 116 : 94;
+      const shoulderW = clamp(baseShoulder + leanNorm * 20 + bmiNorm * 5 - fatNorm * 3, gender === "male" ? 104 : 82, gender === "male" ? 145 : 120);
+      const chestW = clamp(shoulderW - (gender === "male" ? 18 : 14) + leanNorm * 8 + fatNorm * 4, gender === "male" ? 86 : 76, gender === "male" ? 128 : 112);
+      const waistW = clamp(waistRatio * 168 + fatNorm * 13, gender === "male" ? 66 : 62, gender === "male" ? 118 : 116);
+      const hipsW = clamp(hipRatio * 162 + fatNorm * 7, gender === "female" ? 86 : 72, gender === "female" ? 132 : 116);
+      const ribW = clamp((chestW + waistW) / 2, 78, 124);
+      const upperArmW = clamp(19 + leanNorm * 9 + fatNorm * 4 + bmiNorm * 1.5 + maleBias * 1.5, 18, 32);
+      const forearmW = clamp(upperArmW * .78, 15, 25);
+      const handW = clamp(forearmW * .92, 14, 24);
+      const thighW = clamp(27 + leanNorm * 9 + fatNorm * 7 + bmiNorm * 2, 24, 44);
+      const calfW = clamp(20 + leanNorm * 7 + fatNorm * 3 + bmiNorm * 1.5, 18, 34);
+      const neckW = clamp(neckRatio * 106, 18, gender === "male" ? 32 : 28);
       const heightScale = clamp(data.height / (gender === "male" ? 178 : 164), .9, 1.1);
-      const definition = clamp(.9 - fatNorm * .78 + leanNorm * .24 - ageSoftness, .15, .82);
-      const softness = clamp(fatNorm * .34 + ageSoftness * .35, .06, .34);
-      return { gender, heightScale, leanNorm, fatNorm, shoulderW, chestW, waistW, hipsW, upperArmW, forearmW, thighW, calfW, neckW, definition, softness };
+      const definition = clamp(.86 - fatNorm * .7 + leanNorm * .22 - ageSoftness, .12, .78);
+      const softness = clamp(fatNorm * .25 + ageSoftness * .25, .04, .28);
+      return { gender, heightScale, leanNorm, fatNorm, shoulderW, chestW, ribW, waistW, hipsW, upperArmW, forearmW, handW, thighW, calfW, neckW, definition, softness };
     }
 
     function applyAvatarGeometry(metrics, goal = false) {
-      const prefix = goal ? "goal" : "avatar";
       const center = 160;
       const group = $(goal ? "goalAvatar" : "currentAvatar");
-      group.setAttribute("transform", `translate(160 382) scale(1 ${metrics.heightScale.toFixed(2)}) translate(-160 -382)`);
-      setEllipse(`${prefix}Head`, center, 54, 27, 31);
-      setRect(`${prefix}Neck`, center, 78, metrics.neckW, 28, 10);
-      setRect(`${prefix}Shoulders`, center, 101, metrics.shoulderW, 38, 22);
-      setRect(`${prefix}Chest`, center, 124, metrics.chestW, 70, 32);
-      setRect(`${prefix}Waist`, center, 176, metrics.waistW, 78, 34);
-      setRect(`${prefix}Hips`, center, 238, metrics.hipsW, 50, 25);
+      const currentIds = {
+        Head: "avatarHead",
+        Neck: "avatarNeck",
+        ShoulderL: "shoulderL",
+        ShoulderR: "shoulderR",
+        Chest: "avatarChest",
+        Abdomen: "avatarAbdomen",
+        Waist: "avatarWaist",
+        Pelvis: "avatarPelvis",
+        UpperArmL: "upperArmL",
+        UpperArmR: "upperArmR",
+        ForearmL: "forearmL",
+        ForearmR: "forearmR",
+        HandL: "handL",
+        HandR: "handR",
+        ThighL: "thighL",
+        ThighR: "thighR",
+        CalfL: "calfL",
+        CalfR: "calfR",
+        FootL: "footL",
+        FootR: "footR"
+      };
+      const id = (name) => goal ? `goal${name}` : currentIds[name];
+      group.setAttribute("transform", `translate(160 398) scale(1 ${metrics.heightScale.toFixed(2)}) translate(-160 -398)`);
 
-      const armOffset = metrics.shoulderW / 2 + metrics.upperArmW * .78;
-      setLimb(`${goal ? "goalU" : "u"}pperArmL`, center - armOffset, 112, metrics.upperArmW, 88, 8);
-      setLimb(`${goal ? "goalU" : "u"}pperArmR`, center + armOffset, 112, metrics.upperArmW, 88, -8);
-      setLimb(`${goal ? "goalF" : "f"}orearmL`, center - armOffset - 7, 188, metrics.forearmW, 82, 12);
-      setLimb(`${goal ? "goalF" : "f"}orearmR`, center + armOffset + 7, 188, metrics.forearmW, 82, -12);
+      setPath(id("Head"), ovalPath(center, 56, 24, 29));
+      setPath(id("Neck"), torsoPath(center, 80, 108, metrics.neckW, metrics.neckW * 1.08, 4));
+      setPath(id("ShoulderL"), shoulderPath(-1, center, metrics.neckW, metrics.shoulderW));
+      setPath(id("ShoulderR"), shoulderPath(1, center, metrics.neckW, metrics.shoulderW));
+      setPath(id("Chest"), torsoPath(center, 116, 176, metrics.chestW, metrics.ribW, 12));
+      setPath(id("Abdomen"), torsoPath(center, 172, 236, metrics.ribW, metrics.waistW, 10));
+      setPath(id("Waist"), torsoPath(center, 226, 252, metrics.waistW, Math.max(metrics.waistW * .92, 58), 5));
+      setPath(id("Pelvis"), pelvisPath(center, 246, 284, Math.max(metrics.waistW * 1.04, 66), metrics.hipsW));
 
-      const legGap = 15;
-      setLimb(`${goal ? "goalT" : "t"}highL`, center - legGap - metrics.thighW / 2, 278, metrics.thighW, 78, 2);
-      setLimb(`${goal ? "goalT" : "t"}highR`, center + legGap + metrics.thighW / 2, 278, metrics.thighW, 78, -2);
-      setLimb(`${goal ? "goalC" : "c"}alfL`, center - legGap - metrics.calfW / 2, 344, metrics.calfW, 52, 1);
-      setLimb(`${goal ? "goalC" : "c"}alfR`, center + legGap + metrics.calfW / 2, 344, metrics.calfW, 52, -1);
+      const shoulderX = metrics.shoulderW / 2 + 12;
+      const elbowY = 207;
+      const wristY = 286;
+      const leftShoulder = { x: center - shoulderX, y: 128 };
+      const rightShoulder = { x: center + shoulderX, y: 128 };
+      const leftElbow = { x: center - shoulderX - 15, y: elbowY };
+      const rightElbow = { x: center + shoulderX + 15, y: elbowY };
+      const leftWrist = { x: leftElbow.x + 6, y: wristY };
+      const rightWrist = { x: rightElbow.x - 6, y: wristY };
+      setPath(id("UpperArmL"), limbPath(leftShoulder.x, leftShoulder.y, leftElbow.x, leftElbow.y, metrics.upperArmW, metrics.upperArmW * .86));
+      setPath(id("UpperArmR"), limbPath(rightShoulder.x, rightShoulder.y, rightElbow.x, rightElbow.y, metrics.upperArmW, metrics.upperArmW * .86));
+      setPath(id("ForearmL"), limbPath(leftElbow.x, leftElbow.y, leftWrist.x, leftWrist.y, metrics.forearmW, metrics.forearmW * .88));
+      setPath(id("ForearmR"), limbPath(rightElbow.x, rightElbow.y, rightWrist.x, rightWrist.y, metrics.forearmW, metrics.forearmW * .88));
+      setPath(id("HandL"), handPath(leftWrist.x, wristY + 10, -1, metrics.handW, 24));
+      setPath(id("HandR"), handPath(rightWrist.x, wristY + 10, 1, metrics.handW, 24));
+
+      const hipJoint = Math.max(metrics.hipsW * .23, 22);
+      const kneeY = 343;
+      const ankleY = 390;
+      const leftHip = { x: center - hipJoint, y: 282 };
+      const rightHip = { x: center + hipJoint, y: 282 };
+      const leftKnee = { x: center - hipJoint - 4, y: kneeY };
+      const rightKnee = { x: center + hipJoint + 4, y: kneeY };
+      const leftAnkle = { x: leftKnee.x - 2, y: ankleY };
+      const rightAnkle = { x: rightKnee.x + 2, y: ankleY };
+      setPath(id("ThighL"), limbPath(leftHip.x, leftHip.y, leftKnee.x, leftKnee.y, metrics.thighW, metrics.thighW * .78));
+      setPath(id("ThighR"), limbPath(rightHip.x, rightHip.y, rightKnee.x, rightKnee.y, metrics.thighW, metrics.thighW * .78));
+      setPath(id("CalfL"), limbPath(leftKnee.x, leftKnee.y, leftAnkle.x, leftAnkle.y, metrics.calfW, metrics.calfW * .7));
+      setPath(id("CalfR"), limbPath(rightKnee.x, rightKnee.y, rightAnkle.x, rightAnkle.y, metrics.calfW, metrics.calfW * .7));
+      setPath(id("FootL"), footPath(leftAnkle.x - 5, 399, -1, 34, 14));
+      setPath(id("FootR"), footPath(rightAnkle.x + 5, 399, 1, 34, 14));
 
       if (!goal) {
-        setEllipse("shoeL", center - legGap - metrics.calfW / 2, 399, metrics.calfW * .86, 8.5);
-        setEllipse("shoeR", center + legGap + metrics.calfW / 2, 399, metrics.calfW * .86, 8.5);
         $("avatarSvg").style.setProperty("--definition", metrics.definition.toFixed(2));
         $("softnessGlow").setAttribute("opacity", metrics.softness.toFixed(2));
-        const softW = metrics.waistW + 18;
-        $("softnessGlow").setAttribute("d", `M${round1(center - softW / 2)} 164 C${round1(center - softW * .28)} 146 ${round1(center + softW * .28)} 146 ${round1(center + softW / 2)} 164 C${round1(center + softW * .62)} 190 ${round1(center + softW * .42)} 228 ${round1(center + metrics.hipsW / 2)} 240 C${round1(center + metrics.hipsW * .22)} 250 ${round1(center - metrics.hipsW * .22)} 250 ${round1(center - metrics.hipsW / 2)} 240 C${round1(center - softW * .42)} 228 ${round1(center - softW * .62)} 190 ${round1(center - softW / 2)} 164Z`);
+        const softW = metrics.waistW + 14;
+        $("softnessGlow").setAttribute("d", torsoPath(center, 168, 238, Math.max(metrics.ribW - 10, softW), softW, 8));
+        $("chestLine").setAttribute("d", `M${round1(center - metrics.chestW * .32)} 144 C${round1(center - metrics.chestW * .12)} 136 ${round1(center + metrics.chestW * .12)} 136 ${round1(center + metrics.chestW * .32)} 144`);
+        $("waistLineL").setAttribute("d", `M${round1(center - metrics.waistW * .18)} 174 C${round1(center - metrics.waistW * .22)} 198 ${round1(center - metrics.waistW * .2)} 220 ${round1(center - metrics.waistW * .1)} 238`);
+        $("waistLineR").setAttribute("d", `M${round1(center + metrics.waistW * .18)} 174 C${round1(center + metrics.waistW * .22)} 198 ${round1(center + metrics.waistW * .2)} 220 ${round1(center + metrics.waistW * .1)} 238`);
       }
     }
 
