@@ -878,6 +878,74 @@ button, input, select {
       transform: translateZ(34px);
     }
 
+    .avatar-svg-hidden {
+      position: absolute;
+      width: 1px;
+      height: 1px;
+      opacity: 0;
+      pointer-events: none;
+      overflow: hidden;
+    }
+
+    .avatar-anatomy-display {
+      position: relative;
+      z-index: 3;
+      width: 100%;
+      height: 100%;
+      display: grid;
+      place-items: center;
+      transform-style: preserve-3d;
+      --avatar-width-scale: 1;
+      --avatar-height-scale: 1;
+      --avatar-goal-scale: 1.05;
+      --avatar-contrast: 1.08;
+      --avatar-brightness: .88;
+    }
+
+    .avatar-anatomy-image,
+    .avatar-anatomy-goal {
+      position: absolute;
+      height: 104%;
+      max-width: 90%;
+      object-fit: contain;
+      transform-origin: center bottom;
+      user-select: none;
+      pointer-events: none;
+    }
+
+    .avatar-anatomy-goal {
+      opacity: .18;
+      transform: scale(var(--avatar-goal-scale));
+      filter:
+        grayscale(1)
+        brightness(1.3)
+        drop-shadow(0 0 13px rgba(97,228,157,.8))
+        drop-shadow(0 0 24px rgba(53,167,255,.44));
+    }
+
+    .avatar-anatomy-image {
+      opacity: .94;
+      transform: scaleX(var(--avatar-width-scale)) scaleY(var(--avatar-height-scale)) translateZ(38px);
+      filter:
+        grayscale(1)
+        contrast(var(--avatar-contrast))
+        brightness(var(--avatar-brightness))
+        drop-shadow(0 30px 38px rgba(0,0,0,.5))
+        drop-shadow(0 0 18px rgba(127,231,255,.22));
+    }
+
+    .avatar-anatomy-display::after {
+      content: "";
+      position: absolute;
+      width: 46%;
+      height: 10%;
+      bottom: 4%;
+      border-radius: 50%;
+      background: radial-gradient(circle, rgba(97,228,157,.38), rgba(53,167,255,.12) 45%, transparent 72%);
+      filter: blur(7px);
+      transform: translateZ(-20px);
+    }
+
     #currentAvatar {
       filter: drop-shadow(0 0 8px rgba(190,255,242,.16));
     }
@@ -1483,7 +1551,11 @@ button, input, select {
           <div class="avatar-float-wrap" id="avatarFloatWrap">
             <div class="avatar-rotate-wrap" id="avatarRotateWrap">
               <div class="avatar-hover-wrap" id="avatarHoverWrap">
-          <svg class="avatar-svg" id="avatarSvg" viewBox="0 0 320 420" role="img" aria-labelledby="avatarTitle">
+                <div class="avatar-anatomy-display" id="avatarAnatomyDisplay">
+                  <img class="avatar-anatomy-goal" id="avatarAnatomyGoal" src="assets/anatomy-avatar.png" alt="" aria-hidden="true" />
+                  <img class="avatar-anatomy-image" id="avatarAnatomyImage" src="assets/anatomy-avatar.png" alt="Anatomy-based live avatar" />
+                </div>
+          <svg class="avatar-svg avatar-svg-hidden" id="avatarSvg" viewBox="0 0 320 420" role="img" aria-labelledby="avatarTitle">
             <defs>
               <radialGradient id="avatarFloorGlow" cx="50%" cy="50%" r="50%">
                 <stop offset="0%" stop-color="#61e49d" stop-opacity=".42" />
@@ -2128,6 +2200,13 @@ button, input, select {
       applyAvatarGeometry(goalMetrics, true);
       applyAvatarGeometry(currentMetrics, false);
       setAvatarCosmetics(data.gender);
+      const widthScale = clamp(.92 + currentMetrics.leanNorm * .08 + currentMetrics.fatNorm * .08, .9, 1.1);
+      const goalScale = clamp(1 + targetDelta / Math.max(data.weight, 1) * .22, .92, 1.12);
+      $("avatarAnatomyDisplay").style.setProperty("--avatar-width-scale", widthScale.toFixed(2));
+      $("avatarAnatomyDisplay").style.setProperty("--avatar-height-scale", currentMetrics.heightScale.toFixed(2));
+      $("avatarAnatomyDisplay").style.setProperty("--avatar-goal-scale", goalScale.toFixed(2));
+      $("avatarAnatomyDisplay").style.setProperty("--avatar-contrast", (1.02 + currentMetrics.definition * .28).toFixed(2));
+      $("avatarAnatomyDisplay").style.setProperty("--avatar-brightness", (.82 + currentMetrics.definition * .14 - currentMetrics.fatNorm * .04).toFixed(2));
       $("avatarTitle").textContent = `Current ${data.gender === "female" ? "Female" : "Male"} Build`;
       $("avatarCaption").textContent = "Your avatar evolves with your real progress.";
       $("avatarGoalChip").textContent = targetDelta === 0 ? "Target Locked" : `Target ${targetDelta > 0 ? "+" : ""}${targetDelta.toFixed(1)} kg`;
