@@ -408,12 +408,25 @@ button, input, select {
     }
 
     .silhouette-card {
-      min-height: 520px;
-      padding: 22px;
+      min-height: 620px;
+      padding: 24px;
       display: grid;
-      grid-template-rows: auto 1fr auto;
-      gap: 14px;
-      perspective: 900px;
+      grid-template-rows: auto minmax(450px, 1fr);
+      gap: 18px;
+      perspective: 1200px;
+      overflow: hidden;
+      isolation: isolate;
+    }
+
+    .silhouette-card::before {
+      content: "";
+      position: absolute;
+      inset: 12% -8% -18%;
+      pointer-events: none;
+      background:
+        radial-gradient(circle at 50% 34%, rgba(53,167,255,.18), transparent 42%),
+        radial-gradient(circle at 50% 76%, rgba(97,228,157,.16), transparent 38%);
+      opacity: .86;
     }
 
     .avatar-top {
@@ -426,28 +439,40 @@ button, input, select {
       z-index: 2;
     }
 
-    .avatar-top strong,
-    .avatar-readout strong {
+    .avatar-top strong {
       display: block;
     }
 
     .avatar-top p {
-      max-width: 52ch;
+      max-width: 38ch;
+      margin-top: 7px;
       overflow-wrap: anywhere;
     }
 
+    .avatar-top .status-chip {
+      box-shadow: 0 0 26px rgba(97,228,157,.14);
+    }
+
     .avatar-stage {
-      width: min(330px, 72vw);
-      height: 370px;
+      width: min(460px, 82vw);
+      height: 500px;
       position: relative;
       place-self: center;
       transform-style: preserve-3d;
-      animation: floatBody 5.8s ease-in-out infinite;
+      animation: none;
     }
 
-    @keyframes floatBody {
-      0%, 100% { transform: rotateY(-10deg) translateY(0); }
-      50% { transform: rotateY(10deg) translateY(-10px); }
+    .avatar-stage::before {
+      content: "";
+      position: absolute;
+      inset: 7% 0 2%;
+      z-index: 0;
+      border-radius: 50%;
+      background:
+        radial-gradient(circle at 50% 24%, rgba(255,255,255,.1), transparent 24%),
+        radial-gradient(circle at 50% 72%, rgba(53,167,255,.18), transparent 47%);
+      filter: blur(1px);
+      transform: translateZ(-80px);
     }
 
     .avatar-floor {
@@ -673,43 +698,119 @@ button, input, select {
       transform: translateZ(-80px);
     }
 
-    .avatar-readout {
-      width: 100%;
-      display: grid;
-      grid-template-columns: repeat(4, minmax(0, 1fr));
-      gap: 10px;
-      position: relative;
-      z-index: 2;
-    }
-
-    .avatar-readout div {
-      padding: 11px;
-      border: 1px solid var(--line);
-      border-radius: var(--radius);
-      background: rgba(255,255,255,.055);
-    }
-
-    .avatar-readout span {
-      display: block;
-      margin-top: 4px;
-      color: var(--muted);
-      font-size: .78rem;
-      line-height: 1.35;
-    }
-
     .avatar-stage.svg-stage {
-      width: min(390px, 78vw);
-      height: 390px;
+      width: min(470px, 86vw);
+      height: 510px;
       display: grid;
       place-items: center;
-      animation: floatBody 5.8s ease-in-out infinite;
+      animation: none;
+    }
+
+    .avatar-float-wrap,
+    .avatar-hover-wrap {
+      width: 100%;
+      height: 100%;
+      display: grid;
+      place-items: center;
+      transform-style: preserve-3d;
+      transform-origin: center;
+    }
+
+    .avatar-float-wrap {
+      position: relative;
+      z-index: 2;
+      animation: avatarFloat3d 4.4s ease-in-out infinite;
+      will-change: transform;
+    }
+
+    .avatar-hover-wrap {
+      transition: transform .28s ease;
+      will-change: transform;
+    }
+
+    .avatar-float-label {
+      position: absolute;
+      z-index: 6;
+      padding: 8px 11px;
+      border: 1px solid rgba(127,231,255,.25);
+      border-radius: 999px;
+      background: rgba(8,14,22,.66);
+      box-shadow: 0 18px 40px rgba(0,0,0,.24), 0 0 24px rgba(53,167,255,.12);
+      backdrop-filter: blur(14px);
+      color: var(--soft);
+      font-size: .72rem;
+      font-weight: 950;
+      letter-spacing: 1px;
+      line-height: 1;
+      text-transform: uppercase;
+      white-space: nowrap;
+    }
+
+    .avatar-float-label span {
+      color: #a9ffd0;
+    }
+
+    .avatar-float-label.current {
+      left: -15%;
+      top: 44%;
+    }
+
+    .avatar-float-label.goal {
+      right: -13%;
+      top: 60%;
+      border-color: rgba(97,228,157,.28);
+    }
+
+    @keyframes avatarFloat3d {
+      0%, 100% {
+        transform: perspective(1000px) translate3d(-3px, 5px, 0) rotateY(-2.5deg);
+      }
+      50% {
+        transform: perspective(1000px) translate3d(3px, -9px, 0) rotateY(2.5deg);
+      }
+    }
+
+    @keyframes avatarShadowPulse {
+      0%, 100% {
+        transform: scaleX(1.08);
+        opacity: .68;
+      }
+      50% {
+        transform: scaleX(.86);
+        opacity: .42;
+      }
+    }
+
+    @keyframes avatarChestBreath {
+      0%, 100% { transform: scale(1); }
+      50% { transform: scale(1.015, 1.007); }
     }
 
     .avatar-svg {
       width: 100%;
       height: 100%;
       overflow: visible;
-      filter: drop-shadow(0 34px 60px rgba(53,167,255,.24));
+      filter:
+        drop-shadow(0 30px 42px rgba(1,4,10,.42))
+        drop-shadow(0 0 18px rgba(53,167,255,.2))
+        drop-shadow(0 0 30px rgba(97,228,157,.12));
+      transform: translateZ(34px);
+    }
+
+    #currentAvatar {
+      filter: drop-shadow(0 0 8px rgba(190,255,242,.16));
+    }
+
+    #avatarShadow {
+      animation: avatarShadowPulse 4.4s ease-in-out infinite;
+      transform-box: fill-box;
+      transform-origin: center;
+    }
+
+    #avatarChest {
+      animation: avatarChestBreath 4.4s ease-in-out infinite;
+      transform-box: fill-box;
+      transform-origin: 50% 56%;
     }
 
     .avatar-svg .body-region,
@@ -760,112 +861,9 @@ button, input, select {
       opacity: .12;
     }
 
-    .avatar-controls {
-      display: grid;
-      grid-template-columns: repeat(5, minmax(0, 1fr));
-      gap: 8px;
-      position: relative;
-      z-index: 2;
-    }
-
-    .avatar-controls label {
-      gap: 5px;
-      font-size: .72rem;
-    }
-
-    .avatar-controls select {
-      min-height: 36px;
-      padding: 7px 8px;
-      font-size: .8rem;
-    }
-
-    .avatar-progress {
-      position: relative;
-      z-index: 2;
-      display: grid;
-      gap: 8px;
-    }
-
-    .avatar-progress-top {
-      display: flex;
-      justify-content: space-between;
-      gap: 12px;
-      color: var(--muted);
-      font-size: .78rem;
-      font-weight: 850;
-      text-transform: uppercase;
-      letter-spacing: 1px;
-    }
-
-    .avatar-progress-bar {
-      height: 10px;
-      overflow: hidden;
-      border-radius: 999px;
-      border: 1px solid var(--line);
-      background: rgba(255,255,255,.08);
-    }
-
-    .avatar-progress-fill {
-      height: 100%;
-      width: var(--avatar-progress, 0%);
-      border-radius: inherit;
-      background: linear-gradient(90deg, var(--blue), var(--green));
-      box-shadow: 0 0 22px rgba(97,228,157,.36);
-      transition: width .55s ease;
-    }
-
-    .avatar-actions {
-      display: flex;
-      gap: 8px;
-      flex-wrap: wrap;
-      position: relative;
-      z-index: 2;
-    }
-
-    .mini-btn {
-      min-height: 34px;
-      border-radius: 7px;
-      border: 1px solid var(--line);
-      padding: 0 10px;
-      color: var(--soft);
-      background: rgba(255,255,255,.06);
-      cursor: pointer;
-      font-weight: 850;
-      font-size: .82rem;
-    }
-
-    .avatar-breakdown {
-      display: none;
-      position: relative;
-      z-index: 2;
-      padding: 12px;
-      border: 1px solid rgba(53,167,255,.26);
-      border-radius: var(--radius);
-      background: rgba(53,167,255,.08);
-      color: var(--soft);
-      font-size: .88rem;
-      line-height: 1.45;
-    }
-
-    .avatar-breakdown.active {
-      display: grid;
-      gap: 8px;
-    }
-
     .face-detail {
       fill: rgba(7,10,16,.72);
       stroke: none;
-    }
-
-    .avatar-breakdown ul {
-      margin: 0;
-      padding-left: 18px;
-    }
-
-    .accuracy-note {
-      color: var(--muted);
-      font-size: .78rem;
-      line-height: 1.35;
     }
 
     .avatar-stage.celebrate::after {
@@ -888,6 +886,9 @@ button, input, select {
 
     @media (prefers-reduced-motion: reduce) {
       .avatar-stage,
+      .avatar-float-wrap,
+      #avatarShadow,
+      #avatarChest,
       .ring,
       .bar,
       .mini-ring,
@@ -895,11 +896,15 @@ button, input, select {
         animation: none !important;
       }
 
+      .avatar-hover-wrap {
+        transform: none !important;
+        transition: none !important;
+      }
+
       .avatar-svg .body-region,
       .avatar-svg .goal-region,
       .avatar-svg .hair-region,
-      .avatar-svg .outfit-region,
-      .avatar-progress-fill {
+      .avatar-svg .outfit-region {
         transition: none !important;
       }
     }
@@ -1292,11 +1297,12 @@ button, input, select {
       .avatar-top { flex-direction: column; align-items: start; }
       .avatar-top p { max-width: 31ch; }
       .avatar-top .status-chip { white-space: normal; }
+      .silhouette-card { min-height: 560px; grid-template-rows: auto minmax(400px, 1fr); }
       .avatar-stage { width: min(330px, 100%); }
-      .avatar-stage.svg-stage { width: min(320px, 100%); height: 350px; }
-      .avatar-controls { grid-template-columns: repeat(2, minmax(0, 1fr)); }
-      .avatar-readout { grid-template-columns: 1fr; }
-      .avatar-progress-top { flex-direction: column; gap: 4px; }
+      .avatar-stage.svg-stage { width: min(350px, 100%); height: 430px; }
+      .avatar-float-label { padding: 6px 8px; font-size: .56rem; letter-spacing: .7px; }
+      .avatar-float-label.current { left: 4%; top: 7%; }
+      .avatar-float-label.goal { right: 4%; top: 7%; }
       .power-label { font-size: .68rem; }
       .score-row, .badge-row, .timeline, .product-grid, .form { grid-template-columns: 1fr; display: grid; }
       .chart { gap: 6px; }
@@ -1379,51 +1385,15 @@ button, input, select {
           <div>
             <span class="eyebrow">Live Avatar</span>
             <h2 id="avatarTitle">Current Male Build</h2>
-            <p class="muted" id="avatarCaption">Your avatar is built from your current measurements and updates as you progress.</p>
+            <p class="muted" id="avatarCaption">Your avatar evolves with your real progress.</p>
           </div>
-          <span class="status-chip" id="avatarGoalChip">Target +7kg</span>
-        </div>
-        <div class="avatar-controls" aria-label="Avatar personalization controls">
-          <label>Skin
-            <select id="avatarSkin">
-              <option value="#f2b184">Warm</option>
-              <option value="#d08a5b">Tan</option>
-              <option value="#8d5a3b">Deep</option>
-              <option value="#f5c7a4">Light</option>
-            </select>
-          </label>
-          <label>Hair
-            <select id="avatarHairStyle">
-              <option value="short">Short</option>
-              <option value="medium">Medium</option>
-              <option value="tied">Tied</option>
-            </select>
-          </label>
-          <label>Colour
-            <select id="avatarHairColor">
-              <option value="#171923">Black</option>
-              <option value="#3a2a22">Brown</option>
-              <option value="#6a4930">Auburn</option>
-              <option value="#d6b06a">Blonde</option>
-            </select>
-          </label>
-          <label>Outfit
-            <select id="avatarOutfit">
-              <option value="cyan">Cyan</option>
-              <option value="green">Green</option>
-              <option value="purple">Purple</option>
-              <option value="dark">Dark</option>
-            </select>
-          </label>
-          <label>Style
-            <select id="avatarStyle">
-              <option value="cartoon">Cartoon</option>
-              <option value="hologram">Hologram</option>
-              <option value="minimal">Minimal</option>
-            </select>
-          </label>
+          <span class="status-chip" id="avatarGoalChip">Target +7.0 kg</span>
         </div>
         <div class="avatar-stage svg-stage" id="avatarStage" aria-label="Dynamic personalized body avatar">
+          <div class="avatar-float-label current" id="avatarCurrentLabel">Current <span>63 kg</span></div>
+          <div class="avatar-float-label goal" id="avatarGoalLabel">Goal <span>70 kg</span></div>
+          <div class="avatar-float-wrap" id="avatarFloatWrap">
+            <div class="avatar-hover-wrap" id="avatarHoverWrap">
           <svg class="avatar-svg" id="avatarSvg" viewBox="0 0 320 420" role="img" aria-labelledby="avatarTitle">
             <defs>
               <radialGradient id="avatarFloorGlow" cx="50%" cy="50%" r="50%">
@@ -1447,7 +1417,7 @@ button, input, select {
               </linearGradient>
             </defs>
 
-            <ellipse cx="160" cy="386" rx="96" ry="20" fill="url(#avatarFloorGlow)" />
+            <ellipse id="avatarShadow" cx="160" cy="386" rx="96" ry="20" fill="url(#avatarFloorGlow)" />
             <g id="goalAvatar" opacity=".55">
               <path id="goalHead" class="goal-region" />
               <path id="goalNeck" class="goal-region" />
@@ -1504,33 +1474,8 @@ button, input, select {
 
             <path class="hologram-line" d="M64 374 C92 398 228 398 256 374" fill="none" />
           </svg>
-        </div>
-        <div class="avatar-progress">
-          <div class="avatar-progress-top">
-            <span id="avatarProgressLabel">Progress 0%</span>
-            <span>This is a visual estimate, not a medical body scan.</span>
+            </div>
           </div>
-          <div class="avatar-progress-bar"><div class="avatar-progress-fill" id="avatarProgressFill"></div></div>
-        </div>
-        <div class="avatar-readout">
-          <div><strong id="avatarWeightReadout">Current: 63kg</strong><span>Solid avatar</span></div>
-          <div><strong id="avatarGoalReadout">Goal: 70kg</strong><span>Glowing outline</span></div>
-          <div><strong id="avatarTargetReadout">Target: +7kg</strong><span>Change needed</span></div>
-          <div><strong id="avatarShapeReadout">Lean</strong><span>Shape blend</span></div>
-        </div>
-        <div class="avatar-actions">
-          <button class="mini-btn" type="button" id="avatarWhyBtn">Why does my avatar look like this?</button>
-        </div>
-        <div class="avatar-breakdown" id="avatarBreakdown">
-          <strong>Avatar breakdown</strong>
-          <ul>
-            <li>Height influenced avatar height.</li>
-            <li>Waist influenced torso width.</li>
-            <li>Lean mass influenced shoulder, arm, thigh, and calf volume.</li>
-            <li>Body-fat estimate influenced softness and definition.</li>
-            <li>Goal data created the glowing target outline.</li>
-          </ul>
-          <span class="accuracy-note">Cosmetic choices never change measured body proportions and are not stored in this preview.</span>
         </div>
       </article>
     </section>
@@ -2041,31 +1986,25 @@ button, input, select {
       }
     }
 
-    function setAvatarCosmetics() {
-      const skin = $("avatarSkin").value;
+    function setAvatarCosmetics(gender = $("scanGender").value) {
+      const skin = gender === "female" ? "#f1ad8f" : "#f2b184";
       $("skinBase").setAttribute("stop-color", skin);
       $("skinHi").setAttribute("stop-color", colorMix(skin, "#ffffff", .42));
       $("skinShadow").setAttribute("stop-color", colorMix(skin, "#211116", .42));
-      const outfit = {
-        cyan: ["#c6fff5", "#61e49d", "#2384ff"],
-        green: ["#dcffe5", "#62e072", "#087a73"],
-        purple: ["#eee8ff", "#8e7cff", "#3d2b96"],
-        dark: ["#596170", "#222a37", "#090d14"]
-      }[$("avatarOutfit").value];
+      const outfit = gender === "female"
+        ? ["#ddfff7", "#59d8ad", "#2e80ff"]
+        : ["#c6fff5", "#61e49d", "#2384ff"];
       $("outfitHi").setAttribute("stop-color", outfit[0]);
       $("outfitBase").setAttribute("stop-color", outfit[1]);
       $("outfitShadow").setAttribute("stop-color", outfit[2]);
-      $("avatarHair").setAttribute("fill", $("avatarHairColor").value);
-      const hairStyle = $("avatarHairStyle").value;
-      const gender = $("scanGender").value;
+      $("avatarHair").setAttribute("fill", "#171923");
       const hairPaths = {
         short: "M129 49 C133 20 151 16 160 21 C174 13 190 26 191 51 C177 43 171 41 160 48 C149 39 141 42 129 49Z",
         medium: "M128 50 C131 20 151 12 162 20 C184 18 194 36 191 70 C179 60 171 52 160 50 C149 54 137 61 128 76Z",
         tied: "M129 49 C132 20 151 14 160 20 C177 15 190 28 191 50 C179 45 170 42 160 49 C149 41 139 43 129 49Z M190 62 C220 78 213 122 185 126 C197 104 197 82 190 62Z"
       };
-      $("avatarHair").setAttribute("d", hairPaths[hairStyle] || hairPaths[gender === "female" ? "medium" : "short"]);
-      $("avatarSvg").classList.toggle("hologram", $("avatarStyle").value === "hologram");
-      $("avatarSvg").classList.toggle("minimal", $("avatarStyle").value === "minimal");
+      $("avatarHair").setAttribute("d", hairPaths[gender === "female" ? "medium" : "short"]);
+      $("avatarSvg").classList.remove("hologram", "minimal");
     }
 
     function getProgressPercent(data) {
@@ -2080,21 +2019,15 @@ button, input, select {
       const goalMetrics = buildAvatarMetrics(data, true);
       const shapeClass = getShapeClass(data.bodyFat, data.bmi, currentMetrics.leanNorm);
       const targetDelta = data.target - data.weight;
-      const progress = getProgressPercent(data);
       applyAvatarGeometry(goalMetrics, true);
       applyAvatarGeometry(currentMetrics, false);
-      setAvatarCosmetics();
+      setAvatarCosmetics(data.gender);
       $("avatarTitle").textContent = `Current ${data.gender === "female" ? "Female" : "Male"} Build`;
-      $("avatarCaption").textContent = targetDelta === 0
-        ? "Your avatar is built from your current measurements and updates as you progress."
-        : `Your avatar is built from your current measurements. The glowing outline shows your ${targetDelta > 0 ? "size-gain" : "fat-loss"} target.`;
-      $("avatarGoalChip").textContent = targetDelta === 0 ? "Target Locked" : `Target ${targetDelta > 0 ? "+" : ""}${round1(targetDelta)}kg`;
-      $("avatarWeightReadout").textContent = `Current: ${round1(data.weight)}kg`;
-      $("avatarGoalReadout").textContent = `Goal: ${round1(data.target)}kg`;
-      $("avatarTargetReadout").textContent = `Target: ${targetDelta > 0 ? "+" : ""}${round1(targetDelta)}kg`;
-      $("avatarShapeReadout").textContent = shapeClass;
-      $("avatarProgressLabel").textContent = `Progress ${progress}%`;
-      $("avatarProgressFill").style.setProperty("--avatar-progress", `${progress}%`);
+      $("avatarCaption").textContent = "Your avatar evolves with your real progress.";
+      $("avatarGoalChip").textContent = targetDelta === 0 ? "Target Locked" : `Target ${targetDelta > 0 ? "+" : ""}${targetDelta.toFixed(1)} kg`;
+      const formatKg = (value) => `${Number(value).toLocaleString(undefined, { maximumFractionDigits: 1 })} kg`;
+      $("avatarCurrentLabel").innerHTML = `Current <span>${formatKg(data.weight)}</span>`;
+      $("avatarGoalLabel").innerHTML = `Goal <span>${formatKg(data.target)}</span>`;
       return shapeClass;
     }
 
@@ -2123,13 +2056,21 @@ button, input, select {
       $(id).addEventListener("change", () => updateAvatar());
     });
 
-    ["avatarSkin", "avatarHairStyle", "avatarHairColor", "avatarOutfit", "avatarStyle"].forEach(id => {
-      $(id).addEventListener("change", () => updateAvatar());
-    });
-
-    $("avatarWhyBtn").addEventListener("click", () => {
-      $("avatarBreakdown").classList.toggle("active");
-    });
+    const avatarStage = $("avatarStage");
+    const avatarHoverWrap = $("avatarHoverWrap");
+    const reducedMotionQuery = window.matchMedia("(prefers-reduced-motion: reduce)");
+    if (window.matchMedia("(pointer: fine)").matches) {
+      avatarStage.addEventListener("mousemove", (event) => {
+        if (reducedMotionQuery.matches) return;
+        const rect = avatarStage.getBoundingClientRect();
+        const x = ((event.clientX - rect.left) / rect.width) - .5;
+        const y = ((event.clientY - rect.top) / rect.height) - .5;
+        avatarHoverWrap.style.transform = `rotateY(${(x * 7).toFixed(2)}deg) rotateX(${(-y * 3).toFixed(2)}deg)`;
+      });
+      avatarStage.addEventListener("mouseleave", () => {
+        avatarHoverWrap.style.transform = "rotateY(0deg) rotateX(0deg)";
+      });
+    }
 
     function triggerAvatarCelebration() {
       const stage = $("avatarStage");
