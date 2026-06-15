@@ -182,7 +182,7 @@ function buildPaths(metrics: AvatarMetrics) {
   const center = 160;
   const shoulderX = metrics.shoulderW / 2 + 8;
   const elbowY = 212;
-  const wristY = 292;
+  const wristY = 296;
   const leftShoulder = { x: center - shoulderX, y: 127 };
   const rightShoulder = { x: center + shoulderX, y: 127 };
   const leftElbow = { x: center - shoulderX - 13, y: elbowY };
@@ -198,8 +198,8 @@ function buildPaths(metrics: AvatarMetrics) {
   const rightAnkle = { x: rightKnee.x + 2, y: 390 };
 
   return {
-    head: ovalPath(center, 55, 23, 28),
-    neck: torsoPath(center, 78, 111, metrics.neckW * .86, metrics.neckW * 1.08, 4),
+    head: ovalPath(center, 52, 20, 25),
+    neck: torsoPath(center, 74, 111, metrics.neckW * .82, metrics.neckW * 1.08, 4),
     shoulderL: shoulderPath(-1, center, metrics.neckW, metrics.shoulderW),
     shoulderR: shoulderPath(1, center, metrics.neckW, metrics.shoulderW),
     chest: torsoPath(center, 113, 173, metrics.chestW, metrics.ribW, 12),
@@ -210,8 +210,8 @@ function buildPaths(metrics: AvatarMetrics) {
     upperArmR: limbPath(rightShoulder.x, rightShoulder.y, rightElbow.x, rightElbow.y, metrics.upperArmW, metrics.upperArmW * .86),
     forearmL: limbPath(leftElbow.x, leftElbow.y, leftWrist.x, leftWrist.y, metrics.forearmW, metrics.forearmW * .88),
     forearmR: limbPath(rightElbow.x, rightElbow.y, rightWrist.x, rightWrist.y, metrics.forearmW, metrics.forearmW * .88),
-    handL: handPath(leftWrist.x, wristY + 9, -1, metrics.handW, 25),
-    handR: handPath(rightWrist.x, wristY + 9, 1, metrics.handW, 25),
+    handL: handPath(leftWrist.x, wristY + 9, -1, metrics.handW, 26),
+    handR: handPath(rightWrist.x, wristY + 9, 1, metrics.handW, 26),
     thighL: limbPath(leftHip.x, leftHip.y, leftKnee.x, leftKnee.y, metrics.thighW, metrics.thighW * .78),
     thighR: limbPath(rightHip.x, rightHip.y, rightKnee.x, rightKnee.y, metrics.thighW, metrics.thighW * .78),
     calfL: limbPath(leftKnee.x, leftKnee.y, leftAnkle.x, leftAnkle.y, metrics.calfW, metrics.calfW * .7),
@@ -260,7 +260,7 @@ function AvatarSvg({ stats }: { stats: ReturnType<typeof withDerivedStats> }) {
         <path className="live-avatar-shoe" d={current.footL} />
         <path className="live-avatar-shoe" d={current.footR} />
         <path d={current.softness} fill="rgba(255,255,255,.14)" opacity={currentMetrics.softness} />
-        <path className="live-avatar-hair" d="M129 49 C133 20 151 16 160 21 C174 13 190 26 191 51 C177 43 171 41 160 48 C149 39 141 42 129 49Z" />
+        <path className="live-avatar-hair" d="M132 45 C135 22 151 17 160 22 C173 16 187 27 188 48 C176 41 169 40 160 46 C150 39 142 40 132 45Z" />
         <path className="live-avatar-face" d="M150 58 C152 56 154 56 156 58 C154 60 152 60 150 58Z" />
         <path className="live-avatar-face" d="M164 58 C166 56 168 56 170 58 C168 60 166 60 164 58Z" />
         <path d="M153 70 C157 73 164 73 168 70" fill="none" stroke="rgba(7,10,16,.55)" strokeWidth="2" strokeLinecap="round" />

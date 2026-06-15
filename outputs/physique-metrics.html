@@ -2040,8 +2040,8 @@ button, input, select {
       const id = (name) => goal ? `goal${name}` : currentIds[name];
       group.setAttribute("transform", `translate(160 398) scale(1 ${metrics.heightScale.toFixed(2)}) translate(-160 -398)`);
 
-      setPath(id("Head"), ovalPath(center, 55, 23, 28));
-      setPath(id("Neck"), torsoPath(center, 78, 111, metrics.neckW * .86, metrics.neckW * 1.08, 4));
+      setPath(id("Head"), ovalPath(center, 52, 20, 25));
+      setPath(id("Neck"), torsoPath(center, 74, 111, metrics.neckW * .82, metrics.neckW * 1.08, 4));
       setPath(id("ShoulderL"), shoulderPath(-1, center, metrics.neckW, metrics.shoulderW));
       setPath(id("ShoulderR"), shoulderPath(1, center, metrics.neckW, metrics.shoulderW));
       setPath(id("Chest"), torsoPath(center, 113, 173, metrics.chestW, metrics.ribW, 12));
@@ -2051,7 +2051,7 @@ button, input, select {
 
       const shoulderX = metrics.shoulderW / 2 + 8;
       const elbowY = 212;
-      const wristY = 292;
+      const wristY = 296;
       const leftShoulder = { x: center - shoulderX, y: 127 };
       const rightShoulder = { x: center + shoulderX, y: 127 };
       const leftElbow = { x: center - shoulderX - 13, y: elbowY };
@@ -2062,8 +2062,8 @@ button, input, select {
       setPath(id("UpperArmR"), limbPath(rightShoulder.x, rightShoulder.y, rightElbow.x, rightElbow.y, metrics.upperArmW, metrics.upperArmW * .86));
       setPath(id("ForearmL"), limbPath(leftElbow.x, leftElbow.y, leftWrist.x, leftWrist.y, metrics.forearmW, metrics.forearmW * .88));
       setPath(id("ForearmR"), limbPath(rightElbow.x, rightElbow.y, rightWrist.x, rightWrist.y, metrics.forearmW, metrics.forearmW * .88));
-      setPath(id("HandL"), handPath(leftWrist.x, wristY + 9, -1, metrics.handW, 25));
-      setPath(id("HandR"), handPath(rightWrist.x, wristY + 9, 1, metrics.handW, 25));
+      setPath(id("HandL"), handPath(leftWrist.x, wristY + 9, -1, metrics.handW, 26));
+      setPath(id("HandR"), handPath(rightWrist.x, wristY + 9, 1, metrics.handW, 26));
 
       const hipJoint = Math.max(metrics.hipsW * .24, 22);
       const kneeY = 343;
@@ -2105,9 +2105,9 @@ button, input, select {
       $("outfitShadow").setAttribute("stop-color", outfit[2]);
       $("avatarHair").setAttribute("fill", "#171923");
       const hairPaths = {
-        short: "M129 49 C133 20 151 16 160 21 C174 13 190 26 191 51 C177 43 171 41 160 48 C149 39 141 42 129 49Z",
-        medium: "M128 50 C131 20 151 12 162 20 C184 18 194 36 191 70 C179 60 171 52 160 50 C149 54 137 61 128 76Z",
-        tied: "M129 49 C132 20 151 14 160 20 C177 15 190 28 191 50 C179 45 170 42 160 49 C149 41 139 43 129 49Z M190 62 C220 78 213 122 185 126 C197 104 197 82 190 62Z"
+        short: "M132 45 C135 22 151 17 160 22 C173 16 187 27 188 48 C176 41 169 40 160 46 C150 39 142 40 132 45Z",
+        medium: "M130 47 C133 22 151 15 162 22 C181 20 191 36 188 67 C178 58 170 51 160 49 C150 53 139 59 130 73Z",
+        tied: "M132 45 C135 22 151 17 160 22 C174 17 188 29 188 48 C177 43 169 41 160 47 C150 40 141 41 132 45Z M188 60 C216 77 209 118 184 122 C195 102 195 80 188 60Z"
       };
       $("avatarHair").setAttribute("d", hairPaths[gender === "female" ? "medium" : "short"]);
       $("avatarSvg").classList.remove("hologram", "minimal");
