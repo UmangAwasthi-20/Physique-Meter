@@ -1,6 +1,6 @@
 "use client";
 
-import { useMemo, useState } from "react";
+import { type CSSProperties, useMemo, useState } from "react";
 import { AnimatePresence, motion, useReducedMotion } from "framer-motion";
 import { Info, RotateCw, Settings2, X } from "lucide-react";
 
@@ -262,74 +262,20 @@ const avatarRegionOrder = [
 
 function AvatarSvg({ stats }: { stats: ReturnType<typeof withDerivedStats> }) {
   const currentMetrics = buildAvatarMetrics(stats, false);
-  const goalMetrics = buildAvatarMetrics(stats, true);
-  const current = buildPaths(currentMetrics);
-  const goal = buildPaths(goalMetrics);
-  const currentTransform = `translate(160 398) scale(1 ${currentMetrics.heightScale.toFixed(2)}) translate(-160 -398)`;
-  const goalTransform = `translate(160 398) scale(1 ${goalMetrics.heightScale.toFixed(2)}) translate(-160 -398)`;
+  const targetDelta = stats.goalWeight - stats.weight;
+  const anatomyStyle = {
+    "--avatar-width-scale": clamp(.86 + currentMetrics.leanNorm * .12 + currentMetrics.fatNorm * .12, .82, 1.14).toFixed(2),
+    "--avatar-height-scale": currentMetrics.heightScale.toFixed(2),
+    "--avatar-goal-scale": clamp(1 + targetDelta / Math.max(stats.weight, 1) * .22, .92, 1.12).toFixed(2),
+    "--avatar-contrast": (1.02 + currentMetrics.definition * .28).toFixed(2),
+    "--avatar-brightness": (.82 + currentMetrics.definition * .14 - currentMetrics.fatNorm * .04).toFixed(2)
+  } as CSSProperties;
 
   return (
-    <svg className="live-avatar-svg" viewBox="0 0 320 420" role="img" aria-labelledby="liveAvatarTitle">
-      <title id="liveAvatarTitle">Dynamic fitness game avatar built from current measurements</title>
-      <defs>
-        <radialGradient id="liveFloorGlow" cx="50%" cy="50%" r="50%">
-          <stop offset="0%" stopColor="#63d68f" stopOpacity=".42" />
-          <stop offset="46%" stopColor="#1184ff" stopOpacity=".18" />
-          <stop offset="100%" stopColor="#1184ff" stopOpacity="0" />
-        </radialGradient>
-        <linearGradient id="liveSkin" x1="0%" y1="0%" x2="100%" y2="100%">
-          <stop offset="0%" stopColor="#ffd8bd" />
-          <stop offset="62%" stopColor="#f2b184" />
-          <stop offset="100%" stopColor="#9f5d45" />
-        </linearGradient>
-        <linearGradient id="liveShorts" x1="0%" y1="0%" x2="100%" y2="100%">
-          <stop offset="0%" stopColor="#182332" />
-          <stop offset="54%" stopColor="#101821" />
-          <stop offset="100%" stopColor="#071018" />
-        </linearGradient>
-      </defs>
-
-      <ellipse className="live-avatar-shadow" cx="160" cy="386" rx="96" ry="20" fill="url(#liveFloorGlow)" />
-      <g opacity=".55" transform={goalTransform}>
-        {avatarRegionOrder.map((region) => (
-          <path key={region} className="live-avatar-goal" d={goal[region]} />
-        ))}
-      </g>
-
-      <g className="live-avatar-current" transform={currentTransform}>
-        <path className="live-avatar-skin" d={current.neck} />
-        <path className="live-avatar-skin" d={current.shoulderL} />
-        <path className="live-avatar-skin" d={current.shoulderR} />
-        <path className="live-avatar-skin" d={current.upperArmL} />
-        <path className="live-avatar-skin" d={current.upperArmR} />
-        <path className="live-avatar-skin" d={current.forearmL} />
-        <path className="live-avatar-skin" d={current.forearmR} />
-        <path className="live-avatar-skin" d={current.handL} />
-        <path className="live-avatar-skin" d={current.handR} />
-        <path className="live-avatar-skin" d={current.thighL} />
-        <path className="live-avatar-skin" d={current.thighR} />
-        <path className="live-avatar-skin" d={current.calfL} />
-        <path className="live-avatar-skin" d={current.calfR} />
-        <path className="live-avatar-shoe" d={current.footL} />
-        <path className="live-avatar-shoe" d={current.footR} />
-        <path className="live-avatar-skin" d={current.chest} />
-        <path className="live-avatar-skin" d={current.abdomen} />
-        <path className="live-avatar-skin" d={current.waist} />
-        <path className="live-avatar-skin live-avatar-chest" d={current.core} />
-        <path className="live-avatar-shorts" d={current.pelvis} />
-        <path className="live-avatar-skin" d={current.head} />
-        <path className="live-avatar-hair" d="M132 45 C135 22 151 17 160 22 C173 16 187 27 188 48 C176 41 169 40 160 46 C150 39 142 40 132 45Z" />
-        <path className="live-avatar-face" d="M150 58 C152 56 154 56 156 58 C154 60 152 60 150 58Z" />
-        <path className="live-avatar-face" d="M164 58 C166 56 168 56 170 58 C168 60 166 60 164 58Z" />
-        <path d="M153 70 C157 73 164 73 168 70" fill="none" stroke="rgba(7,10,16,.55)" strokeWidth="2" strokeLinecap="round" />
-        <path d={current.softness} fill="rgba(255,255,255,.14)" opacity={currentMetrics.softness} />
-        <path className="live-avatar-definition" d={current.chestLine} opacity={currentMetrics.definition} />
-        <path className="live-avatar-definition" d={current.waistLineL} opacity={currentMetrics.definition} />
-        <path className="live-avatar-definition" d={current.waistLineR} opacity={currentMetrics.definition} />
-      </g>
-
-      <path className="live-avatar-hologram-line" d="M64 374 C92 398 228 398 256 374" fill="none" />
-    </svg>
+    <div className="live-avatar-image-wrap" style={anatomyStyle} role="img" aria-label="Anatomy body live avatar">
+      <img className="live-avatar-anatomy-goal" src="/assets/anatomy-avatar.png" alt="" aria-hidden="true" />
+      <img className="live-avatar-anatomy-img" src="/assets/anatomy-avatar.png" alt="Anatomy body live avatar" />
+    </div>
   );
 }
 
