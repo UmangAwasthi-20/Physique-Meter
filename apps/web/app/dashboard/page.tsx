@@ -4,6 +4,7 @@ import Link from "next/link";
 import { motion } from "framer-motion";
 import { Download, Flame, Moon, Sparkles, Trophy, Upload } from "lucide-react";
 import { Area, AreaChart, CartesianGrid, ResponsiveContainer, Tooltip, XAxis, YAxis } from "recharts";
+import LiveAvatar from "../../components/LiveAvatar";
 
 const trend = [
   { week: "W1", score: 68, weight: 84.4 },
@@ -58,6 +59,20 @@ export default function DashboardPage() {
               <span className="muted">{helper}</span>
             </motion.article>
           ))}
+
+          <LiveAvatar
+            stats={{
+              sex: "male",
+              age: 21,
+              height: 181,
+              weight: 63,
+              waist: 78,
+              neck: 40,
+              hips: 88,
+              goalWeight: 70,
+              goalBodyFat: 15
+            }}
+          />
 
           <motion.article className="card span-7" initial={{ opacity: 0 }} animate={{ opacity: 1 }}>
             <h2>Score Momentum</h2>

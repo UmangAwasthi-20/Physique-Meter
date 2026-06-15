@@ -453,6 +453,69 @@ button, input, select {
       box-shadow: 0 0 26px rgba(97,228,157,.14);
     }
 
+    .avatar-header-actions {
+      display: flex;
+      align-items: center;
+      justify-content: flex-end;
+      gap: 7px;
+      position: relative;
+      flex: 0 0 auto;
+      flex-wrap: nowrap;
+    }
+
+    .avatar-rotate-toggle,
+    .avatar-icon-btn {
+      min-height: 32px;
+      border: 1px solid rgba(127,231,255,.2);
+      border-radius: 999px;
+      background: rgba(8,14,22,.48);
+      color: var(--soft);
+      box-shadow: 0 0 20px rgba(53,167,255,.08);
+      cursor: pointer;
+      font-weight: 950;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+    }
+
+    .avatar-rotate-toggle {
+      padding: 0 11px;
+      font-size: .68rem;
+    }
+
+    .avatar-rotate-toggle[aria-pressed="true"] {
+      color: #a9ffd0;
+      border-color: rgba(97,228,157,.34);
+      background: rgba(97,228,157,.12);
+    }
+
+    .avatar-icon-btn {
+      width: 32px;
+      padding: 0;
+      font-size: .72rem;
+    }
+
+    .avatar-info-popover {
+      display: none;
+      position: absolute;
+      top: calc(100% + 10px);
+      right: 0;
+      width: min(250px, 76vw);
+      padding: 12px;
+      border: 1px solid rgba(127,231,255,.22);
+      border-radius: var(--radius);
+      background: rgba(8,14,22,.92);
+      color: var(--soft);
+      box-shadow: 0 24px 50px rgba(0,0,0,.36);
+      backdrop-filter: blur(18px);
+      font-size: .78rem;
+      line-height: 1.45;
+      z-index: 20;
+    }
+
+    .avatar-info-popover.active {
+      display: block;
+    }
+
     .avatar-stage {
       width: min(460px, 82vw);
       height: 500px;
@@ -707,6 +770,7 @@ button, input, select {
     }
 
     .avatar-float-wrap,
+    .avatar-rotate-wrap,
     .avatar-hover-wrap {
       width: 100%;
       height: 100%;
@@ -719,8 +783,16 @@ button, input, select {
     .avatar-float-wrap {
       position: relative;
       z-index: 2;
-      animation: avatarFloat3d 4.4s ease-in-out infinite;
+      animation: avatarFloat3d 4.8s ease-in-out infinite;
       will-change: transform;
+    }
+
+    .avatar-rotate-wrap {
+      will-change: transform;
+    }
+
+    .avatar-stage.rotate-enabled .avatar-rotate-wrap {
+      animation: avatarAutoRotate 7.8s ease-in-out infinite;
     }
 
     .avatar-hover-wrap {
@@ -763,10 +835,19 @@ button, input, select {
 
     @keyframes avatarFloat3d {
       0%, 100% {
-        transform: perspective(1000px) translate3d(-3px, 5px, 0) rotateY(-2.5deg);
+        transform: perspective(1000px) translate3d(-2px, 5px, 0);
       }
       50% {
-        transform: perspective(1000px) translate3d(3px, -9px, 0) rotateY(2.5deg);
+        transform: perspective(1000px) translate3d(2px, -9px, 0);
+      }
+    }
+
+    @keyframes avatarAutoRotate {
+      0%, 100% {
+        transform: rotateY(-8deg);
+      }
+      50% {
+        transform: rotateY(8deg);
       }
     }
 
@@ -887,6 +968,7 @@ button, input, select {
     @media (prefers-reduced-motion: reduce) {
       .avatar-stage,
       .avatar-float-wrap,
+      .avatar-rotate-wrap,
       #avatarShadow,
       #avatarChest,
       .ring,
@@ -1297,6 +1379,7 @@ button, input, select {
       .avatar-top { flex-direction: column; align-items: start; }
       .avatar-top p { max-width: 31ch; }
       .avatar-top .status-chip { white-space: normal; }
+      .avatar-header-actions { width: 100%; justify-content: flex-start; flex-wrap: wrap; }
       .silhouette-card { min-height: 560px; grid-template-rows: auto minmax(400px, 1fr); }
       .avatar-stage { width: min(330px, 100%); }
       .avatar-stage.svg-stage { width: min(350px, 100%); height: 430px; }
@@ -1387,13 +1470,19 @@ button, input, select {
             <h2 id="avatarTitle">Current Male Build</h2>
             <p class="muted" id="avatarCaption">Your avatar evolves with your real progress.</p>
           </div>
-          <span class="status-chip" id="avatarGoalChip">Target +7.0 kg</span>
+          <div class="avatar-header-actions">
+            <span class="status-chip" id="avatarGoalChip">Target +7.0 kg</span>
+            <button class="avatar-rotate-toggle" type="button" id="avatarRotateToggle" aria-pressed="false">Auto Rotate</button>
+            <button class="avatar-icon-btn" type="button" id="avatarInfoToggle" aria-label="Avatar safety note">i</button>
+            <div class="avatar-info-popover" id="avatarInfoPopover">This avatar is a visual estimate based on your entered measurements, not a medical body scan.</div>
+          </div>
         </div>
         <div class="avatar-stage svg-stage" id="avatarStage" aria-label="Dynamic personalized body avatar">
           <div class="avatar-float-label current" id="avatarCurrentLabel">Current <span>63 kg</span></div>
           <div class="avatar-float-label goal" id="avatarGoalLabel">Goal <span>70 kg</span></div>
           <div class="avatar-float-wrap" id="avatarFloatWrap">
-            <div class="avatar-hover-wrap" id="avatarHoverWrap">
+            <div class="avatar-rotate-wrap" id="avatarRotateWrap">
+              <div class="avatar-hover-wrap" id="avatarHoverWrap">
           <svg class="avatar-svg" id="avatarSvg" viewBox="0 0 320 420" role="img" aria-labelledby="avatarTitle">
             <defs>
               <radialGradient id="avatarFloorGlow" cx="50%" cy="50%" r="50%">
@@ -1457,9 +1546,9 @@ button, input, select {
               <path id="calfR" class="body-region" fill="url(#skinShade)" />
               <path id="footL" class="shoe-region" fill="#111821" />
               <path id="footR" class="shoe-region" fill="#111821" />
-              <path id="avatarChest" class="outfit-region" fill="url(#outfitShade)" />
-              <path id="avatarAbdomen" class="outfit-region" fill="url(#outfitShade)" />
-              <path id="avatarWaist" class="outfit-region" fill="url(#outfitShade)" />
+              <path id="avatarChest" class="body-region" fill="url(#skinShade)" />
+              <path id="avatarAbdomen" class="body-region" fill="url(#skinShade)" />
+              <path id="avatarWaist" class="body-region" fill="url(#skinShade)" />
               <path id="avatarPelvis" class="outfit-region" fill="#121821" />
               <path id="avatarHead" class="body-region" fill="url(#skinShade)" />
               <path id="avatarHair" class="hair-region" d="M132 50 C135 28 149 21 160 24 C174 18 188 31 188 51 C178 45 170 43 160 48 C150 42 141 44 132 50Z" fill="#171923" />
@@ -1474,6 +1563,7 @@ button, input, select {
 
             <path class="hologram-line" d="M64 374 C92 398 228 398 256 374" fill="none" />
           </svg>
+              </div>
             </div>
           </div>
         </div>
@@ -1794,29 +1884,42 @@ button, input, select {
     }
 
     function shoulderPath(side, center, neckW, shoulderW) {
-      const innerX = center + side * (neckW * .34);
-      const outerX = center + side * (shoulderW / 2);
-      const armX = center + side * (shoulderW / 2 + 15);
-      return `M${round1(innerX)} 94
-        C${round1(center + side * 22)} 96 ${round1(center + side * 42)} 100 ${round1(outerX)} 111
-        C${round1(armX)} 119 ${round1(armX)} 137 ${round1(outerX - side * 10)} 145
-        C${round1(center + side * 38)} 132 ${round1(center + side * 20)} 119 ${round1(innerX)} 112Z`;
+      const innerX = center + side * (neckW * .38);
+      const clavicleX = center + side * (shoulderW * .28);
+      const deltoidX = center + side * (shoulderW / 2 + 7);
+      const armPitX = center + side * (shoulderW / 2 - 7);
+      return `M${round1(innerX)} 98
+        C${round1(clavicleX)} 95 ${round1(center + side * shoulderW * .43)} 101 ${round1(deltoidX)} 116
+        C${round1(deltoidX + side * 9)} 126 ${round1(deltoidX + side * 4)} 142 ${round1(armPitX)} 150
+        C${round1(center + side * shoulderW * .28)} 137 ${round1(center + side * neckW * .55)} 120 ${round1(innerX)} 112Z`;
     }
 
     function torsoPath(center, topY, bottomY, topW, bottomW, curve = 14) {
+      const leftTop = center - topW / 2;
+      const rightTop = center + topW / 2;
+      const leftBottom = center - bottomW / 2;
+      const rightBottom = center + bottomW / 2;
+      const sideCurve = Math.max(curve, Math.abs(topW - bottomW) * .22);
       return `M${round1(center - topW / 2)} ${round1(topY)}
-        C${round1(center - topW / 2 - curve)} ${round1(topY + 18)} ${round1(center - bottomW / 2 - curve * .35)} ${round1(bottomY - 20)} ${round1(center - bottomW / 2)} ${round1(bottomY)}
-        C${round1(center - bottomW * .22)} ${round1(bottomY + 8)} ${round1(center + bottomW * .22)} ${round1(bottomY + 8)} ${round1(center + bottomW / 2)} ${round1(bottomY)}
-        C${round1(center + bottomW / 2 + curve * .35)} ${round1(bottomY - 20)} ${round1(center + topW / 2 + curve)} ${round1(topY + 18)} ${round1(center + topW / 2)} ${round1(topY)}
-        C${round1(center + topW * .24)} ${round1(topY - 8)} ${round1(center - topW * .24)} ${round1(topY - 8)} ${round1(center - topW / 2)} ${round1(topY)}Z`;
+        C${round1(leftTop - sideCurve * .55)} ${round1(topY + 19)} ${round1(leftBottom - sideCurve * .28)} ${round1(bottomY - 22)} ${round1(leftBottom)} ${round1(bottomY)}
+        C${round1(center - bottomW * .2)} ${round1(bottomY + 5)} ${round1(center + bottomW * .2)} ${round1(bottomY + 5)} ${round1(rightBottom)} ${round1(bottomY)}
+        C${round1(rightBottom + sideCurve * .28)} ${round1(bottomY - 22)} ${round1(rightTop + sideCurve * .55)} ${round1(topY + 19)} ${round1(rightTop)} ${round1(topY)}
+        C${round1(center + topW * .24)} ${round1(topY - 7)} ${round1(center - topW * .24)} ${round1(topY - 7)} ${round1(leftTop)} ${round1(topY)}Z`;
     }
 
     function pelvisPath(center, topY, bottomY, topW, hipW) {
-      return `M${round1(center - topW / 2)} ${round1(topY)}
-        C${round1(center - hipW / 2)} ${round1(topY + 12)} ${round1(center - hipW / 2)} ${round1(bottomY - 8)} ${round1(center - hipW * .34)} ${round1(bottomY)}
-        L${round1(center + hipW * .34)} ${round1(bottomY)}
-        C${round1(center + hipW / 2)} ${round1(bottomY - 8)} ${round1(center + hipW / 2)} ${round1(topY + 12)} ${round1(center + topW / 2)} ${round1(topY)}
-        C${round1(center + topW * .18)} ${round1(topY + 8)} ${round1(center - topW * .18)} ${round1(topY + 8)} ${round1(center - topW / 2)} ${round1(topY)}Z`;
+      const leftTop = center - topW / 2;
+      const rightTop = center + topW / 2;
+      const leftHip = center - hipW * .44;
+      const rightHip = center + hipW * .44;
+      const leftLeg = center - hipW * .18;
+      const rightLeg = center + hipW * .18;
+      return `M${round1(leftTop)} ${round1(topY)}
+        C${round1(leftHip)} ${round1(topY + 10)} ${round1(leftHip)} ${round1(bottomY - 12)} ${round1(leftLeg)} ${round1(bottomY)}
+        C${round1(center - 10)} ${round1(bottomY + 7)} ${round1(center - 4)} ${round1(bottomY + 3)} ${round1(center)} ${round1(bottomY + 10)}
+        C${round1(center + 4)} ${round1(bottomY + 3)} ${round1(center + 10)} ${round1(bottomY + 7)} ${round1(rightLeg)} ${round1(bottomY)}
+        C${round1(rightHip)} ${round1(bottomY - 12)} ${round1(rightHip)} ${round1(topY + 10)} ${round1(rightTop)} ${round1(topY)}
+        C${round1(center + topW * .24)} ${round1(topY + 9)} ${round1(center - topW * .24)} ${round1(topY + 9)} ${round1(leftTop)} ${round1(topY)}Z`;
     }
 
     function limbPath(x1, y1, x2, y2, w1, w2) {
@@ -1833,11 +1936,14 @@ button, input, select {
       const p3y = y2 - ny * w2 / 2;
       const p4x = x1 - nx * w1 / 2;
       const p4y = y1 - ny * w1 / 2;
+      const bulge = Math.min(5, Math.max(1.5, w1 * .12));
       return `M${round1(p1x)} ${round1(p1y)}
-        C${round1((p1x + p2x) / 2)} ${round1((p1y + p2y) / 2)} ${round1(p2x)} ${round1(p2y)} ${round1(p2x)} ${round1(p2y)}
-        C${round1(x2 + dx * .02)} ${round1(y2 + dy * .02)} ${round1(p3x)} ${round1(p3y)} ${round1(p3x)} ${round1(p3y)}
-        C${round1((p3x + p4x) / 2)} ${round1((p3y + p4y) / 2)} ${round1(p4x)} ${round1(p4y)} ${round1(p4x)} ${round1(p4y)}
-        C${round1(x1 - dx * .02)} ${round1(y1 - dy * .02)} ${round1(p1x)} ${round1(p1y)} ${round1(p1x)} ${round1(p1y)}Z`;
+        C${round1(x1 + dx * .26 + nx * (w1 * .18 + bulge))} ${round1(y1 + dy * .26 + ny * (w1 * .18 + bulge))}
+         ${round1(x1 + dx * .72 + nx * (w2 * .16))} ${round1(y1 + dy * .72 + ny * (w2 * .16))} ${round1(p2x)} ${round1(p2y)}
+        C${round1(x2 + dx * .025)} ${round1(y2 + dy * .025)} ${round1(p3x)} ${round1(p3y)} ${round1(p3x)} ${round1(p3y)}
+        C${round1(x1 + dx * .72 - nx * (w2 * .16))} ${round1(y1 + dy * .72 - ny * (w2 * .16))}
+         ${round1(x1 + dx * .26 - nx * (w1 * .18 + bulge))} ${round1(y1 + dy * .26 - ny * (w1 * .18 + bulge))} ${round1(p4x)} ${round1(p4y)}
+        C${round1(x1 - dx * .025)} ${round1(y1 - dy * .025)} ${round1(p1x)} ${round1(p1y)} ${round1(p1x)} ${round1(p1y)}Z`;
     }
 
     function handPath(cx, cy, side, width, height) {
@@ -1877,7 +1983,7 @@ button, input, select {
       const ffmi = leanMass / Math.pow(heightM, 2);
       const fatMassIndex = fatMass / Math.pow(heightM, 2);
       const ageSoftness = clamp((data.age - 35) / 55, 0, .07);
-      const leanNorm = clamp((ffmi - 15.5) / 8, 0, 1);
+      const leanNorm = clamp((ffmi - 15.8) / 8.2, 0, 1);
       const bmiNorm = clamp((bmi - 18) / 12, 0, 1);
       const fatNorm = clamp(bodyFat / (gender === "female" ? 36 : 30) * .72 + fatMassIndex / 12 * .28, 0, 1);
       const goalWaist = clamp(data.waist + targetDelta * .18 - (data.bodyFat - bodyFat) * .42, 48, 180);
@@ -1888,21 +1994,21 @@ button, input, select {
       const hipRatio = hips / data.height;
       const neckRatio = data.neck / data.height;
       const maleBias = gender === "male" ? 1 : 0;
-      const baseShoulder = gender === "male" ? 116 : 94;
-      const shoulderW = clamp(baseShoulder + leanNorm * 20 + bmiNorm * 5 - fatNorm * 3, gender === "male" ? 104 : 82, gender === "male" ? 145 : 120);
-      const chestW = clamp(shoulderW - (gender === "male" ? 18 : 14) + leanNorm * 8 + fatNorm * 4, gender === "male" ? 86 : 76, gender === "male" ? 128 : 112);
-      const waistW = clamp(waistRatio * 168 + fatNorm * 13, gender === "male" ? 66 : 62, gender === "male" ? 118 : 116);
-      const hipsW = clamp(hipRatio * 162 + fatNorm * 7, gender === "female" ? 86 : 72, gender === "female" ? 132 : 116);
-      const ribW = clamp((chestW + waistW) / 2, 78, 124);
-      const upperArmW = clamp(19 + leanNorm * 9 + fatNorm * 4 + bmiNorm * 1.5 + maleBias * 1.5, 18, 32);
-      const forearmW = clamp(upperArmW * .78, 15, 25);
+      const baseShoulder = gender === "male" ? 118 : 96;
+      const shoulderW = clamp(baseShoulder + leanNorm * 26 + bmiNorm * 6 - fatNorm * 2, gender === "male" ? 106 : 84, gender === "male" ? 148 : 122);
+      const chestW = clamp(shoulderW - (gender === "male" ? 20 : 15) + leanNorm * 12 + fatNorm * 3, gender === "male" ? 88 : 76, gender === "male" ? 132 : 114);
+      const waistW = clamp(waistRatio * 164 + fatNorm * 16 + bmiNorm * 4, gender === "male" ? 62 : 58, gender === "male" ? 120 : 116);
+      const hipsW = clamp(hipRatio * 158 + fatNorm * 8 + bmiNorm * 2, gender === "female" ? 86 : 72, gender === "female" ? 132 : 116);
+      const ribW = clamp(chestW - (gender === "male" ? 12 : 8) + fatNorm * 5, 78, 124);
+      const upperArmW = clamp(18 + leanNorm * 11 + fatNorm * 4 + bmiNorm * 1.5 + maleBias * 1.6, 17, 34);
+      const forearmW = clamp(upperArmW * .74, 14, 25);
       const handW = clamp(forearmW * .92, 14, 24);
-      const thighW = clamp(27 + leanNorm * 9 + fatNorm * 7 + bmiNorm * 2, 24, 44);
-      const calfW = clamp(20 + leanNorm * 7 + fatNorm * 3 + bmiNorm * 1.5, 18, 34);
-      const neckW = clamp(neckRatio * 106, 18, gender === "male" ? 32 : 28);
+      const thighW = clamp(26 + leanNorm * 10 + fatNorm * 8 + bmiNorm * 2, 23, 44);
+      const calfW = clamp(19 + leanNorm * 7 + fatNorm * 3 + bmiNorm * 1.5, 17, 34);
+      const neckW = clamp(neckRatio * 106 + leanNorm * 2, 18, gender === "male" ? 33 : 28);
       const heightScale = clamp(data.height / (gender === "male" ? 178 : 164), .9, 1.1);
-      const definition = clamp(.86 - fatNorm * .7 + leanNorm * .22 - ageSoftness, .12, .78);
-      const softness = clamp(fatNorm * .25 + ageSoftness * .25, .04, .28);
+      const definition = clamp(.9 - fatNorm * 1.05 + leanNorm * .32 - ageSoftness, .04, .86);
+      const softness = clamp(fatNorm * .32 + ageSoftness * .25, .04, .34);
       return { gender, heightScale, leanNorm, fatNorm, shoulderW, chestW, ribW, waistW, hipsW, upperArmW, forearmW, handW, thighW, calfW, neckW, definition, softness };
     }
 
@@ -1934,36 +2040,36 @@ button, input, select {
       const id = (name) => goal ? `goal${name}` : currentIds[name];
       group.setAttribute("transform", `translate(160 398) scale(1 ${metrics.heightScale.toFixed(2)}) translate(-160 -398)`);
 
-      setPath(id("Head"), ovalPath(center, 56, 24, 29));
-      setPath(id("Neck"), torsoPath(center, 80, 108, metrics.neckW, metrics.neckW * 1.08, 4));
+      setPath(id("Head"), ovalPath(center, 55, 23, 28));
+      setPath(id("Neck"), torsoPath(center, 78, 111, metrics.neckW * .86, metrics.neckW * 1.08, 4));
       setPath(id("ShoulderL"), shoulderPath(-1, center, metrics.neckW, metrics.shoulderW));
       setPath(id("ShoulderR"), shoulderPath(1, center, metrics.neckW, metrics.shoulderW));
-      setPath(id("Chest"), torsoPath(center, 116, 176, metrics.chestW, metrics.ribW, 12));
-      setPath(id("Abdomen"), torsoPath(center, 172, 236, metrics.ribW, metrics.waistW, 10));
-      setPath(id("Waist"), torsoPath(center, 226, 252, metrics.waistW, Math.max(metrics.waistW * .92, 58), 5));
-      setPath(id("Pelvis"), pelvisPath(center, 246, 284, Math.max(metrics.waistW * 1.04, 66), metrics.hipsW));
+      setPath(id("Chest"), torsoPath(center, 113, 173, metrics.chestW, metrics.ribW, 12));
+      setPath(id("Abdomen"), torsoPath(center, 166, 234, metrics.ribW, metrics.waistW, 9));
+      setPath(id("Waist"), torsoPath(center, 228, 252, metrics.waistW, Math.max(metrics.waistW * .88, 55), 4));
+      setPath(id("Pelvis"), pelvisPath(center, 246, 282, Math.max(metrics.waistW * .98, 62), metrics.hipsW));
 
-      const shoulderX = metrics.shoulderW / 2 + 12;
-      const elbowY = 207;
-      const wristY = 286;
-      const leftShoulder = { x: center - shoulderX, y: 128 };
-      const rightShoulder = { x: center + shoulderX, y: 128 };
-      const leftElbow = { x: center - shoulderX - 15, y: elbowY };
-      const rightElbow = { x: center + shoulderX + 15, y: elbowY };
-      const leftWrist = { x: leftElbow.x + 6, y: wristY };
-      const rightWrist = { x: rightElbow.x - 6, y: wristY };
+      const shoulderX = metrics.shoulderW / 2 + 8;
+      const elbowY = 212;
+      const wristY = 292;
+      const leftShoulder = { x: center - shoulderX, y: 127 };
+      const rightShoulder = { x: center + shoulderX, y: 127 };
+      const leftElbow = { x: center - shoulderX - 13, y: elbowY };
+      const rightElbow = { x: center + shoulderX + 13, y: elbowY };
+      const leftWrist = { x: leftElbow.x + 7, y: wristY };
+      const rightWrist = { x: rightElbow.x - 7, y: wristY };
       setPath(id("UpperArmL"), limbPath(leftShoulder.x, leftShoulder.y, leftElbow.x, leftElbow.y, metrics.upperArmW, metrics.upperArmW * .86));
       setPath(id("UpperArmR"), limbPath(rightShoulder.x, rightShoulder.y, rightElbow.x, rightElbow.y, metrics.upperArmW, metrics.upperArmW * .86));
       setPath(id("ForearmL"), limbPath(leftElbow.x, leftElbow.y, leftWrist.x, leftWrist.y, metrics.forearmW, metrics.forearmW * .88));
       setPath(id("ForearmR"), limbPath(rightElbow.x, rightElbow.y, rightWrist.x, rightWrist.y, metrics.forearmW, metrics.forearmW * .88));
-      setPath(id("HandL"), handPath(leftWrist.x, wristY + 10, -1, metrics.handW, 24));
-      setPath(id("HandR"), handPath(rightWrist.x, wristY + 10, 1, metrics.handW, 24));
+      setPath(id("HandL"), handPath(leftWrist.x, wristY + 9, -1, metrics.handW, 25));
+      setPath(id("HandR"), handPath(rightWrist.x, wristY + 9, 1, metrics.handW, 25));
 
-      const hipJoint = Math.max(metrics.hipsW * .23, 22);
+      const hipJoint = Math.max(metrics.hipsW * .24, 22);
       const kneeY = 343;
       const ankleY = 390;
-      const leftHip = { x: center - hipJoint, y: 282 };
-      const rightHip = { x: center + hipJoint, y: 282 };
+      const leftHip = { x: center - hipJoint, y: 280 };
+      const rightHip = { x: center + hipJoint, y: 280 };
       const leftKnee = { x: center - hipJoint - 4, y: kneeY };
       const rightKnee = { x: center + hipJoint + 4, y: kneeY };
       const leftAnkle = { x: leftKnee.x - 2, y: ankleY };
@@ -1978,11 +2084,11 @@ button, input, select {
       if (!goal) {
         $("avatarSvg").style.setProperty("--definition", metrics.definition.toFixed(2));
         $("softnessGlow").setAttribute("opacity", metrics.softness.toFixed(2));
-        const softW = metrics.waistW + 14;
-        $("softnessGlow").setAttribute("d", torsoPath(center, 168, 238, Math.max(metrics.ribW - 10, softW), softW, 8));
-        $("chestLine").setAttribute("d", `M${round1(center - metrics.chestW * .32)} 144 C${round1(center - metrics.chestW * .12)} 136 ${round1(center + metrics.chestW * .12)} 136 ${round1(center + metrics.chestW * .32)} 144`);
-        $("waistLineL").setAttribute("d", `M${round1(center - metrics.waistW * .18)} 174 C${round1(center - metrics.waistW * .22)} 198 ${round1(center - metrics.waistW * .2)} 220 ${round1(center - metrics.waistW * .1)} 238`);
-        $("waistLineR").setAttribute("d", `M${round1(center + metrics.waistW * .18)} 174 C${round1(center + metrics.waistW * .22)} 198 ${round1(center + metrics.waistW * .2)} 220 ${round1(center + metrics.waistW * .1)} 238`);
+        const softW = metrics.waistW + 12 + metrics.fatNorm * 8;
+        $("softnessGlow").setAttribute("d", torsoPath(center, 166, 238, Math.max(metrics.ribW - 8, softW), softW, 9));
+        $("chestLine").setAttribute("d", `M${round1(center - metrics.chestW * .28)} 142 C${round1(center - metrics.chestW * .1)} 136 ${round1(center + metrics.chestW * .1)} 136 ${round1(center + metrics.chestW * .28)} 142`);
+        $("waistLineL").setAttribute("d", `M${round1(center - metrics.waistW * .16)} 176 C${round1(center - metrics.waistW * .22)} 198 ${round1(center - metrics.waistW * .17)} 220 ${round1(center - metrics.waistW * .08)} 238`);
+        $("waistLineR").setAttribute("d", `M${round1(center + metrics.waistW * .16)} 176 C${round1(center + metrics.waistW * .22)} 198 ${round1(center + metrics.waistW * .17)} 220 ${round1(center + metrics.waistW * .08)} 238`);
       }
     }
 
@@ -2059,6 +2165,19 @@ button, input, select {
     const avatarStage = $("avatarStage");
     const avatarHoverWrap = $("avatarHoverWrap");
     const reducedMotionQuery = window.matchMedia("(prefers-reduced-motion: reduce)");
+    const avatarRotateToggle = $("avatarRotateToggle");
+    const avatarInfoToggle = $("avatarInfoToggle");
+    const avatarInfoPopover = $("avatarInfoPopover");
+    avatarRotateToggle.addEventListener("click", () => {
+      const isOn = avatarRotateToggle.getAttribute("aria-pressed") !== "true";
+      avatarRotateToggle.setAttribute("aria-pressed", String(isOn));
+      avatarStage.classList.toggle("rotate-enabled", isOn && !reducedMotionQuery.matches);
+    });
+
+    avatarInfoToggle.addEventListener("click", () => {
+      avatarInfoPopover.classList.toggle("active");
+    });
+
     if (window.matchMedia("(pointer: fine)").matches) {
       avatarStage.addEventListener("mousemove", (event) => {
         if (reducedMotionQuery.matches) return;
