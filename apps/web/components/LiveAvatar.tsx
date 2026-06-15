@@ -1,6 +1,6 @@
 "use client";
 
-import { type CSSProperties, useMemo, useState } from "react";
+import { useMemo, useState } from "react";
 import { AnimatePresence, motion, useReducedMotion } from "framer-motion";
 import { Info, RotateCw, Settings2, X } from "lucide-react";
 
@@ -94,12 +94,12 @@ function buildAvatarMetrics(stats: ReturnType<typeof withDerivedStats>, goal = f
   const waist = goal ? goalWaist : stats.waist;
   const hips = goal ? goalHips : stats.hips;
   const maleBias = stats.sex === "male" ? 1 : 0;
-  const baseShoulder = stats.sex === "male" ? 118 : 96;
-  const shoulderW = clamp(baseShoulder + leanNorm * 26 + bmiNorm * 6 - fatNorm * 2, stats.sex === "male" ? 106 : 84, stats.sex === "male" ? 148 : 122);
-  const chestW = clamp(shoulderW - (stats.sex === "male" ? 20 : 15) + leanNorm * 12 + fatNorm * 3, stats.sex === "male" ? 88 : 76, stats.sex === "male" ? 132 : 114);
-  const waistW = clamp(waist / stats.height * 164 + fatNorm * 16 + bmiNorm * 4, stats.sex === "male" ? 62 : 58, stats.sex === "male" ? 120 : 116);
+  const baseShoulder = stats.sex === "male" ? 88 : 96;
+  const shoulderW = clamp(baseShoulder + leanNorm * 50 + bmiNorm * 6 - fatNorm, stats.sex === "male" ? 84 : 84, stats.sex === "male" ? 150 : 122);
+  const chestW = clamp(shoulderW - (stats.sex === "male" ? 28 : 15) + leanNorm * 17 + fatNorm * 2, stats.sex === "male" ? 70 : 76, stats.sex === "male" ? 134 : 114);
+  const waistW = clamp(waist / stats.height * 145 + fatNorm * 18 + bmiNorm * 5, stats.sex === "male" ? 56 : 56, stats.sex === "male" ? 122 : 118);
   const hipsW = clamp(hips / stats.height * 158 + fatNorm * 8 + bmiNorm * 2, stats.sex === "female" ? 86 : 72, stats.sex === "female" ? 132 : 116);
-  const ribW = clamp(chestW - (stats.sex === "male" ? 12 : 8) + fatNorm * 5, 78, 124);
+  const ribW = clamp(chestW - (stats.sex === "male" ? 12 : 8) + fatNorm * 4, stats.sex === "male" ? 62 : 68, 124);
   const ageSoftness = clamp((stats.age - 35) / 55, 0, .07);
   return {
     heightScale: clamp(stats.height / (stats.sex === "male" ? 178 : 164), .9, 1.1),
@@ -110,11 +110,11 @@ function buildAvatarMetrics(stats: ReturnType<typeof withDerivedStats>, goal = f
     ribW,
     waistW,
     hipsW,
-    upperArmW: clamp(18 + leanNorm * 11 + fatNorm * 4 + bmiNorm * 1.5 + maleBias * 1.6, 17, 34),
-    forearmW: clamp((18 + leanNorm * 11 + fatNorm * 4 + bmiNorm * 1.5 + maleBias * 1.6) * .74, 14, 25),
+    upperArmW: clamp(12.8 + leanNorm * 13.5 + fatNorm * 5 + bmiNorm * 1.8 + maleBias, 12, 34),
+    forearmW: clamp((12.8 + leanNorm * 13.5 + fatNorm * 5 + bmiNorm * 1.8 + maleBias) * .74, 10.5, 25),
     handW: 18,
-    thighW: clamp(26 + leanNorm * 10 + fatNorm * 8 + bmiNorm * 2, 23, 44),
-    calfW: clamp(19 + leanNorm * 7 + fatNorm * 3 + bmiNorm * 1.5, 17, 34),
+    thighW: clamp(20 + leanNorm * 13 + fatNorm * 9 + bmiNorm * 2.5, 18, 44),
+    calfW: clamp(14.5 + leanNorm * 8.5 + fatNorm * 3.8 + bmiNorm * 1.5, 13.5, 34),
     neckW: clamp(stats.neck / stats.height * 106 + leanNorm * 2, 18, stats.sex === "male" ? 33 : 28),
     definition: clamp(.9 - fatNorm * 1.05 + leanNorm * .32 - ageSoftness, .04, .86),
     softness: clamp(fatNorm * .32 + ageSoftness * .25, .04, .34)
@@ -134,12 +134,23 @@ function torsoPath(center: number, topY: number, bottomY: number, topW: number, 
   return `M${round1(leftTop)} ${round1(topY)} C${round1(leftTop - sideCurve * .55)} ${round1(topY + 19)} ${round1(leftBottom - sideCurve * .28)} ${round1(bottomY - 22)} ${round1(leftBottom)} ${round1(bottomY)} C${round1(center - bottomW * .2)} ${round1(bottomY + 5)} ${round1(center + bottomW * .2)} ${round1(bottomY + 5)} ${round1(rightBottom)} ${round1(bottomY)} C${round1(rightBottom + sideCurve * .28)} ${round1(bottomY - 22)} ${round1(rightTop + sideCurve * .55)} ${round1(topY + 19)} ${round1(rightTop)} ${round1(topY)} C${round1(center + topW * .24)} ${round1(topY - 7)} ${round1(center - topW * .24)} ${round1(topY - 7)} ${round1(leftTop)} ${round1(topY)}Z`;
 }
 
+function coreTorsoPath(center: number, chestW: number, ribW: number, waistW: number, softness = 0) {
+  const leftChest = center - chestW / 2;
+  const rightChest = center + chestW / 2;
+  const leftRib = center - ribW / 2;
+  const rightRib = center + ribW / 2;
+  const leftWaist = center - waistW / 2;
+  const rightWaist = center + waistW / 2;
+  const soft = softness * 10;
+  return `M${round1(leftChest)} 114 C${round1(leftChest - 8 - soft)} 132 ${round1(leftRib - 7 - soft)} 156 ${round1(leftRib)} 176 C${round1(leftRib - 2 - soft)} 197 ${round1(leftWaist - 5 - soft)} 226 ${round1(leftWaist)} 251 C${round1(center - waistW * .28)} 260 ${round1(center + waistW * .28)} 260 ${round1(rightWaist)} 251 C${round1(rightWaist + 5 + soft)} 226 ${round1(rightRib + 2 + soft)} 197 ${round1(rightRib)} 176 C${round1(rightRib + 7 + soft)} 156 ${round1(rightChest + 8 + soft)} 132 ${round1(rightChest)} 114 C${round1(center + chestW * .2)} 106 ${round1(center - chestW * .2)} 106 ${round1(leftChest)} 114Z`;
+}
+
 function shoulderPath(side: number, center: number, neckW: number, shoulderW: number) {
   const innerX = center + side * (neckW * .38);
   const clavicleX = center + side * (shoulderW * .28);
   const deltoidX = center + side * (shoulderW / 2 + 7);
   const armPitX = center + side * (shoulderW / 2 - 7);
-  return `M${round1(innerX)} 98 C${round1(clavicleX)} 95 ${round1(center + side * shoulderW * .43)} 101 ${round1(deltoidX)} 116 C${round1(deltoidX + side * 9)} 126 ${round1(deltoidX + side * 4)} 142 ${round1(armPitX)} 150 C${round1(center + side * shoulderW * .28)} 137 ${round1(center + side * neckW * .55)} 120 ${round1(innerX)} 112Z`;
+  return `M${round1(innerX)} 101 C${round1(clavicleX)} 97 ${round1(center + side * shoulderW * .43)} 103 ${round1(deltoidX)} 118 C${round1(deltoidX + side * 6)} 130 ${round1(deltoidX + side * 3)} 143 ${round1(armPitX)} 149 C${round1(center + side * shoulderW * .28)} 138 ${round1(center + side * neckW * .55)} 121 ${round1(innerX)} 113Z`;
 }
 
 function pelvisPath(center: number, topY: number, bottomY: number, topW: number, hipW: number) {
@@ -181,17 +192,17 @@ function footPath(cx: number, cy: number, side: number, width: number, height: n
 function buildPaths(metrics: AvatarMetrics) {
   const center = 160;
   const shoulderX = metrics.shoulderW / 2 + 8;
-  const elbowY = 212;
-  const wristY = 296;
-  const leftShoulder = { x: center - shoulderX, y: 127 };
-  const rightShoulder = { x: center + shoulderX, y: 127 };
-  const leftElbow = { x: center - shoulderX - 13, y: elbowY };
-  const rightElbow = { x: center + shoulderX + 13, y: elbowY };
+  const elbowY = 220;
+  const wristY = 304;
+  const leftShoulder = { x: center - shoulderX, y: 136 };
+  const rightShoulder = { x: center + shoulderX, y: 136 };
+  const leftElbow = { x: center - shoulderX - 11, y: elbowY };
+  const rightElbow = { x: center + shoulderX + 11, y: elbowY };
   const leftWrist = { x: leftElbow.x + 7, y: wristY };
   const rightWrist = { x: rightElbow.x - 7, y: wristY };
-  const hipJoint = Math.max(metrics.hipsW * .24, 22);
-  const leftHip = { x: center - hipJoint, y: 280 };
-  const rightHip = { x: center + hipJoint, y: 280 };
+  const hipJoint = Math.max(metrics.hipsW * .21, 18);
+  const leftHip = { x: center - hipJoint, y: 274 };
+  const rightHip = { x: center + hipJoint, y: 274 };
   const leftKnee = { x: center - hipJoint - 4, y: 343 };
   const rightKnee = { x: center + hipJoint + 4, y: 343 };
   const leftAnkle = { x: leftKnee.x - 2, y: 390 };
@@ -204,8 +215,9 @@ function buildPaths(metrics: AvatarMetrics) {
     shoulderR: shoulderPath(1, center, metrics.neckW, metrics.shoulderW),
     chest: torsoPath(center, 113, 173, metrics.chestW, metrics.ribW, 12),
     abdomen: torsoPath(center, 166, 234, metrics.ribW, metrics.waistW, 9),
-    waist: torsoPath(center, 228, 252, metrics.waistW, Math.max(metrics.waistW * .88, 55), 4),
-    pelvis: pelvisPath(center, 246, 282, Math.max(metrics.waistW * .98, 62), metrics.hipsW),
+    waist: torsoPath(center, 224, 252, metrics.waistW, Math.max(metrics.waistW * .84, 52), 6),
+    core: coreTorsoPath(center, metrics.chestW, metrics.ribW, metrics.waistW, metrics.softness),
+    pelvis: pelvisPath(center, 246, 274, Math.max(metrics.waistW * .84, 52), metrics.hipsW * .86),
     upperArmL: limbPath(leftShoulder.x, leftShoulder.y, leftElbow.x, leftElbow.y, metrics.upperArmW, metrics.upperArmW * .86),
     upperArmR: limbPath(rightShoulder.x, rightShoulder.y, rightElbow.x, rightElbow.y, metrics.upperArmW, metrics.upperArmW * .86),
     forearmL: limbPath(leftElbow.x, leftElbow.y, leftWrist.x, leftWrist.y, metrics.forearmW, metrics.forearmW * .88),
@@ -225,22 +237,99 @@ function buildPaths(metrics: AvatarMetrics) {
   };
 }
 
+const avatarRegionOrder = [
+  "head",
+  "neck",
+  "shoulderL",
+  "shoulderR",
+  "chest",
+  "abdomen",
+  "waist",
+  "pelvis",
+  "upperArmL",
+  "upperArmR",
+  "forearmL",
+  "forearmR",
+  "handL",
+  "handR",
+  "thighL",
+  "thighR",
+  "calfL",
+  "calfR",
+  "footL",
+  "footR"
+] as const;
+
 function AvatarSvg({ stats }: { stats: ReturnType<typeof withDerivedStats> }) {
   const currentMetrics = buildAvatarMetrics(stats, false);
-  const targetDelta = stats.goalWeight - stats.weight;
-  const anatomyStyle = {
-    "--avatar-width-scale": clamp(.92 + currentMetrics.leanNorm * .08 + currentMetrics.fatNorm * .08, .9, 1.1).toFixed(2),
-    "--avatar-height-scale": currentMetrics.heightScale.toFixed(2),
-    "--avatar-goal-scale": clamp(1 + targetDelta / Math.max(stats.weight, 1) * .22, .92, 1.12).toFixed(2),
-    "--avatar-contrast": (1.02 + currentMetrics.definition * .28).toFixed(2),
-    "--avatar-brightness": (.82 + currentMetrics.definition * .14 - currentMetrics.fatNorm * .04).toFixed(2)
-  } as CSSProperties;
+  const goalMetrics = buildAvatarMetrics(stats, true);
+  const current = buildPaths(currentMetrics);
+  const goal = buildPaths(goalMetrics);
+  const currentTransform = `translate(160 398) scale(1 ${currentMetrics.heightScale.toFixed(2)}) translate(-160 -398)`;
+  const goalTransform = `translate(160 398) scale(1 ${goalMetrics.heightScale.toFixed(2)}) translate(-160 -398)`;
 
   return (
-    <div className="live-avatar-image-wrap" style={anatomyStyle} role="img" aria-label="Anatomy-based live avatar">
-      <img className="live-avatar-anatomy-goal" src="/assets/anatomy-avatar.png" alt="" aria-hidden="true" />
-      <img className="live-avatar-anatomy-img" src="/assets/anatomy-avatar.png" alt="Anatomy-based live avatar" />
-    </div>
+    <svg className="live-avatar-svg" viewBox="0 0 320 420" role="img" aria-labelledby="liveAvatarTitle">
+      <title id="liveAvatarTitle">Dynamic fitness game avatar built from current measurements</title>
+      <defs>
+        <radialGradient id="liveFloorGlow" cx="50%" cy="50%" r="50%">
+          <stop offset="0%" stopColor="#63d68f" stopOpacity=".42" />
+          <stop offset="46%" stopColor="#1184ff" stopOpacity=".18" />
+          <stop offset="100%" stopColor="#1184ff" stopOpacity="0" />
+        </radialGradient>
+        <linearGradient id="liveSkin" x1="0%" y1="0%" x2="100%" y2="100%">
+          <stop offset="0%" stopColor="#ffd8bd" />
+          <stop offset="62%" stopColor="#f2b184" />
+          <stop offset="100%" stopColor="#9f5d45" />
+        </linearGradient>
+        <linearGradient id="liveShorts" x1="0%" y1="0%" x2="100%" y2="100%">
+          <stop offset="0%" stopColor="#182332" />
+          <stop offset="54%" stopColor="#101821" />
+          <stop offset="100%" stopColor="#071018" />
+        </linearGradient>
+      </defs>
+
+      <ellipse className="live-avatar-shadow" cx="160" cy="386" rx="96" ry="20" fill="url(#liveFloorGlow)" />
+      <g opacity=".55" transform={goalTransform}>
+        {avatarRegionOrder.map((region) => (
+          <path key={region} className="live-avatar-goal" d={goal[region]} />
+        ))}
+      </g>
+
+      <g className="live-avatar-current" transform={currentTransform}>
+        <path className="live-avatar-skin" d={current.neck} />
+        <path className="live-avatar-skin" d={current.shoulderL} />
+        <path className="live-avatar-skin" d={current.shoulderR} />
+        <path className="live-avatar-skin" d={current.upperArmL} />
+        <path className="live-avatar-skin" d={current.upperArmR} />
+        <path className="live-avatar-skin" d={current.forearmL} />
+        <path className="live-avatar-skin" d={current.forearmR} />
+        <path className="live-avatar-skin" d={current.handL} />
+        <path className="live-avatar-skin" d={current.handR} />
+        <path className="live-avatar-skin" d={current.thighL} />
+        <path className="live-avatar-skin" d={current.thighR} />
+        <path className="live-avatar-skin" d={current.calfL} />
+        <path className="live-avatar-skin" d={current.calfR} />
+        <path className="live-avatar-shoe" d={current.footL} />
+        <path className="live-avatar-shoe" d={current.footR} />
+        <path className="live-avatar-skin" d={current.chest} />
+        <path className="live-avatar-skin" d={current.abdomen} />
+        <path className="live-avatar-skin" d={current.waist} />
+        <path className="live-avatar-skin live-avatar-chest" d={current.core} />
+        <path className="live-avatar-shorts" d={current.pelvis} />
+        <path className="live-avatar-skin" d={current.head} />
+        <path className="live-avatar-hair" d="M132 45 C135 22 151 17 160 22 C173 16 187 27 188 48 C176 41 169 40 160 46 C150 39 142 40 132 45Z" />
+        <path className="live-avatar-face" d="M150 58 C152 56 154 56 156 58 C154 60 152 60 150 58Z" />
+        <path className="live-avatar-face" d="M164 58 C166 56 168 56 170 58 C168 60 166 60 164 58Z" />
+        <path d="M153 70 C157 73 164 73 168 70" fill="none" stroke="rgba(7,10,16,.55)" strokeWidth="2" strokeLinecap="round" />
+        <path d={current.softness} fill="rgba(255,255,255,.14)" opacity={currentMetrics.softness} />
+        <path className="live-avatar-definition" d={current.chestLine} opacity={currentMetrics.definition} />
+        <path className="live-avatar-definition" d={current.waistLineL} opacity={currentMetrics.definition} />
+        <path className="live-avatar-definition" d={current.waistLineR} opacity={currentMetrics.definition} />
+      </g>
+
+      <path className="live-avatar-hologram-line" d="M64 374 C92 398 228 398 256 374" fill="none" />
+    </svg>
   );
 }
 
