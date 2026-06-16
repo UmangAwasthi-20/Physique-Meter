@@ -204,6 +204,58 @@ function footPath(cx: number, cy: number, side: number, width: number, height: n
   return `M${round1(cx - side * width * .42)} ${round1(cy - height * .35)} C${round1(cx + side * width * .18)} ${round1(cy - height * .58)} ${round1(cx + side * width * .72)} ${round1(cy - height * .18)} ${round1(cx + side * width * .76)} ${round1(cy + height * .2)} C${round1(cx + side * width * .42)} ${round1(cy + height * .55)} ${round1(cx - side * width * .56)} ${round1(cy + height * .48)} ${round1(cx - side * width * .7)} ${round1(cy + height * .06)} C${round1(cx - side * width * .64)} ${round1(cy - height * .22)} ${round1(cx - side * width * .56)} ${round1(cy - height * .32)} ${round1(cx - side * width * .42)} ${round1(cy - height * .35)}Z`;
 }
 
+function sideBodyPath(metrics: AvatarMetrics) {
+  const c = 160;
+  const depth = 24 + metrics.fatNorm * 20 + metrics.leanNorm * 10;
+  const chest = 34 + metrics.leanNorm * 14 + metrics.fatNorm * 6;
+  const belly = 30 + metrics.fatNorm * 28 + metrics.waistW * .08;
+  const hip = 28 + metrics.hipsW * .09 + metrics.fatNorm * 9;
+  return `M${round1(c - depth * .18)} 28 C${round1(c + depth * .64)} 31 ${round1(c + depth * .78)} 64 ${round1(c + depth * .12)} 78 C${round1(c + chest)} 101 ${round1(c + chest * .9)} 139 ${round1(c + belly)} 172 C${round1(c + belly * 1.04)} 211 ${round1(c + hip)} 240 ${round1(c + hip * .65)} 274 C${round1(c + 18)} 304 ${round1(c + 14)} 350 ${round1(c + 10)} 399 C${round1(c - 14)} 404 ${round1(c - 25)} 398 ${round1(c - 10)} 386 C${round1(c - 7)} 344 ${round1(c - 11)} 308 ${round1(c - 20)} 276 C${round1(c - 30)} 246 ${round1(c - 32)} 208 ${round1(c - 26)} 167 C${round1(c - 20)} 127 ${round1(c - 20)} 98 ${round1(c - 9)} 78 C${round1(c - depth * .68)} 60 ${round1(c - depth * .54)} 32 ${round1(c - depth * .18)} 28Z`;
+}
+
+function scanTorsoSurfacePath(metrics: AvatarMetrics) {
+  const c = 160;
+  const shoulder = metrics.shoulderW / 2;
+  const chest = metrics.chestW / 2;
+  const rib = metrics.ribW / 2;
+  const waist = Math.max(48, metrics.waistW * (.72 + metrics.fatNorm * .32)) / 2;
+  const hip = metrics.hipsW / 2;
+  const neck = metrics.neckW / 2;
+  const soft = metrics.softness * 10;
+  return `M160 27 C181 27 187 62 169 78 C${round1(c + neck)} 86 ${round1(c + neck * 1.12)} 96 ${round1(c + shoulder * .62)} 106 C${round1(c + chest + 8)} 122 ${round1(c + chest + 9 + soft)} 150 ${round1(c + rib + 5 + soft)} 178 C${round1(c + waist + 7 + soft)} 208 ${round1(c + waist + 4 + soft)} 236 ${round1(c + hip * .46)} 257 C${round1(c + hip * .34)} 271 ${round1(c + hip * .16)} 282 165 287 C162 291 158 291 155 287 C${round1(c - hip * .16)} 282 ${round1(c - hip * .34)} 271 ${round1(c - hip * .46)} 257 C${round1(c - waist - 4 - soft)} 236 ${round1(c - waist - 7 - soft)} 208 ${round1(c - rib - 5 - soft)} 178 C${round1(c - chest - 9 - soft)} 150 ${round1(c - chest - 8)} 122 ${round1(c - shoulder * .62)} 106 C${round1(c - neck * 1.12)} 96 ${round1(c - neck)} 86 151 78 C133 62 139 27 160 27Z`;
+}
+
+function scanArmSurfacePath(side: number, metrics: AvatarMetrics) {
+  const c = 160;
+  const shoulderX = c + side * (metrics.shoulderW / 2 + 7);
+  const elbowX = shoulderX + side * 11;
+  const wristX = elbowX - side * 7;
+  const handX = wristX - side;
+  const upper = metrics.upperArmW / 2;
+  const fore = metrics.forearmW / 2;
+  return `M${round1(shoulderX - side * 5)} 126 C${round1(shoulderX + side * (upper + 8))} 144 ${round1(elbowX + side * (upper + 5))} 188 ${round1(elbowX + side * fore)} 222 C${round1(wristX + side * (fore + 3))} 254 ${round1(wristX + side * (fore + 2))} 287 ${round1(handX + side * 11)} 308 C${round1(handX + side * 9)} 324 ${round1(handX - side * 10)} 325 ${round1(handX - side * 8)} 307 C${round1(wristX - side * fore)} 281 ${round1(elbowX - side * (fore + 2))} 247 ${round1(elbowX - side * (upper * .45))} 222 C${round1(shoulderX - side * (upper * .35))} 184 ${round1(shoulderX - side * (upper * .15))} 150 ${round1(shoulderX - side * 5)} 126Z`;
+}
+
+function scanLegSurfacePath(side: number, metrics: AvatarMetrics) {
+  const c = 160;
+  const hip = Math.max(metrics.hipsW * .21, 18);
+  const hipX = c + side * hip;
+  const kneeX = hipX + side * 4;
+  const ankleX = kneeX + side * 2;
+  const thigh = metrics.thighW / 2;
+  const calf = metrics.calfW / 2;
+  return `M${round1(hipX - side * 8)} 274 C${round1(hipX + side * (thigh + 6))} 298 ${round1(kneeX + side * (thigh * .78))} 326 ${round1(kneeX + side * calf)} 345 C${round1(ankleX + side * (calf + 1))} 368 ${round1(ankleX + side * (calf * .6))} 389 ${round1(ankleX + side * 22)} 399 C${round1(ankleX + side * 6)} 407 ${round1(ankleX - side * 19)} 405 ${round1(ankleX - side * 10)} 392 C${round1(kneeX - side * (calf * .55))} 370 ${round1(kneeX - side * (calf * .52))} 352 ${round1(kneeX - side * (thigh * .28))} 340 C${round1(hipX - side * (thigh * .24))} 319 ${round1(hipX - side * 14)} 292 ${round1(hipX - side * 8)} 274Z`;
+}
+
+function backBodyPath(metrics: AvatarMetrics) {
+  const c = 160;
+  const shoulder = metrics.shoulderW / 2;
+  const lat = metrics.chestW / 2 + metrics.leanNorm * 8;
+  const waist = Math.max(48, metrics.waistW * (.76 + metrics.fatNorm * .3)) / 2;
+  const hips = metrics.hipsW / 2;
+  return `M${round1(c - metrics.neckW * .45)} 86 C${round1(c - metrics.neckW * .7)} 101 ${round1(c - shoulder * .78)} 104 ${round1(c - shoulder)} 121 C${round1(c - lat - 8)} 152 ${round1(c - lat)} 196 ${round1(c - waist)} 250 C${round1(c - hips * .48)} 266 ${round1(c - hips * .36)} 281 ${round1(c - hips * .28)} 292 C${round1(c - hips * .42)} 322 ${round1(c - hips * .3)} 358 ${round1(c - hips * .22)} 399 C${round1(c - 20)} 406 ${round1(c - 8)} 402 ${round1(c - 8)} 390 C${round1(c - 6)} 354 ${round1(c - 5)} 317 ${round1(c - 4)} 288 C${round1(c - 2)} 280 ${round1(c + 2)} 280 ${round1(c + 4)} 288 C${round1(c + 5)} 317 ${round1(c + 6)} 354 ${round1(c + 8)} 390 C${round1(c + 8)} 402 ${round1(c + 20)} 406 ${round1(c + hips * .22)} 399 C${round1(c + hips * .3)} 358 ${round1(c + hips * .42)} 322 ${round1(c + hips * .28)} 292 C${round1(c + hips * .36)} 281 ${round1(c + hips * .48)} 266 ${round1(c + waist)} 250 C${round1(c + lat)} 196 ${round1(c + lat + 8)} 152 ${round1(c + shoulder)} 121 C${round1(c + shoulder * .78)} 104 ${round1(c + metrics.neckW * .7)} 101 ${round1(c + metrics.neckW * .45)} 86 C${round1(c + metrics.neckW * .28)} 78 ${round1(c - metrics.neckW * .28)} 78 ${round1(c - metrics.neckW * .45)} 86Z`;
+}
+
 function buildPaths(metrics: AvatarMetrics) {
   const center = 160;
   const shoulderX = metrics.shoulderW / 2 + 8;
@@ -222,6 +274,7 @@ function buildPaths(metrics: AvatarMetrics) {
   const rightKnee = { x: center + hipJoint + 4, y: 343 };
   const leftAnkle = { x: leftKnee.x - 2, y: 390 };
   const rightAnkle = { x: rightKnee.x + 2, y: 390 };
+  const sideDepth = 24 + metrics.fatNorm * 20 + metrics.leanNorm * 10;
 
   return {
     head: ovalPath(center, 52, 20, 25),
@@ -233,6 +286,11 @@ function buildPaths(metrics: AvatarMetrics) {
     waist: torsoPath(center, 224, 252, metrics.waistW, Math.max(metrics.waistW * .84, 52), 6),
     core: coreTorsoPath(center, metrics.chestW, metrics.ribW, Math.max(48, metrics.waistW * (.72 + metrics.fatNorm * .32)), metrics.softness),
     shell: scanShellPath(metrics),
+    torsoSurface: scanTorsoSurfacePath(metrics),
+    armSurfaceL: scanArmSurfacePath(-1, metrics),
+    armSurfaceR: scanArmSurfacePath(1, metrics),
+    legSurfaceL: scanLegSurfacePath(-1, metrics),
+    legSurfaceR: scanLegSurfacePath(1, metrics),
     pelvis: pelvisPath(center, 246, 274, Math.max(metrics.waistW * .84, 52), metrics.hipsW * .86),
     upperArmL: limbPath(leftShoulder.x, leftShoulder.y, leftElbow.x, leftElbow.y, metrics.upperArmW, metrics.upperArmW * .86),
     upperArmR: limbPath(rightShoulder.x, rightShoulder.y, rightElbow.x, rightElbow.y, metrics.upperArmW, metrics.upperArmW * .86),
@@ -246,8 +304,30 @@ function buildPaths(metrics: AvatarMetrics) {
     calfR: limbPath(rightKnee.x, rightKnee.y, rightAnkle.x, rightAnkle.y, metrics.calfW, metrics.calfW * .7),
     footL: footPath(leftAnkle.x - 5, 399, -1, 34, 14),
     footR: footPath(rightAnkle.x + 5, 399, 1, 34, 14),
+    sideBody: sideBodyPath(metrics),
+    sideArm: limbPath(center - sideDepth * .72, 128, center - sideDepth * .42, 304, metrics.upperArmW * .8, metrics.forearmW * .78),
+    sideLeg: limbPath(center - sideDepth * .12, 274, center - sideDepth * .02, 399, metrics.thighW * .72, metrics.calfW * .55),
+    sideRim: `M${round1(center - sideDepth * .7)} 88 C${round1(center - sideDepth * 1.45)} 168 ${round1(center - sideDepth * 1.2)} 302 ${round1(center - sideDepth * .2)} 402`,
+    sideDefinition: `M${round1(center + sideDepth * .42)} 128 C${round1(center + sideDepth * .9)} 176 ${round1(center + sideDepth * .82)} 224 ${round1(center + sideDepth * .32)} 262`,
+    backBody: backBodyPath(metrics),
+    backArmL: limbPath(center - shoulderX + 2, 136, center - shoulderX - 10, 304, metrics.upperArmW, metrics.forearmW * .86),
+    backArmR: limbPath(center + shoulderX - 2, 136, center + shoulderX + 10, 304, metrics.upperArmW, metrics.forearmW * .86),
+    backLegL: limbPath(center - hipJoint, 274, center - hipJoint - 5, 399, metrics.thighW, metrics.calfW * .7),
+    backLegR: limbPath(center + hipJoint, 274, center + hipJoint + 5, 399, metrics.thighW, metrics.calfW * .7),
+    backSpine: `M160 92 C156 136 156 201 160 272`,
+    backLatL: `M${round1(center - metrics.shoulderW * .36)} 132 C${round1(center - metrics.shoulderW * .24)} 176 ${round1(center - metrics.shoulderW * .18)} 220 ${round1(center - metrics.waistW * .26)} 252`,
+    backLatR: `M${round1(center + metrics.shoulderW * .36)} 132 C${round1(center + metrics.shoulderW * .24)} 176 ${round1(center + metrics.shoulderW * .18)} 220 ${round1(center + metrics.waistW * .26)} 252`,
     softness: torsoPath(center, 166, 238, Math.max(metrics.ribW - 8, metrics.waistW + 12 + metrics.fatNorm * 8), metrics.waistW + 12 + metrics.fatNorm * 8, 9),
     chestLine: `M${round1(center - metrics.chestW * .28)} 142 C${round1(center - metrics.chestW * .1)} 136 ${round1(center + metrics.chestW * .1)} 136 ${round1(center + metrics.chestW * .28)} 142`,
+    pecLineL: `M${round1(center - metrics.chestW * .42)} 128 C${round1(center - metrics.chestW * .26)} 150 ${round1(center - metrics.chestW * .18)} 160 ${round1(center - 7)} 160`,
+    pecLineR: `M${round1(center + metrics.chestW * .42)} 128 C${round1(center + metrics.chestW * .26)} 150 ${round1(center + metrics.chestW * .18)} 160 ${round1(center + 7)} 160`,
+    sternumLine: `M160 122 C158 146 158 168 160 190`,
+    abLine1: `M${round1(center - metrics.waistW * .18)} 194 C${round1(center - metrics.waistW * .08)} 198 ${round1(center + metrics.waistW * .08)} 198 ${round1(center + metrics.waistW * .18)} 194`,
+    abLine2: `M${round1(center - metrics.waistW * .16)} 218 C${round1(center - metrics.waistW * .06)} 222 ${round1(center + metrics.waistW * .06)} 222 ${round1(center + metrics.waistW * .16)} 218`,
+    obliqueLineL: `M${round1(center - metrics.ribW * .34)} 176 C${round1(center - metrics.waistW * .42)} 204 ${round1(center - metrics.waistW * .34)} 232 ${round1(center - metrics.waistW * .2)} 252`,
+    obliqueLineR: `M${round1(center + metrics.ribW * .34)} 176 C${round1(center + metrics.waistW * .42)} 204 ${round1(center + metrics.waistW * .34)} 232 ${round1(center + metrics.waistW * .2)} 252`,
+    quadLineL: `M${round1(center - metrics.hipsW * .22)} 284 C${round1(center - metrics.hipsW * .28)} 318 ${round1(center - metrics.hipsW * .24)} 354 ${round1(center - metrics.hipsW * .18)} 386`,
+    quadLineR: `M${round1(center + metrics.hipsW * .22)} 284 C${round1(center + metrics.hipsW * .28)} 318 ${round1(center + metrics.hipsW * .24)} 354 ${round1(center + metrics.hipsW * .18)} 386`,
     waistLineL: `M${round1(center - metrics.waistW * .16)} 176 C${round1(center - metrics.waistW * .22)} 198 ${round1(center - metrics.waistW * .17)} 220 ${round1(center - metrics.waistW * .08)} 238`,
     waistLineR: `M${round1(center + metrics.waistW * .16)} 176 C${round1(center + metrics.waistW * .22)} 198 ${round1(center + metrics.waistW * .17)} 220 ${round1(center + metrics.waistW * .08)} 238`
   };
@@ -336,14 +416,47 @@ function AvatarSvg({ stats }: { stats: ReturnType<typeof withDerivedStats> }) {
         <path className="live-avatar-scan-core live-avatar-chest" d={current.core} />
         <path className="live-avatar-scan" d={current.pelvis} />
         <path className="live-avatar-scan" d={current.head} />
+        <path className="live-avatar-scan-surface" d={current.torsoSurface} />
+        <path className="live-avatar-scan-surface" d={current.armSurfaceL} />
+        <path className="live-avatar-scan-surface" d={current.armSurfaceR} />
+        <path className="live-avatar-scan-surface" d={current.legSurfaceL} />
+        <path className="live-avatar-scan-surface" d={current.legSurfaceR} />
         <path d={current.softness} fill="rgba(255,255,255,.16)" opacity={currentMetrics.softness} />
         <path className="live-avatar-definition" d={current.chestLine} opacity={currentMetrics.definition} />
+        <path className="live-avatar-definition" d={current.pecLineL} opacity={currentMetrics.definition} />
+        <path className="live-avatar-definition" d={current.pecLineR} opacity={currentMetrics.definition} />
+        <path className="live-avatar-definition" d={current.sternumLine} opacity={currentMetrics.definition} />
+        <path className="live-avatar-definition" d={current.abLine1} opacity={currentMetrics.definition} />
+        <path className="live-avatar-definition" d={current.abLine2} opacity={currentMetrics.definition} />
+        <path className="live-avatar-definition" d={current.obliqueLineL} opacity={currentMetrics.definition} />
+        <path className="live-avatar-definition" d={current.obliqueLineR} opacity={currentMetrics.definition} />
+        <path className="live-avatar-definition" d={current.quadLineL} opacity={currentMetrics.definition} />
+        <path className="live-avatar-definition" d={current.quadLineR} opacity={currentMetrics.definition} />
         <path className="live-avatar-definition" d={current.waistLineL} opacity={currentMetrics.definition} />
         <path className="live-avatar-definition" d={current.waistLineR} opacity={currentMetrics.definition} />
         <path className="live-avatar-rim" d="M120 96 C84 145 84 268 130 391" />
         <path className="live-avatar-rim" d="M200 96 C236 145 236 268 190 391" />
         <path className="live-avatar-scan-line" d="M132 284 C146 292 174 292 188 284" />
         <path className="live-avatar-scan-line" d="M126 344 C142 350 178 350 194 344" />
+      </g>
+
+      <g className="live-avatar-alt live-avatar-side-view" transform={currentTransform}>
+        <path className="live-avatar-scan-core" d={current.sideBody} />
+        <path className="live-avatar-scan" d={current.sideArm} />
+        <path className="live-avatar-scan" d={current.sideLeg} />
+        <path className="live-avatar-rim" d={current.sideRim} />
+        <path className="live-avatar-definition" d={current.sideDefinition} opacity={currentMetrics.definition} />
+      </g>
+
+      <g className="live-avatar-alt live-avatar-back-view" transform={currentTransform}>
+        <path className="live-avatar-scan-core" d={current.backBody} />
+        <path className="live-avatar-scan" d={current.backArmL} />
+        <path className="live-avatar-scan" d={current.backArmR} />
+        <path className="live-avatar-scan" d={current.backLegL} />
+        <path className="live-avatar-scan" d={current.backLegR} />
+        <path className="live-avatar-definition" d={current.backSpine} opacity={currentMetrics.definition} />
+        <path className="live-avatar-definition" d={current.backLatL} opacity={currentMetrics.definition} />
+        <path className="live-avatar-definition" d={current.backLatR} opacity={currentMetrics.definition} />
       </g>
 
       <path className="live-avatar-hologram-line" d="M64 374 C92 398 228 398 256 374" fill="none" />
@@ -386,9 +499,9 @@ export default function LiveAvatar({ stats: inputStats = defaultStats }: { stats
           transition={{ duration: 4.8, repeat: Infinity, ease: "easeInOut" }}
         >
           <motion.div
-            className="live-avatar-rotate"
-            animate={!reducedMotion && autoRotate ? { rotateY: [-8, 8, -8] } : { rotateY: 0 }}
-            transition={{ duration: 7.8, repeat: autoRotate ? Infinity : 0, ease: "easeInOut" }}
+            className={`live-avatar-rotate${autoRotate && !reducedMotion ? " is-rotating" : ""}`}
+            animate={!reducedMotion && autoRotate ? { rotateY: [0, 360] } : { rotateY: 0 }}
+            transition={{ duration: 22, repeat: autoRotate ? Infinity : 0, ease: "linear" }}
             whileHover={!reducedMotion ? { rotateY: 4, rotateX: -1 } : undefined}
           >
             <AvatarSvg stats={stats} />

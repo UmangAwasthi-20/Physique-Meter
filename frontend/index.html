@@ -792,7 +792,7 @@ button, input, select {
     }
 
     .avatar-stage.rotate-enabled .avatar-rotate-wrap {
-      animation: avatarAutoRotate 7.8s ease-in-out infinite;
+      animation: avatarAutoRotate 22s linear infinite;
     }
 
     .avatar-hover-wrap {
@@ -843,12 +843,24 @@ button, input, select {
     }
 
     @keyframes avatarAutoRotate {
-      0%, 100% {
-        transform: rotateY(-8deg);
-      }
-      50% {
-        transform: rotateY(8deg);
-      }
+      from { transform: rotateY(0deg); }
+      to { transform: rotateY(360deg); }
+    }
+
+    @keyframes avatarFrontCycle {
+      0%, 16%, 84%, 100% { opacity: 1; }
+      24%, 76% { opacity: 0; }
+    }
+
+    @keyframes avatarSideCycle {
+      0%, 12%, 88%, 100% { opacity: 0; }
+      22%, 34%, 66%, 78% { opacity: .96; }
+      44%, 56% { opacity: 0; }
+    }
+
+    @keyframes avatarBackCycle {
+      0%, 36%, 64%, 100% { opacity: 0; }
+      46%, 54% { opacity: .96; }
     }
 
     @keyframes avatarShadowPulse {
@@ -882,6 +894,25 @@ button, input, select {
       filter:
         drop-shadow(0 18px 30px rgba(0,0,0,.42))
         drop-shadow(0 0 12px rgba(127,231,255,.18));
+    }
+
+    .avatar-view-alt {
+      opacity: 0;
+      filter:
+        drop-shadow(0 18px 30px rgba(0,0,0,.42))
+        drop-shadow(0 0 12px rgba(127,231,255,.18));
+    }
+
+    .avatar-stage.rotate-enabled #currentAvatar {
+      animation: avatarFrontCycle 22s linear infinite;
+    }
+
+    .avatar-stage.rotate-enabled #sideAvatar {
+      animation: avatarSideCycle 22s linear infinite;
+    }
+
+    .avatar-stage.rotate-enabled #backAvatar {
+      animation: avatarBackCycle 22s linear infinite;
     }
 
     #avatarShadow {
@@ -929,6 +960,33 @@ button, input, select {
       stroke: rgba(188,255,240,.24);
       stroke-width: .8;
       opacity: .92;
+    }
+
+    .avatar-svg .scan-surface {
+      fill: url(#scanCoreShade);
+      stroke: rgba(188,255,240,.34);
+      stroke-width: 1;
+      opacity: .96;
+      filter:
+        drop-shadow(0 0 16px rgba(127,231,255,.2))
+        drop-shadow(0 0 28px rgba(97,228,157,.12));
+      vector-effect: non-scaling-stroke;
+    }
+
+    #currentAvatar .scan-region {
+      opacity: .14;
+    }
+
+    #currentAvatar .scan-core {
+      opacity: .18;
+    }
+
+    #currentAvatar .scan-surface {
+      opacity: .98;
+    }
+
+    .avatar-view-alt .scan-region {
+      opacity: .46;
     }
 
     .avatar-svg .scan-structure {
@@ -1016,6 +1074,9 @@ button, input, select {
       .avatar-rotate-wrap,
       #avatarShadow,
       #avatarChest,
+      #currentAvatar,
+      #sideAvatar,
+      #backAvatar,
       .ring,
       .bar,
       .mini-ring,
@@ -1033,6 +1094,15 @@ button, input, select {
       .avatar-svg .hair-region,
       .avatar-svg .outfit-region {
         transition: none !important;
+      }
+
+      #currentAvatar {
+        opacity: 1 !important;
+      }
+
+      #sideAvatar,
+      #backAvatar {
+        opacity: 0 !important;
       }
     }
 
@@ -1605,11 +1675,25 @@ button, input, select {
               <path id="avatarCore" class="body-region scan-core" />
               <path id="avatarPelvis" class="body-region scan-region" />
               <path id="avatarHead" class="body-region scan-region" />
+              <path id="avatarScanSurface" class="body-region scan-surface" />
+              <path id="avatarArmSurfaceL" class="body-region scan-surface" />
+              <path id="avatarArmSurfaceR" class="body-region scan-surface" />
+              <path id="avatarLegSurfaceL" class="body-region scan-surface" />
+              <path id="avatarLegSurfaceR" class="body-region scan-surface" />
               <path id="avatarHair" class="hair-region" opacity="0" />
               <path id="avatarEyeL" class="face-detail" opacity="0" />
               <path id="avatarEyeR" class="face-detail" opacity="0" />
               <path id="avatarSmile" class="face-detail" opacity="0" fill="none" />
               <path id="chestLine" class="definition-line" d="M118 143 C138 134 181 134 202 143" fill="none" />
+              <path id="pecLineL" class="definition-line" fill="none" />
+              <path id="pecLineR" class="definition-line" fill="none" />
+              <path id="sternumLine" class="definition-line" fill="none" />
+              <path id="abLine1" class="definition-line" fill="none" />
+              <path id="abLine2" class="definition-line" fill="none" />
+              <path id="obliqueLineL" class="definition-line" fill="none" />
+              <path id="obliqueLineR" class="definition-line" fill="none" />
+              <path id="quadLineL" class="definition-line" fill="none" />
+              <path id="quadLineR" class="definition-line" fill="none" />
               <path id="waistLineL" class="definition-line" d="M145 171 C141 193 141 216 146 234" fill="none" />
               <path id="waistLineR" class="definition-line" d="M175 171 C179 193 179 216 174 234" fill="none" />
               <path id="softnessGlow" class="body-region" d="M115 164 C134 145 188 145 205 164 C213 188 205 226 188 238 C174 248 145 248 132 238 C113 224 107 188 115 164Z" fill="rgba(255,255,255,.16)" opacity=".1" />
@@ -1617,6 +1701,25 @@ button, input, select {
               <path id="scanRimR" class="rim-region" d="M200 96 C236 145 236 268 190 391" />
               <path class="scan-joint-line" d="M132 284 C146 292 174 292 188 284" fill="none" />
               <path class="scan-joint-line" d="M126 344 C142 350 178 350 194 344" fill="none" />
+            </g>
+
+            <g id="sideAvatar" class="avatar-view-alt">
+              <path id="sideBody" class="body-region scan-core" />
+              <path id="sideArm" class="body-region scan-region" />
+              <path id="sideLeg" class="body-region scan-region" />
+              <path id="sideRim" class="rim-region" />
+              <path id="sideDefinition" class="definition-line" fill="none" />
+            </g>
+
+            <g id="backAvatar" class="avatar-view-alt">
+              <path id="backBody" class="body-region scan-core" />
+              <path id="backArmL" class="body-region scan-region" />
+              <path id="backArmR" class="body-region scan-region" />
+              <path id="backLegL" class="body-region scan-region" />
+              <path id="backLegR" class="body-region scan-region" />
+              <path id="backSpine" class="definition-line" fill="none" />
+              <path id="backLatL" class="definition-line" fill="none" />
+              <path id="backLatR" class="definition-line" fill="none" />
             </g>
 
             <path class="hologram-line" d="M64 374 C92 398 228 398 256 374" fill="none" />
@@ -2074,6 +2177,123 @@ button, input, select {
         C${round1(cx - side * width * .64)} ${round1(cy - height * .22)} ${round1(cx - side * width * .56)} ${round1(cy - height * .32)} ${round1(cx - side * width * .42)} ${round1(cy - height * .35)}Z`;
     }
 
+    function sideBodyPath(metrics) {
+      const c = 160;
+      const depth = 24 + metrics.fatNorm * 20 + metrics.leanNorm * 10;
+      const chest = 34 + metrics.leanNorm * 14 + metrics.fatNorm * 6;
+      const belly = 30 + metrics.fatNorm * 28 + metrics.waistW * .08;
+      const hip = 28 + metrics.hipsW * .09 + metrics.fatNorm * 9;
+      return `M${round1(c - depth * .18)} 28
+        C${round1(c + depth * .64)} 31 ${round1(c + depth * .78)} 64 ${round1(c + depth * .12)} 78
+        C${round1(c + chest)} 101 ${round1(c + chest * .9)} 139 ${round1(c + belly)} 172
+        C${round1(c + belly * 1.04)} 211 ${round1(c + hip)} 240 ${round1(c + hip * .65)} 274
+        C${round1(c + 18)} 304 ${round1(c + 14)} 350 ${round1(c + 10)} 399
+        C${round1(c - 14)} 404 ${round1(c - 25)} 398 ${round1(c - 10)} 386
+        C${round1(c - 7)} 344 ${round1(c - 11)} 308 ${round1(c - 20)} 276
+        C${round1(c - 30)} 246 ${round1(c - 32)} 208 ${round1(c - 26)} 167
+        C${round1(c - 20)} 127 ${round1(c - 20)} 98 ${round1(c - 9)} 78
+        C${round1(c - depth * .68)} 60 ${round1(c - depth * .54)} 32 ${round1(c - depth * .18)} 28Z`;
+    }
+
+    function scanTorsoSurfacePath(metrics) {
+      const c = 160;
+      const shoulder = metrics.shoulderW / 2;
+      const chest = metrics.chestW / 2;
+      const rib = metrics.ribW / 2;
+      const waist = Math.max(48, metrics.waistW * (.72 + metrics.fatNorm * .32)) / 2;
+      const hip = metrics.hipsW / 2;
+      const neck = metrics.neckW / 2;
+      const soft = metrics.softness * 10;
+      return `M160 27
+        C181 27 187 62 169 78
+        C${round1(c + neck)} 86 ${round1(c + neck * 1.12)} 96 ${round1(c + shoulder * .62)} 106
+        C${round1(c + chest + 8)} 122 ${round1(c + chest + 9 + soft)} 150 ${round1(c + rib + 5 + soft)} 178
+        C${round1(c + waist + 7 + soft)} 208 ${round1(c + waist + 4 + soft)} 236 ${round1(c + hip * .46)} 257
+        C${round1(c + hip * .34)} 271 ${round1(c + hip * .16)} 282 165 287
+        C162 291 158 291 155 287
+        C${round1(c - hip * .16)} 282 ${round1(c - hip * .34)} 271 ${round1(c - hip * .46)} 257
+        C${round1(c - waist - 4 - soft)} 236 ${round1(c - waist - 7 - soft)} 208 ${round1(c - rib - 5 - soft)} 178
+        C${round1(c - chest - 9 - soft)} 150 ${round1(c - chest - 8)} 122 ${round1(c - shoulder * .62)} 106
+        C${round1(c - neck * 1.12)} 96 ${round1(c - neck)} 86 151 78
+        C133 62 139 27 160 27Z`;
+    }
+
+    function scanArmSurfacePath(side, metrics) {
+      const c = 160;
+      const shoulderX = c + side * (metrics.shoulderW / 2 + 7);
+      const elbowX = shoulderX + side * 11;
+      const wristX = elbowX - side * 7;
+      const handX = wristX - side * 1;
+      const upper = metrics.upperArmW / 2;
+      const fore = metrics.forearmW / 2;
+      return `M${round1(shoulderX - side * 5)} 126
+        C${round1(shoulderX + side * (upper + 8))} 144 ${round1(elbowX + side * (upper + 5))} 188 ${round1(elbowX + side * fore)} 222
+        C${round1(wristX + side * (fore + 3))} 254 ${round1(wristX + side * (fore + 2))} 287 ${round1(handX + side * 11)} 308
+        C${round1(handX + side * 9)} 324 ${round1(handX - side * 10)} 325 ${round1(handX - side * 8)} 307
+        C${round1(wristX - side * fore)} 281 ${round1(elbowX - side * (fore + 2))} 247 ${round1(elbowX - side * (upper * .45))} 222
+        C${round1(shoulderX - side * (upper * .35))} 184 ${round1(shoulderX - side * (upper * .15))} 150 ${round1(shoulderX - side * 5)} 126Z`;
+    }
+
+    function scanLegSurfacePath(side, metrics) {
+      const c = 160;
+      const hip = Math.max(metrics.hipsW * .21, 18);
+      const hipX = c + side * hip;
+      const kneeX = hipX + side * 4;
+      const ankleX = kneeX + side * 2;
+      const thigh = metrics.thighW / 2;
+      const calf = metrics.calfW / 2;
+      return `M${round1(hipX - side * 8)} 274
+        C${round1(hipX + side * (thigh + 6))} 298 ${round1(kneeX + side * (thigh * .78))} 326 ${round1(kneeX + side * calf)} 345
+        C${round1(ankleX + side * (calf + 1))} 368 ${round1(ankleX + side * (calf * .6))} 389 ${round1(ankleX + side * 22)} 399
+        C${round1(ankleX + side * 6)} 407 ${round1(ankleX - side * 19)} 405 ${round1(ankleX - side * 10)} 392
+        C${round1(kneeX - side * (calf * .55))} 370 ${round1(kneeX - side * (calf * .52))} 352 ${round1(kneeX - side * (thigh * .28))} 340
+        C${round1(hipX - side * (thigh * .24))} 319 ${round1(hipX - side * 14)} 292 ${round1(hipX - side * 8)} 274Z`;
+    }
+
+    function backBodyPath(metrics) {
+      const c = 160;
+      const shoulder = metrics.shoulderW / 2;
+      const lat = metrics.chestW / 2 + metrics.leanNorm * 8;
+      const waist = Math.max(48, metrics.waistW * (.76 + metrics.fatNorm * .3)) / 2;
+      const hips = metrics.hipsW / 2;
+      return `M${round1(c - metrics.neckW * .45)} 86
+        C${round1(c - metrics.neckW * .7)} 101 ${round1(c - shoulder * .78)} 104 ${round1(c - shoulder)} 121
+        C${round1(c - lat - 8)} 152 ${round1(c - lat)} 196 ${round1(c - waist)} 250
+        C${round1(c - hips * .48)} 266 ${round1(c - hips * .36)} 281 ${round1(c - hips * .28)} 292
+        C${round1(c - hips * .42)} 322 ${round1(c - hips * .3)} 358 ${round1(c - hips * .22)} 399
+        C${round1(c - 20)} 406 ${round1(c - 8)} 402 ${round1(c - 8)} 390
+        C${round1(c - 6)} 354 ${round1(c - 5)} 317 ${round1(c - 4)} 288
+        C${round1(c - 2)} 280 ${round1(c + 2)} 280 ${round1(c + 4)} 288
+        C${round1(c + 5)} 317 ${round1(c + 6)} 354 ${round1(c + 8)} 390
+        C${round1(c + 8)} 402 ${round1(c + 20)} 406 ${round1(c + hips * .22)} 399
+        C${round1(c + hips * .3)} 358 ${round1(c + hips * .42)} 322 ${round1(c + hips * .28)} 292
+        C${round1(c + hips * .36)} 281 ${round1(c + hips * .48)} 266 ${round1(c + waist)} 250
+        C${round1(c + lat)} 196 ${round1(c + lat + 8)} 152 ${round1(c + shoulder)} 121
+        C${round1(c + shoulder * .78)} 104 ${round1(c + metrics.neckW * .7)} 101 ${round1(c + metrics.neckW * .45)} 86
+        C${round1(c + metrics.neckW * .28)} 78 ${round1(c - metrics.neckW * .28)} 78 ${round1(c - metrics.neckW * .45)} 86Z`;
+    }
+
+    function updateAlternateViews(metrics) {
+      const c = 160;
+      const sideDepth = 24 + metrics.fatNorm * 20 + metrics.leanNorm * 10;
+      setPath("sideBody", sideBodyPath(metrics));
+      setPath("sideArm", limbPath(c - sideDepth * .72, 128, c - sideDepth * .42, 304, metrics.upperArmW * .8, metrics.forearmW * .78));
+      setPath("sideLeg", limbPath(c - sideDepth * .12, 274, c - sideDepth * .02, 399, metrics.thighW * .72, metrics.calfW * .55));
+      setPath("sideRim", `M${round1(c - sideDepth * .7)} 88 C${round1(c - sideDepth * 1.45)} 168 ${round1(c - sideDepth * 1.2)} 302 ${round1(c - sideDepth * .2)} 402`);
+      setPath("sideDefinition", `M${round1(c + sideDepth * .42)} 128 C${round1(c + sideDepth * .9)} 176 ${round1(c + sideDepth * .82)} 224 ${round1(c + sideDepth * .32)} 262`);
+
+      const shoulder = metrics.shoulderW / 2;
+      const hip = Math.max(metrics.hipsW * .21, 18);
+      setPath("backBody", backBodyPath(metrics));
+      setPath("backArmL", limbPath(c - shoulder - 6, 136, c - shoulder - 18, 304, metrics.upperArmW, metrics.forearmW * .86));
+      setPath("backArmR", limbPath(c + shoulder + 6, 136, c + shoulder + 18, 304, metrics.upperArmW, metrics.forearmW * .86));
+      setPath("backLegL", limbPath(c - hip, 274, c - hip - 5, 399, metrics.thighW, metrics.calfW * .7));
+      setPath("backLegR", limbPath(c + hip, 274, c + hip + 5, 399, metrics.thighW, metrics.calfW * .7));
+      setPath("backSpine", `M160 92 C156 136 156 201 160 272`);
+      setPath("backLatL", `M${round1(c - shoulder * .72)} 132 C${round1(c - shoulder * .48)} 176 ${round1(c - shoulder * .35)} 220 ${round1(c - metrics.waistW * .26)} 252`);
+      setPath("backLatR", `M${round1(c + shoulder * .72)} 132 C${round1(c + shoulder * .48)} 176 ${round1(c + shoulder * .35)} 220 ${round1(c + metrics.waistW * .26)} 252`);
+    }
+
     function getShapeClass(bodyFat, bmi, leanNorm) {
       if (leanNorm > .72 && bodyFat < 18) return "Muscular";
       if (leanNorm > .55 && bodyFat < 23) return "Athletic";
@@ -2166,6 +2386,11 @@ button, input, select {
       if (!goal) {
         const visualWaistW = Math.max(48, metrics.waistW * (.72 + metrics.fatNorm * .32));
         setPath("avatarCore", coreTorsoPath(center, metrics.chestW, metrics.ribW, visualWaistW, metrics.softness));
+        setPath("avatarScanSurface", scanTorsoSurfacePath(metrics));
+        setPath("avatarArmSurfaceL", scanArmSurfacePath(-1, metrics));
+        setPath("avatarArmSurfaceR", scanArmSurfacePath(1, metrics));
+        setPath("avatarLegSurfaceL", scanLegSurfacePath(-1, metrics));
+        setPath("avatarLegSurfaceR", scanLegSurfacePath(1, metrics));
       }
 
       const shoulderX = metrics.shoulderW / 2 + 8;
@@ -2203,9 +2428,19 @@ button, input, select {
       if (!goal) {
         $("avatarSvg").style.setProperty("--definition", metrics.definition.toFixed(2));
         $("softnessGlow").setAttribute("opacity", metrics.softness.toFixed(2));
+        updateAlternateViews(metrics);
         const softW = metrics.waistW + 12 + metrics.fatNorm * 8;
         $("softnessGlow").setAttribute("d", torsoPath(center, 166, 238, Math.max(metrics.ribW - 8, softW), softW, 9));
         $("chestLine").setAttribute("d", `M${round1(center - metrics.chestW * .28)} 142 C${round1(center - metrics.chestW * .1)} 136 ${round1(center + metrics.chestW * .1)} 136 ${round1(center + metrics.chestW * .28)} 142`);
+        $("pecLineL").setAttribute("d", `M${round1(center - metrics.chestW * .42)} 128 C${round1(center - metrics.chestW * .26)} 150 ${round1(center - metrics.chestW * .18)} 160 ${round1(center - 7)} 160`);
+        $("pecLineR").setAttribute("d", `M${round1(center + metrics.chestW * .42)} 128 C${round1(center + metrics.chestW * .26)} 150 ${round1(center + metrics.chestW * .18)} 160 ${round1(center + 7)} 160`);
+        $("sternumLine").setAttribute("d", `M160 122 C158 146 158 168 160 190`);
+        $("abLine1").setAttribute("d", `M${round1(center - metrics.waistW * .18)} 194 C${round1(center - metrics.waistW * .08)} 198 ${round1(center + metrics.waistW * .08)} 198 ${round1(center + metrics.waistW * .18)} 194`);
+        $("abLine2").setAttribute("d", `M${round1(center - metrics.waistW * .16)} 218 C${round1(center - metrics.waistW * .06)} 222 ${round1(center + metrics.waistW * .06)} 222 ${round1(center + metrics.waistW * .16)} 218`);
+        $("obliqueLineL").setAttribute("d", `M${round1(center - metrics.ribW * .34)} 176 C${round1(center - metrics.waistW * .42)} 204 ${round1(center - metrics.waistW * .34)} 232 ${round1(center - metrics.waistW * .2)} 252`);
+        $("obliqueLineR").setAttribute("d", `M${round1(center + metrics.ribW * .34)} 176 C${round1(center + metrics.waistW * .42)} 204 ${round1(center + metrics.waistW * .34)} 232 ${round1(center + metrics.waistW * .2)} 252`);
+        $("quadLineL").setAttribute("d", `M${round1(center - metrics.hipsW * .22)} 284 C${round1(center - metrics.hipsW * .28)} 318 ${round1(center - metrics.hipsW * .24)} 354 ${round1(center - metrics.hipsW * .18)} 386`);
+        $("quadLineR").setAttribute("d", `M${round1(center + metrics.hipsW * .22)} 284 C${round1(center + metrics.hipsW * .28)} 318 ${round1(center + metrics.hipsW * .24)} 354 ${round1(center + metrics.hipsW * .18)} 386`);
         $("waistLineL").setAttribute("d", `M${round1(center - metrics.waistW * .16)} 176 C${round1(center - metrics.waistW * .22)} 198 ${round1(center - metrics.waistW * .17)} 220 ${round1(center - metrics.waistW * .08)} 238`);
         $("waistLineR").setAttribute("d", `M${round1(center + metrics.waistW * .16)} 176 C${round1(center + metrics.waistW * .22)} 198 ${round1(center + metrics.waistW * .17)} 220 ${round1(center + metrics.waistW * .08)} 238`);
       }
