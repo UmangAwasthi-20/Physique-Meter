@@ -1,6 +1,6 @@
 "use client";
 
-import { type CSSProperties, useMemo, useState } from "react";
+import { useMemo, useState } from "react";
 import { AnimatePresence, motion, useReducedMotion } from "framer-motion";
 import { Info, RotateCw, Settings2, X } from "lucide-react";
 
@@ -145,6 +145,21 @@ function coreTorsoPath(center: number, chestW: number, ribW: number, waistW: num
   return `M${round1(leftChest)} 114 C${round1(leftChest - 8 - soft)} 132 ${round1(leftRib - 7 - soft)} 156 ${round1(leftRib)} 176 C${round1(leftRib - 2 - soft)} 197 ${round1(leftWaist - 5 - soft)} 226 ${round1(leftWaist)} 251 C${round1(center - waistW * .28)} 260 ${round1(center + waistW * .28)} 260 ${round1(rightWaist)} 251 C${round1(rightWaist + 5 + soft)} 226 ${round1(rightRib + 2 + soft)} 197 ${round1(rightRib)} 176 C${round1(rightRib + 7 + soft)} 156 ${round1(rightChest + 8 + soft)} 132 ${round1(rightChest)} 114 C${round1(center + chestW * .2)} 106 ${round1(center - chestW * .2)} 106 ${round1(leftChest)} 114Z`;
 }
 
+function scanShellPath(metrics: AvatarMetrics) {
+  const c = 160;
+  const neck = metrics.neckW;
+  const shoulder = metrics.shoulderW / 2;
+  const chest = metrics.chestW / 2;
+  const rib = metrics.ribW / 2;
+  const waist = metrics.waistW / 2;
+  const hip = metrics.hipsW / 2;
+  const arm = metrics.upperArmW / 2;
+  const thigh = metrics.thighW / 2;
+  const calf = metrics.calfW / 2;
+  const soft = metrics.softness * 8;
+  return `M${round1(c - neck * .45)} 86 C${round1(c - neck * .8)} 101 ${round1(c - shoulder * .78)} 105 ${round1(c - shoulder - 8)} 120 C${round1(c - shoulder - 20)} 145 ${round1(c - shoulder - 23)} 186 ${round1(c - shoulder - 19)} 220 C${round1(c - shoulder - 20)} 252 ${round1(c - shoulder - 18)} 284 ${round1(c - shoulder - 10)} 305 C${round1(c - shoulder - 2)} 315 ${round1(c - shoulder + 10)} 312 ${round1(c - shoulder + 10)} 298 C${round1(c - shoulder + 5)} 261 ${round1(c - shoulder + arm)} 196 ${round1(c - chest - 7)} 150 C${round1(c - chest - 8 - soft)} 170 ${round1(c - rib - 8 - soft)} 202 ${round1(c - waist - 4 - soft)} 250 C${round1(c - hip * .5)} 265 ${round1(c - hip * .45)} 275 ${round1(c - hip * .34)} 286 C${round1(c - hip * .38 - thigh)} 306 ${round1(c - hip * .34 - thigh * .65)} 330 ${round1(c - hip * .3 - calf)} 350 C${round1(c - hip * .26 - calf * .75)} 371 ${round1(c - hip * .24 - calf * .5)} 390 ${round1(c - hip * .22 - calf * .3)} 399 C${round1(c - hip * .54)} 406 ${round1(c - hip * .09)} 409 ${round1(c - hip * .1)} 398 C${round1(c - hip * .11)} 372 ${round1(c - hip * .08)} 334 ${round1(c - 8)} 286 C${round1(c - 4)} 278 ${round1(c + 4)} 278 ${round1(c + 8)} 286 C${round1(c + hip * .08)} 334 ${round1(c + hip * .11)} 372 ${round1(c + hip * .1)} 398 C${round1(c + hip * .09)} 409 ${round1(c + hip * .54)} 406 ${round1(c + hip * .22 + calf * .3)} 399 C${round1(c + hip * .24 + calf * .5)} 390 ${round1(c + hip * .26 + calf * .75)} 371 ${round1(c + hip * .3 + calf)} 350 C${round1(c + hip * .34 + thigh * .65)} 330 ${round1(c + hip * .38 + thigh)} 306 ${round1(c + hip * .34)} 286 C${round1(c + hip * .45)} 275 ${round1(c + hip * .5)} 265 ${round1(c + waist + 4 + soft)} 250 C${round1(c + rib + 8 + soft)} 202 ${round1(c + chest + 8 + soft)} 170 ${round1(c + chest + 7)} 150 C${round1(c + shoulder - arm)} 196 ${round1(c + shoulder - 5)} 261 ${round1(c + shoulder - 10)} 298 C${round1(c + shoulder - 10)} 312 ${round1(c + shoulder + 2)} 315 ${round1(c + shoulder + 10)} 305 C${round1(c + shoulder + 18)} 284 ${round1(c + shoulder + 20)} 252 ${round1(c + shoulder + 19)} 220 C${round1(c + shoulder + 23)} 186 ${round1(c + shoulder + 20)} 145 ${round1(c + shoulder + 8)} 120 C${round1(c + shoulder * .78)} 105 ${round1(c + neck * .8)} 101 ${round1(c + neck * .45)} 86 C${round1(c + neck * .28)} 78 ${round1(c - neck * .28)} 78 ${round1(c - neck * .45)} 86Z`;
+}
+
 function shoulderPath(side: number, center: number, neckW: number, shoulderW: number) {
   const innerX = center + side * (neckW * .38);
   const clavicleX = center + side * (shoulderW * .28);
@@ -216,7 +231,8 @@ function buildPaths(metrics: AvatarMetrics) {
     chest: torsoPath(center, 113, 173, metrics.chestW, metrics.ribW, 12),
     abdomen: torsoPath(center, 166, 234, metrics.ribW, metrics.waistW, 9),
     waist: torsoPath(center, 224, 252, metrics.waistW, Math.max(metrics.waistW * .84, 52), 6),
-    core: coreTorsoPath(center, metrics.chestW, metrics.ribW, metrics.waistW, metrics.softness),
+    core: coreTorsoPath(center, metrics.chestW, metrics.ribW, Math.max(48, metrics.waistW * (.72 + metrics.fatNorm * .32)), metrics.softness),
+    shell: scanShellPath(metrics),
     pelvis: pelvisPath(center, 246, 274, Math.max(metrics.waistW * .84, 52), metrics.hipsW * .86),
     upperArmL: limbPath(leftShoulder.x, leftShoulder.y, leftElbow.x, leftElbow.y, metrics.upperArmW, metrics.upperArmW * .86),
     upperArmR: limbPath(rightShoulder.x, rightShoulder.y, rightElbow.x, rightElbow.y, metrics.upperArmW, metrics.upperArmW * .86),
@@ -262,20 +278,76 @@ const avatarRegionOrder = [
 
 function AvatarSvg({ stats }: { stats: ReturnType<typeof withDerivedStats> }) {
   const currentMetrics = buildAvatarMetrics(stats, false);
-  const targetDelta = stats.goalWeight - stats.weight;
-  const anatomyStyle = {
-    "--avatar-width-scale": clamp(.86 + currentMetrics.leanNorm * .12 + currentMetrics.fatNorm * .12, .82, 1.14).toFixed(2),
-    "--avatar-height-scale": currentMetrics.heightScale.toFixed(2),
-    "--avatar-goal-scale": clamp(1 + targetDelta / Math.max(stats.weight, 1) * .22, .92, 1.12).toFixed(2),
-    "--avatar-contrast": (1.02 + currentMetrics.definition * .28).toFixed(2),
-    "--avatar-brightness": (.82 + currentMetrics.definition * .14 - currentMetrics.fatNorm * .04).toFixed(2)
-  } as CSSProperties;
+  const goalMetrics = buildAvatarMetrics(stats, true);
+  const current = buildPaths(currentMetrics);
+  const goal = buildPaths(goalMetrics);
+  const currentTransform = `translate(160 398) scale(1 ${currentMetrics.heightScale.toFixed(2)}) translate(-160 -398)`;
+  const goalTransform = `translate(160 398) scale(1 ${goalMetrics.heightScale.toFixed(2)}) translate(-160 -398)`;
 
   return (
-    <div className="live-avatar-image-wrap" style={anatomyStyle} role="img" aria-label="Anatomy body live avatar">
-      <img className="live-avatar-anatomy-goal" src="/assets/anatomy-avatar.png" alt="" aria-hidden="true" />
-      <img className="live-avatar-anatomy-img" src="/assets/anatomy-avatar.png" alt="Anatomy body live avatar" />
-    </div>
+    <svg className="live-avatar-svg" viewBox="0 0 320 420" role="img" aria-labelledby="liveAvatarTitle">
+      <title id="liveAvatarTitle">Dynamic realistic body-scan avatar built from current measurements</title>
+      <defs>
+        <radialGradient id="liveFloorGlow" cx="50%" cy="50%" r="50%">
+          <stop offset="0%" stopColor="#63d68f" stopOpacity=".42" />
+          <stop offset="46%" stopColor="#1184ff" stopOpacity=".18" />
+          <stop offset="100%" stopColor="#1184ff" stopOpacity="0" />
+        </radialGradient>
+        <linearGradient id="liveScanBody" x1="20%" y1="0%" x2="82%" y2="100%">
+          <stop offset="0%" stopColor="#e8f4f2" />
+          <stop offset="34%" stopColor="#9fb8bd" />
+          <stop offset="72%" stopColor="#4f6d78" />
+          <stop offset="100%" stopColor="#15222c" />
+        </linearGradient>
+        <radialGradient id="liveScanCore" cx="50%" cy="35%" r="72%">
+          <stop offset="0%" stopColor="#eff7f4" stopOpacity=".94" />
+          <stop offset="48%" stopColor="#8aa6ae" stopOpacity=".92" />
+          <stop offset="80%" stopColor="#2e5262" stopOpacity=".88" />
+          <stop offset="100%" stopColor="#101923" stopOpacity=".96" />
+        </radialGradient>
+      </defs>
+
+      <ellipse className="live-avatar-shadow" cx="160" cy="386" rx="96" ry="20" fill="url(#liveFloorGlow)" />
+      <g opacity=".55" transform={goalTransform}>
+        {avatarRegionOrder.map((region) => (
+          <path key={region} className="live-avatar-goal" d={goal[region]} />
+        ))}
+      </g>
+
+      <g className="live-avatar-current" transform={currentTransform}>
+        <path className="live-avatar-scan" d={current.neck} />
+        <path className="live-avatar-scan" d={current.shoulderL} />
+        <path className="live-avatar-scan" d={current.shoulderR} />
+        <path className="live-avatar-scan" d={current.upperArmL} />
+        <path className="live-avatar-scan" d={current.upperArmR} />
+        <path className="live-avatar-scan" d={current.forearmL} />
+        <path className="live-avatar-scan" d={current.forearmR} />
+        <path className="live-avatar-scan" d={current.handL} />
+        <path className="live-avatar-scan" d={current.handR} />
+        <path className="live-avatar-scan" d={current.thighL} />
+        <path className="live-avatar-scan" d={current.thighR} />
+        <path className="live-avatar-scan" d={current.calfL} />
+        <path className="live-avatar-scan" d={current.calfR} />
+        <path className="live-avatar-scan" d={current.footL} />
+        <path className="live-avatar-scan" d={current.footR} />
+        <path className="live-avatar-scan live-avatar-structure" d={current.chest} />
+        <path className="live-avatar-scan live-avatar-structure" d={current.abdomen} />
+        <path className="live-avatar-scan live-avatar-structure" d={current.waist} />
+        <path className="live-avatar-scan-core live-avatar-chest" d={current.core} />
+        <path className="live-avatar-scan" d={current.pelvis} />
+        <path className="live-avatar-scan" d={current.head} />
+        <path d={current.softness} fill="rgba(255,255,255,.16)" opacity={currentMetrics.softness} />
+        <path className="live-avatar-definition" d={current.chestLine} opacity={currentMetrics.definition} />
+        <path className="live-avatar-definition" d={current.waistLineL} opacity={currentMetrics.definition} />
+        <path className="live-avatar-definition" d={current.waistLineR} opacity={currentMetrics.definition} />
+        <path className="live-avatar-rim" d="M120 96 C84 145 84 268 130 391" />
+        <path className="live-avatar-rim" d="M200 96 C236 145 236 268 190 391" />
+        <path className="live-avatar-scan-line" d="M132 284 C146 292 174 292 188 284" />
+        <path className="live-avatar-scan-line" d="M126 344 C142 350 178 350 194 344" />
+      </g>
+
+      <path className="live-avatar-hologram-line" d="M64 374 C92 398 228 398 256 374" fill="none" />
+    </svg>
   );
 }
 

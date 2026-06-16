@@ -400,66 +400,10 @@ button, input, select, textarea { font: inherit; }
   transform: translateZ(34px);
 }
 
-.live-avatar-image-wrap {
-  position: relative;
-  z-index: 3;
-  width: 100%;
-  height: 100%;
-  display: grid;
-  place-items: center;
-  transform-style: preserve-3d;
-  --avatar-width-scale: 1;
-  --avatar-height-scale: 1;
-  --avatar-goal-scale: 1.04;
-  --avatar-contrast: 1.08;
-  --avatar-brightness: .9;
-}
-
-.live-avatar-anatomy-img,
-.live-avatar-anatomy-goal {
-  position: absolute;
-  height: 96%;
-  max-width: 92%;
-  object-fit: contain;
-  transform-origin: center bottom;
-  user-select: none;
-  pointer-events: none;
-}
-
-.live-avatar-anatomy-goal {
-  opacity: .2;
-  transform: scale(var(--avatar-goal-scale));
-  filter:
-    brightness(1.28)
-    contrast(1.12)
-    drop-shadow(0 0 13px rgba(99,214,143,.8))
-    drop-shadow(0 0 24px rgba(17,132,255,.44));
-}
-
-.live-avatar-anatomy-img {
-  opacity: .95;
-  transform: scaleX(var(--avatar-width-scale)) scaleY(var(--avatar-height-scale)) translateZ(38px);
-  filter:
-    contrast(var(--avatar-contrast))
-    brightness(var(--avatar-brightness))
-    drop-shadow(0 30px 38px rgba(0,0,0,.5))
-    drop-shadow(0 0 18px rgba(127,231,255,.22));
-}
-
-.live-avatar-image-wrap::after {
-  content: "";
-  position: absolute;
-  width: 46%;
-  height: 10%;
-  bottom: 4%;
-  border-radius: 50%;
-  background: radial-gradient(circle, rgba(99,214,143,.38), rgba(17,132,255,.12) 45%, transparent 72%);
-  filter: blur(7px);
-  transform: translateZ(-20px);
-}
-
 .live-avatar-current {
-  filter: drop-shadow(0 0 8px rgba(190,255,242,.16));
+  filter:
+    drop-shadow(0 18px 30px rgba(0,0,0,.42))
+    drop-shadow(0 0 12px rgba(127,231,255,.18));
 }
 
 .live-avatar-shadow {
@@ -476,41 +420,54 @@ button, input, select, textarea { font: inherit; }
   filter: drop-shadow(0 0 14px rgba(99,214,143,.36));
 }
 
-.live-avatar-skin {
-  fill: url(#liveSkin);
-}
-
 .live-avatar-chest {
   transform-box: fill-box;
   transform-origin: 50% 56%;
   animation: liveAvatarBreath 4.8s ease-in-out infinite;
 }
 
-.live-avatar-shorts {
-  fill: url(#liveShorts);
-  stroke: rgba(127,231,255,.18);
-  stroke-width: .9;
+.live-avatar-scan {
+  fill: url(#liveScanBody);
+  stroke: rgba(164,245,255,.2);
+  stroke-width: .75;
+  opacity: .88;
+  vector-effect: non-scaling-stroke;
 }
 
-.live-avatar-shoe {
-  fill: #111821;
-  stroke: rgba(127,231,255,.18);
-  stroke-width: .9;
+.live-avatar-scan-core {
+  fill: url(#liveScanCore);
+  stroke: rgba(188,255,240,.24);
+  stroke-width: .8;
+  opacity: .92;
 }
 
-.live-avatar-hair {
-  fill: #171923;
+.live-avatar-structure {
+  opacity: 0;
 }
 
-.live-avatar-face {
-  fill: rgba(7,10,16,.72);
+.live-avatar-rim {
+  fill: none;
+  stroke: rgba(104,240,211,.48);
+  stroke-width: 1.2;
+  opacity: .42;
+  filter: drop-shadow(0 0 10px rgba(99,214,143,.28));
+  vector-effect: non-scaling-stroke;
+}
+
+.live-avatar-scan-line {
+  fill: none;
+  stroke: rgba(164,245,255,.22);
+  stroke-width: 1;
+  stroke-linecap: round;
+  opacity: .45;
 }
 
 .live-avatar-definition {
   fill: none;
-  stroke: rgba(5,6,8,.24);
-  stroke-width: 2;
+  stroke: rgba(217,255,244,.34);
+  stroke-width: 1.25;
   stroke-linecap: round;
+  filter: drop-shadow(0 0 5px rgba(17,132,255,.22));
 }
 
 .live-avatar-hologram-line {

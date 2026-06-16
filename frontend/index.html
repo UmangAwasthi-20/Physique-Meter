@@ -878,75 +878,10 @@ button, input, select {
       transform: translateZ(34px);
     }
 
-    .avatar-svg-hidden {
-      position: absolute;
-      width: 1px;
-      height: 1px;
-      opacity: 0;
-      pointer-events: none;
-      overflow: hidden;
-    }
-
-    .avatar-anatomy-display {
-      position: relative;
-      z-index: 3;
-      width: 100%;
-      height: 100%;
-      display: grid;
-      place-items: center;
-      transform-style: preserve-3d;
-      --avatar-width-scale: 1;
-      --avatar-height-scale: 1;
-      --avatar-goal-scale: 1.04;
-      --avatar-contrast: 1.08;
-      --avatar-brightness: .9;
-    }
-
-    .avatar-anatomy-image,
-    .avatar-anatomy-goal {
-      position: absolute;
-      height: 96%;
-      max-width: 92%;
-      object-fit: contain;
-      transform-origin: center bottom;
-      user-select: none;
-      pointer-events: none;
-    }
-
-    .avatar-anatomy-goal {
-      opacity: .2;
-      transform: scale(var(--avatar-goal-scale));
-      filter:
-        brightness(1.28)
-        contrast(1.12)
-        drop-shadow(0 0 13px rgba(97,228,157,.8))
-        drop-shadow(0 0 24px rgba(53,167,255,.44));
-    }
-
-    .avatar-anatomy-image {
-      opacity: .95;
-      transform: scaleX(var(--avatar-width-scale)) scaleY(var(--avatar-height-scale)) translateZ(38px);
-      filter:
-        contrast(var(--avatar-contrast))
-        brightness(var(--avatar-brightness))
-        drop-shadow(0 30px 38px rgba(0,0,0,.5))
-        drop-shadow(0 0 18px rgba(127,231,255,.22));
-    }
-
-    .avatar-anatomy-display::after {
-      content: "";
-      position: absolute;
-      width: 46%;
-      height: 10%;
-      bottom: 4%;
-      border-radius: 50%;
-      background: radial-gradient(circle, rgba(97,228,157,.38), rgba(53,167,255,.12) 45%, transparent 72%);
-      filter: blur(7px);
-      transform: translateZ(-20px);
-    }
-
     #currentAvatar {
-      filter: drop-shadow(0 0 8px rgba(190,255,242,.16));
+      filter:
+        drop-shadow(0 18px 30px rgba(0,0,0,.42))
+        drop-shadow(0 0 12px rgba(127,231,255,.18));
     }
 
     #avatarShadow {
@@ -981,6 +916,41 @@ button, input, select {
       filter: drop-shadow(0 0 14px rgba(97,228,157,.36));
     }
 
+    .avatar-svg .scan-region {
+      fill: url(#scanBodyShade);
+      stroke: rgba(164,245,255,.2);
+      stroke-width: .75;
+      opacity: .88;
+      vector-effect: non-scaling-stroke;
+    }
+
+    .avatar-svg .scan-core {
+      fill: url(#scanCoreShade);
+      stroke: rgba(188,255,240,.24);
+      stroke-width: .8;
+      opacity: .92;
+    }
+
+    .avatar-svg .scan-structure {
+      opacity: 0;
+    }
+
+    .avatar-svg .rim-region {
+      fill: none;
+      stroke: rgba(104,240,211,.48);
+      stroke-width: 1.2;
+      opacity: .42;
+      filter: drop-shadow(0 0 10px rgba(97,228,157,.28));
+      vector-effect: non-scaling-stroke;
+    }
+
+    .avatar-svg .scan-joint-line {
+      stroke: rgba(164,245,255,.22);
+      stroke-width: 1;
+      stroke-linecap: round;
+      opacity: .45;
+    }
+
     .avatar-svg .outfit-region,
     .avatar-svg .shoe-region {
       stroke: rgba(127,231,255,.18);
@@ -988,11 +958,12 @@ button, input, select {
     }
 
     .avatar-svg .definition-line {
-      stroke: rgba(5,6,8,.22);
-      stroke-width: 2;
+      stroke: rgba(217,255,244,.34);
+      stroke-width: 1.25;
       stroke-linecap: round;
       opacity: var(--definition, .45);
       transition: opacity .45s ease, transform .45s ease;
+      filter: drop-shadow(0 0 5px rgba(53,167,255,.22));
     }
 
     .avatar-svg .hologram-line {
@@ -1557,30 +1528,34 @@ button, input, select {
           <div class="avatar-float-wrap" id="avatarFloatWrap">
             <div class="avatar-rotate-wrap" id="avatarRotateWrap">
               <div class="avatar-hover-wrap" id="avatarHoverWrap">
-                <div class="avatar-anatomy-display" id="avatarAnatomyDisplay">
-                  <img class="avatar-anatomy-goal" id="avatarAnatomyGoal" src="assets/anatomy-avatar.png" alt="" aria-hidden="true" />
-                  <img class="avatar-anatomy-image" id="avatarAnatomyImage" src="assets/anatomy-avatar.png" alt="Anatomy body live avatar" />
-                </div>
-          <svg class="avatar-svg avatar-svg-hidden" id="avatarSvg" viewBox="0 0 320 420" role="img" aria-labelledby="avatarTitle">
+          <svg class="avatar-svg" id="avatarSvg" viewBox="0 0 320 420" role="img" aria-labelledby="avatarTitle">
             <defs>
               <radialGradient id="avatarFloorGlow" cx="50%" cy="50%" r="50%">
                 <stop offset="0%" stop-color="#61e49d" stop-opacity=".42" />
                 <stop offset="46%" stop-color="#35a7ff" stop-opacity=".18" />
                 <stop offset="100%" stop-color="#35a7ff" stop-opacity="0" />
               </radialGradient>
-              <linearGradient id="skinShade" x1="0%" y1="0%" x2="100%" y2="100%">
-                <stop offset="0%" id="skinHi" stop-color="#ffd8bd" />
-                <stop offset="62%" id="skinBase" stop-color="#f2b184" />
-                <stop offset="100%" id="skinShadow" stop-color="#9f5d45" />
+              <linearGradient id="scanBodyShade" x1="20%" y1="0%" x2="82%" y2="100%">
+                <stop offset="0%" id="skinHi" stop-color="#e8f4f2" />
+                <stop offset="34%" id="skinBase" stop-color="#9fb8bd" />
+                <stop offset="72%" stop-color="#4f6d78" />
+                <stop offset="100%" id="skinShadow" stop-color="#15222c" />
+              </linearGradient>
+              <radialGradient id="scanCoreShade" cx="50%" cy="35%" r="72%">
+                <stop offset="0%" stop-color="#eff7f4" stop-opacity=".94" />
+                <stop offset="48%" stop-color="#8aa6ae" stop-opacity=".92" />
+                <stop offset="80%" stop-color="#2e5262" stop-opacity=".88" />
+                <stop offset="100%" stop-color="#101923" stop-opacity=".96" />
               </linearGradient>
               <linearGradient id="outfitShade" x1="0%" y1="0%" x2="100%" y2="100%">
                 <stop offset="0%" id="outfitHi" stop-color="#182332" />
                 <stop offset="52%" id="outfitBase" stop-color="#101821" />
                 <stop offset="100%" id="outfitShadow" stop-color="#071018" />
               </linearGradient>
-              <linearGradient id="limbShade" x1="0%" y1="0%" x2="100%" y2="100%">
-                <stop offset="0%" stop-color="#8ceaff" />
-                <stop offset="100%" stop-color="#2669b8" />
+              <linearGradient id="scanRimShade" x1="0%" y1="0%" x2="100%" y2="0%">
+                <stop offset="0%" stop-color="#61e49d" stop-opacity=".78" />
+                <stop offset="42%" stop-color="#d8fff6" stop-opacity=".16" />
+                <stop offset="100%" stop-color="#35a7ff" stop-opacity=".72" />
               </linearGradient>
             </defs>
 
@@ -1609,35 +1584,39 @@ button, input, select {
             </g>
 
             <g id="currentAvatar">
-              <path id="avatarNeck" class="body-region" fill="url(#skinShade)" />
-              <path id="shoulderL" class="body-region" fill="url(#skinShade)" />
-              <path id="shoulderR" class="body-region" fill="url(#skinShade)" />
-              <path id="upperArmL" class="body-region" fill="url(#skinShade)" />
-              <path id="upperArmR" class="body-region" fill="url(#skinShade)" />
-              <path id="forearmL" class="body-region" fill="url(#skinShade)" />
-              <path id="forearmR" class="body-region" fill="url(#skinShade)" />
-              <path id="handL" class="body-region" fill="url(#skinShade)" />
-              <path id="handR" class="body-region" fill="url(#skinShade)" />
-              <path id="thighL" class="body-region" fill="url(#skinShade)" />
-              <path id="thighR" class="body-region" fill="url(#skinShade)" />
-              <path id="calfL" class="body-region" fill="url(#skinShade)" />
-              <path id="calfR" class="body-region" fill="url(#skinShade)" />
-              <path id="footL" class="shoe-region" fill="#111821" />
-              <path id="footR" class="shoe-region" fill="#111821" />
-              <path id="avatarChest" class="body-region" fill="url(#skinShade)" />
-              <path id="avatarAbdomen" class="body-region" fill="url(#skinShade)" />
-              <path id="avatarWaist" class="body-region" fill="url(#skinShade)" />
-              <path id="avatarCore" class="body-region" fill="url(#skinShade)" />
-              <path id="avatarPelvis" class="outfit-region" fill="url(#outfitShade)" />
-              <path id="avatarHead" class="body-region" fill="url(#skinShade)" />
-              <path id="avatarHair" class="hair-region" d="M132 50 C135 28 149 21 160 24 C174 18 188 31 188 51 C178 45 170 43 160 48 C150 42 141 44 132 50Z" fill="#171923" />
-              <path id="avatarEyeL" class="face-detail" d="M150 58 C152 56 154 56 156 58 C154 60 152 60 150 58Z" />
-              <path id="avatarEyeR" class="face-detail" d="M164 58 C166 56 168 56 170 58 C168 60 166 60 164 58Z" />
-              <path id="avatarSmile" class="face-detail" d="M153 70 C157 73 164 73 168 70" fill="none" stroke="rgba(7,10,16,.55)" stroke-width="2" stroke-linecap="round" />
+              <path id="avatarNeck" class="body-region scan-region" />
+              <path id="shoulderL" class="body-region scan-region" />
+              <path id="shoulderR" class="body-region scan-region" />
+              <path id="upperArmL" class="body-region scan-region" />
+              <path id="upperArmR" class="body-region scan-region" />
+              <path id="forearmL" class="body-region scan-region" />
+              <path id="forearmR" class="body-region scan-region" />
+              <path id="handL" class="body-region scan-region" />
+              <path id="handR" class="body-region scan-region" />
+              <path id="thighL" class="body-region scan-region" />
+              <path id="thighR" class="body-region scan-region" />
+              <path id="calfL" class="body-region scan-region" />
+              <path id="calfR" class="body-region scan-region" />
+              <path id="footL" class="body-region scan-region" />
+              <path id="footR" class="body-region scan-region" />
+              <path id="avatarChest" class="body-region scan-region scan-structure" />
+              <path id="avatarAbdomen" class="body-region scan-region scan-structure" />
+              <path id="avatarWaist" class="body-region scan-region scan-structure" />
+              <path id="avatarCore" class="body-region scan-core" />
+              <path id="avatarPelvis" class="body-region scan-region" />
+              <path id="avatarHead" class="body-region scan-region" />
+              <path id="avatarHair" class="hair-region" opacity="0" />
+              <path id="avatarEyeL" class="face-detail" opacity="0" />
+              <path id="avatarEyeR" class="face-detail" opacity="0" />
+              <path id="avatarSmile" class="face-detail" opacity="0" fill="none" />
               <path id="chestLine" class="definition-line" d="M118 143 C138 134 181 134 202 143" fill="none" />
               <path id="waistLineL" class="definition-line" d="M145 171 C141 193 141 216 146 234" fill="none" />
               <path id="waistLineR" class="definition-line" d="M175 171 C179 193 179 216 174 234" fill="none" />
-              <path id="softnessGlow" class="body-region" d="M115 164 C134 145 188 145 205 164 C213 188 205 226 188 238 C174 248 145 248 132 238 C113 224 107 188 115 164Z" fill="rgba(255,255,255,.14)" opacity=".1" />
+              <path id="softnessGlow" class="body-region" d="M115 164 C134 145 188 145 205 164 C213 188 205 226 188 238 C174 248 145 248 132 238 C113 224 107 188 115 164Z" fill="rgba(255,255,255,.16)" opacity=".1" />
+              <path id="scanRimL" class="rim-region" d="M120 96 C84 145 84 268 130 391" />
+              <path id="scanRimR" class="rim-region" d="M200 96 C236 145 236 268 190 391" />
+              <path class="scan-joint-line" d="M132 284 C146 292 174 292 188 284" fill="none" />
+              <path class="scan-joint-line" d="M126 344 C142 350 178 350 194 344" fill="none" />
             </g>
 
             <path class="hologram-line" d="M64 374 C92 398 228 398 256 374" fill="none" />
@@ -2003,6 +1982,46 @@ button, input, select {
         C${round1(center + chestW * .2)} 106 ${round1(center - chestW * .2)} 106 ${round1(leftChest)} 114Z`;
     }
 
+    function scanShellPath(metrics) {
+      const c = 160;
+      const neck = metrics.neckW;
+      const shoulder = metrics.shoulderW / 2;
+      const chest = metrics.chestW / 2;
+      const rib = metrics.ribW / 2;
+      const waist = metrics.waistW / 2;
+      const hip = metrics.hipsW / 2;
+      const arm = metrics.upperArmW / 2;
+      const forearm = metrics.forearmW / 2;
+      const thigh = metrics.thighW / 2;
+      const calf = metrics.calfW / 2;
+      const soft = metrics.softness * 8;
+      return `M${round1(c - neck * .45)} 86
+        C${round1(c - neck * .8)} 101 ${round1(c - shoulder * .78)} 105 ${round1(c - shoulder - 8)} 120
+        C${round1(c - shoulder - 20)} 145 ${round1(c - shoulder - 23)} 186 ${round1(c - shoulder - 19)} 220
+        C${round1(c - shoulder - 20)} 252 ${round1(c - shoulder - 18)} 284 ${round1(c - shoulder - 10)} 305
+        C${round1(c - shoulder - 2)} 315 ${round1(c - shoulder + 10)} 312 ${round1(c - shoulder + 10)} 298
+        C${round1(c - shoulder + 5)} 261 ${round1(c - shoulder + arm)} 196 ${round1(c - chest - 7)} 150
+        C${round1(c - chest - 8 - soft)} 170 ${round1(c - rib - 8 - soft)} 202 ${round1(c - waist - 4 - soft)} 250
+        C${round1(c - hip * .5)} 265 ${round1(c - hip * .45)} 275 ${round1(c - hip * .34)} 286
+        C${round1(c - hip * .38 - thigh)} 306 ${round1(c - hip * .34 - thigh * .65)} 330 ${round1(c - hip * .3 - calf)} 350
+        C${round1(c - hip * .26 - calf * .75)} 371 ${round1(c - hip * .24 - calf * .5)} 390 ${round1(c - hip * .22 - calf * .3)} 399
+        C${round1(c - hip * .54)} 406 ${round1(c - hip * .09)} 409 ${round1(c - hip * .1)} 398
+        C${round1(c - hip * .11)} 372 ${round1(c - hip * .08)} 334 ${round1(c - 8)} 286
+        C${round1(c - 4)} 278 ${round1(c + 4)} 278 ${round1(c + 8)} 286
+        C${round1(c + hip * .08)} 334 ${round1(c + hip * .11)} 372 ${round1(c + hip * .1)} 398
+        C${round1(c + hip * .09)} 409 ${round1(c + hip * .54)} 406 ${round1(c + hip * .22 + calf * .3)} 399
+        C${round1(c + hip * .24 + calf * .5)} 390 ${round1(c + hip * .26 + calf * .75)} 371 ${round1(c + hip * .3 + calf)} 350
+        C${round1(c + hip * .34 + thigh * .65)} 330 ${round1(c + hip * .38 + thigh)} 306 ${round1(c + hip * .34)} 286
+        C${round1(c + hip * .45)} 275 ${round1(c + hip * .5)} 265 ${round1(c + waist + 4 + soft)} 250
+        C${round1(c + rib + 8 + soft)} 202 ${round1(c + chest + 8 + soft)} 170 ${round1(c + chest + 7)} 150
+        C${round1(c + shoulder - arm)} 196 ${round1(c + shoulder - 5)} 261 ${round1(c + shoulder - 10)} 298
+        C${round1(c + shoulder - 10)} 312 ${round1(c + shoulder + 2)} 315 ${round1(c + shoulder + 10)} 305
+        C${round1(c + shoulder + 18)} 284 ${round1(c + shoulder + 20)} 252 ${round1(c + shoulder + 19)} 220
+        C${round1(c + shoulder + 23)} 186 ${round1(c + shoulder + 20)} 145 ${round1(c + shoulder + 8)} 120
+        C${round1(c + shoulder * .78)} 105 ${round1(c + neck * .8)} 101 ${round1(c + neck * .45)} 86
+        C${round1(c + neck * .28)} 78 ${round1(c - neck * .28)} 78 ${round1(c - neck * .45)} 86Z`;
+    }
+
     function pelvisPath(center, topY, bottomY, topW, hipW) {
       const leftTop = center - topW / 2;
       const rightTop = center + topW / 2;
@@ -2145,7 +2164,8 @@ button, input, select {
       setPath(id("Waist"), torsoPath(center, 224, 252, metrics.waistW, Math.max(metrics.waistW * .84, 52), 6));
       setPath(id("Pelvis"), pelvisPath(center, 246, 274, Math.max(metrics.waistW * .84, 52), metrics.hipsW * .86));
       if (!goal) {
-        setPath("avatarCore", coreTorsoPath(center, metrics.chestW, metrics.ribW, metrics.waistW, metrics.softness));
+        const visualWaistW = Math.max(48, metrics.waistW * (.72 + metrics.fatNorm * .32));
+        setPath("avatarCore", coreTorsoPath(center, metrics.chestW, metrics.ribW, visualWaistW, metrics.softness));
       }
 
       const shoulderX = metrics.shoulderW / 2 + 8;
@@ -2192,23 +2212,11 @@ button, input, select {
     }
 
     function setAvatarCosmetics(gender = $("scanGender").value) {
-      const skin = gender === "female" ? "#f1ad8f" : "#f2b184";
-      $("skinBase").setAttribute("stop-color", skin);
-      $("skinHi").setAttribute("stop-color", colorMix(skin, "#ffffff", .42));
-      $("skinShadow").setAttribute("stop-color", colorMix(skin, "#211116", .42));
-      const outfit = gender === "female"
-        ? ["#1b2636", "#121b27", "#071018"]
-        : ["#182332", "#101821", "#071018"];
-      $("outfitHi").setAttribute("stop-color", outfit[0]);
-      $("outfitBase").setAttribute("stop-color", outfit[1]);
-      $("outfitShadow").setAttribute("stop-color", outfit[2]);
-      $("avatarHair").setAttribute("fill", "#171923");
-      const hairPaths = {
-        short: "M132 45 C135 22 151 17 160 22 C173 16 187 27 188 48 C176 41 169 40 160 46 C150 39 142 40 132 45Z",
-        medium: "M130 47 C133 22 151 15 162 22 C181 20 191 36 188 67 C178 58 170 51 160 49 C150 53 139 59 130 73Z",
-        tied: "M132 45 C135 22 151 17 160 22 C174 17 188 29 188 48 C177 43 169 41 160 47 C150 40 141 41 132 45Z M188 60 C216 77 209 118 184 122 C195 102 195 80 188 60Z"
-      };
-      $("avatarHair").setAttribute("d", hairPaths[gender === "female" ? "medium" : "short"]);
+      $("skinHi").setAttribute("stop-color", "#f0fbf8");
+      $("skinBase").setAttribute("stop-color", "#9fb8bd");
+      $("skinShadow").setAttribute("stop-color", "#15222c");
+      $("avatarHair").setAttribute("d", "");
+      $("avatarHair").setAttribute("opacity", "0");
       $("avatarSvg").classList.remove("hologram", "minimal");
     }
 
@@ -2227,13 +2235,6 @@ button, input, select {
       applyAvatarGeometry(goalMetrics, true);
       applyAvatarGeometry(currentMetrics, false);
       setAvatarCosmetics(data.gender);
-      const widthScale = clamp(.86 + currentMetrics.leanNorm * .12 + currentMetrics.fatNorm * .12, .82, 1.14);
-      const goalScale = clamp(1 + targetDelta / Math.max(data.weight, 1) * .22, .92, 1.12);
-      $("avatarAnatomyDisplay").style.setProperty("--avatar-width-scale", widthScale.toFixed(2));
-      $("avatarAnatomyDisplay").style.setProperty("--avatar-height-scale", currentMetrics.heightScale.toFixed(2));
-      $("avatarAnatomyDisplay").style.setProperty("--avatar-goal-scale", goalScale.toFixed(2));
-      $("avatarAnatomyDisplay").style.setProperty("--avatar-contrast", (1.02 + currentMetrics.definition * .28).toFixed(2));
-      $("avatarAnatomyDisplay").style.setProperty("--avatar-brightness", (.82 + currentMetrics.definition * .14 - currentMetrics.fatNorm * .04).toFixed(2));
       $("avatarTitle").textContent = `Current ${data.gender === "female" ? "Female" : "Male"} Build`;
       $("avatarCaption").textContent = "Your avatar evolves with your real progress.";
       $("avatarGoalChip").textContent = targetDelta === 0 ? "Target Locked" : `Target ${targetDelta > 0 ? "+" : ""}${targetDelta.toFixed(1)} kg`;
