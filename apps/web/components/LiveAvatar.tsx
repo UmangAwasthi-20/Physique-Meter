@@ -465,7 +465,7 @@ function AvatarSvg({ stats }: { stats: ReturnType<typeof withDerivedStats> }) {
 }
 
 export default function LiveAvatar({ stats: inputStats = defaultStats }: { stats?: Partial<AvatarStats> }) {
-  const [autoRotate, setAutoRotate] = useState(false);
+  const [autoRotate, setAutoRotate] = useState(true);
   const [infoOpen, setInfoOpen] = useState(false);
   const reducedMotion = useReducedMotion();
   const stats = useMemo(() => withDerivedStats(inputStats), [inputStats]);
